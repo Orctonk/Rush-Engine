@@ -7,12 +7,15 @@ workspace "Rush Engine"
 
 	builddir = "%{cfg.platform}-%{prj.architecture}-%{cfg.buildcfg}"
 
+
+
 	project "Rush-Engine"
 		kind "SharedLib"
 		language "C++"
 		cppdialect "C++17"
 
 		files {"%{prj.name}/src/**.cpp", "%{prj.name}/src/**.h"}
+		include_GLFW()
 
 		targetdir("build/bin/" .. builddir .. "/%{prj.name}")
 		objdir("build/objs/" .. builddir .. "/%{prj.name}")
@@ -70,3 +73,15 @@ workspace "Rush Engine"
 		filter "platforms:Mac"
 			system "macosx"
 			defines {"RUSH_MAC"}
+
+include_GLFW(){
+	includedir "Libraries/glfw-3.2.1/include"
+}
+
+build_GLFW(){
+	prebuildcommands{
+		"{CHDIR} build/lib/glfw-3.2.1",
+		"cmake ../../../Libraries/glfw-3.2.1",
+		"cmake --build ."
+	}
+}
