@@ -15,3 +15,10 @@
 		#define RUSH_API
 	#endif
 #endif
+
+namespace Rush {
+
+	RUSH_API void Init();
+	RUSH_API void Exit();
+	
+}
