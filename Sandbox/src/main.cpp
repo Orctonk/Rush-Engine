@@ -5,17 +5,14 @@ int main()
 {
 	Rush::Init();
 
-	Rush::Window g_window("Test", 640, 480);
-
- 	std::cout << sizeof(g_window) << std::endl;
-
-	//g_window.SetWindowMode(Rush::WindowMode::Fullscreen);
+	{
+	Rush::Window g_window("Test", 1024, 768);
 
 	while (!g_window.ShouldClose())
 	{
 		g_window.SwapBuffers();
 	}
-
+	}
 	Rush::Exit();
 	return 0;
 }

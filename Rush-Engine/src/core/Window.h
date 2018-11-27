@@ -11,30 +11,33 @@ struct GLFWwindow;
 
 namespace Rush{
 
-	// enum RUSH_API WindowMode
-	// {
-	// 	Fullscreen,
-	// 	Windowed,
-	// 	Windowed_Fullscreen
-	// };
+	enum RUSH_API WindowMode
+	{
+		Fullscreen,
+		Windowed,
+		Windowed_Fullscreen
+	};
 
 	class RUSH_API Window
 	{
 
 	private:
+		int m_Width, m_Height;
+
 		#ifdef RUSH_OPENGL
 		GLFWwindow* m_Window;
+		int m_Pre_Fullscreen_X, m_Pre_Fullscreen_Y;
 		#endif
-		//int m_Width, m_Height;
+
 
 
 	public:
-		Window(std::string title, int width, int height);
+		Window(const char *title, int width, int height);
 		~Window();
 		bool ShouldClose();
 		void SwapBuffers();
 
-		// void SetWindowMode(WindowMode mode);
+		void SetWindowMode(WindowMode mode);
 	};
 
 }

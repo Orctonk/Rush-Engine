@@ -14,11 +14,12 @@
 	#elif RUSH_MAC
 		#define RUSH_API
 	#endif
+	#define RUSH_OPENGL
 #endif
 
 namespace Rush {
 
 	RUSH_API void Init();
 	RUSH_API void Exit();
-	
+
 }

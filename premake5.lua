@@ -14,8 +14,8 @@ function use_GLFW()
 
 	filter "platforms:not Windows"
 		libdirs{"build/libs/glfw-3.2.1/src"}
-		links{"GL"}
-		
+		links{"GL", "X11", "Xrandr", "Xinerama", "Xxf86vm", "Xcursor"}
+
 	filter {}
 
 	links {"glfw3"}
@@ -23,20 +23,19 @@ function use_GLFW()
 end
 
 function build_GLFW()
-	prebuildcommands{
-		"{MKDIR} libs/glfw-3.2.1",
-		"{CHDIR} libs/glfw-3.2.1"
-	}
+	prebuildcommands{"{MKDIR} libs/glfw-3.2.1;"}
 
 	filter "platforms:Windows"
-		prebuildcommands {"cmake -G \"Visual Studio 15 2017 Win64\" ../../../Libraries/glfw-3.2.1"}
+		prebuildcommands {
+			"{CHDIR} libs/glfw-3.2.1",
+			"cmake -G \"Visual Studio 15 2017 Win64\" ../../../Libraries/glfw-3.2.1",
+			"cmake --build ."
+		}
 
 	filter "platforms:not Windows"
-		prebuildcommands {"cmake ../../../Libraries/glfw-3.2.1"}
+		prebuildcommands {"{CHDIR} libs/glfw-3.2.1;cmake ../../../Libraries/glfw-3.2.1;cmake --build .;"}
 
 	filter {}
-
-	prebuildcommands {"cmake --build ."}
 
 	glfwbuilt = true
 end
@@ -53,7 +52,7 @@ function use_rush()
 
 	filter "platforms:not Windows"
 		postbuildcommands {
-			"{COPY} bin/" .. builddir .. "/Rush-Engine/Rush.dll bin/" ..builddir .. "/%{prj.name}/Rush.dll" ,
+			"{COPY} bin/" .. builddir .. "/Rush-Engine/libRush.so bin/" ..builddir .. "/%{prj.name}/libRush.so" ,
 		}
 
 	filter {}

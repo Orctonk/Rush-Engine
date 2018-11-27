@@ -4,16 +4,25 @@
 	#include <GLFW/glfw3.h>
 #endif
 
+#include <iostream>
+
 namespace Rush
 {
 
-	Window::Window(std::string title, int width, int height)
-	//: m_Width(width), m_Height(height)
+	Window::Window(const char *title, int width, int height)
+	: m_Width(width), m_Height(height)
 	{
 	#ifdef RUSH_OPENGL
-		m_Window = glfwCreateWindow(width,height, title.c_str(), NULL, NULL);
-		glfwMakeContextCurrent(m_Window);
-		glfwSwapInterval(1);
+		m_Window = glfwCreateWindow(width,height, title, NULL, NULL);
+		if(m_Window == nullptr)
+		{
+			std::cerr << "Failed to create a GLFW window!" << std::endl;
+		}
+		else
+		{
+			glfwMakeContextCurrent(m_Window);
+			glfwSwapInterval(1);
+		}
 	#endif
 	}
 
@@ -39,19 +48,20 @@ namespace Rush
 	#endif
 	}
 
-	// void Window::SetWindowMode(WindowMode mode)
-	// {
-	// #ifdef RUSH_OPENGL
-	// 	switch(mode)
-	// 	{
-	// 	case WindowMode::Fullscreen:
-	// 		glfwSetWindowMonitor(m_Window,glfwGetPrimaryMonitor(),NULL,NULL,NULL,NULL,60);
-	// 		break;
-	//
-	// 	case WindowMode::Windowed:
-	// 		glfwSetWindowMonitor(m_Window,NULL,NULL,NULL,m_Width,m_Height,NULL);
-	// 	}
-	// #endif
-	// }
+	void Window::SetWindowMode(WindowMode mode)
+	{
+	#ifdef RUSH_OPENGL
+		switch(mode)
+		{
+		case WindowMode::Fullscreen:
+			glfwGetWindowPos(m_Window,&m_Pre_Fullscreen_X,&m_Pre_Fullscreen_Y);
+			glfwSetWindowMonitor(m_Window,glfwGetPrimaryMonitor(),0,0,m_Width,m_Height,60);
+			break;
+
+		case WindowMode::Windowed:
+			glfwSetWindowMonitor(m_Window,nullptr,m_Pre_Fullscreen_X,m_Pre_Fullscreen_Y,m_Width,m_Height,GLFW_DONT_CARE);
+		}
+	#endif
+	}
 
 }
