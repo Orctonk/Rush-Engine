@@ -8,6 +8,7 @@ namespace Rush{
 
 class GLFWWindow : public AbstractWindow {
 private:
+    static int s_WindowCount;
     GLFWwindow *m_Window;
 
 public:

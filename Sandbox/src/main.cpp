@@ -6,7 +6,6 @@ using namespace Rush;
 
 class Sandbox : public Application{
 private: 
-	AbstractWindow *m_Window;
 
 	bool WindowCloseHandler(Events::WindowCloseEvent e){
 		m_Running = false;
@@ -29,14 +28,6 @@ public:
 					+ 	std::to_string(RUSH_VERSION_MAJOR) 
 					+ 	"." 
 					+ 	std::to_string(RUSH_VERSION_MINOR));	
-		WindowProperties props;
-		props.height = 480;
-		props.width = 640;
-		props.xPos = 100;
-		props.yPos = 100;
-		props.windowMode = WindowMode::WINDOWED;
-		props.m_Title = "test";
-		m_Window = AbstractWindow::CreateWindow(props);
 
 		Events::EventManager::GetInstance()
 			.RegisterHandler<Events::WindowCloseEvent>(
@@ -50,7 +41,7 @@ public:
 	}
 
 	void Exit() override {
-		delete m_Window;
+		
 	}
 
 	void Update() override{

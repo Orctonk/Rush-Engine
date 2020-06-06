@@ -1,88 +1,105 @@
+#include <string>
+
 #include "GLFWWindow.h"
 #include "../events/EventManager.h"
 #include "../events/WindowEvent.h"
 #include "../events/KeyboardEvent.h"
 #include "../events/MouseEvent.h"
-#include <string>
 #include "../core/Logger.h"
 
 namespace Rush{
 
-void moveCallback(GLFWwindow* win, int x, int y){
-    Events::WindowMoveEvent e(x,y);
-    Events::EventManager::GetInstance().PostEvent(e);
+static void glfwErrorCallback(int errorCode, const char * message){
+    Logger::Error("(" + std::to_string(errorCode) + ") " + message);
 }
 
-void resizeCallback(GLFWwindow* win, int width, int height){
-    Events::WindowResizeEvent e(width,height);
-    Events::EventManager::GetInstance().PostEvent(e);
-}
-
-void closeCallback(GLFWwindow *win){
-    Events::WindowCloseEvent e;
-    Events::EventManager::GetInstance().PostEvent(e);
-}
-
-void focusCallback(GLFWwindow * win, int focus_gained){
-    Events::WindowFocusEvent e(focus_gained == GLFW_TRUE);
-    Events::EventManager::GetInstance().PostEvent(e);
-}
-
-void keyCallback(GLFWwindow *win, int key, int scan, int action, int mods){
-    if(action == GLFW_PRESS){
-        Events::KeyboardPressEvent e(key);
-        Events::EventManager::GetInstance().PostEvent(e);
-    } else if (action == GLFW_REPEAT){
-        Events::KeyboardRepeatEvent e(key);
-        Events::EventManager::GetInstance().PostEvent(e);
-    } else if (action == GLFW_RELEASE){
-        Events::KeyboardReleaseEvent e(key);
-        Events::EventManager::GetInstance().PostEvent(e);
-    }
-}
-
-void mouseButtonCallback(GLFWwindow *win, int button, int action, int mods){
-    if(action == GLFW_PRESS){
-        Events::MousePressedEvent e(button);
-        Events::EventManager::GetInstance().PostEvent(e);
-    } else if(action == GLFW_RELEASE){
-        Events::MousePressedEvent e(button);
-        Events::EventManager::GetInstance().PostEvent(e);
-    }
-}
-
-void mouseMoveCallback(GLFWwindow *win, double x, double y){
-    Events::MouseMoveEvent e(x,y);
-    Events::EventManager::GetInstance().PostEvent(e);
-}
-
-void mouseScrollCallback(GLFWwindow *win, double x, double y){
-    Events::MouseScrollEvent e(y);
-    Events::EventManager::GetInstance().PostEvent(e);
-}
+int GLFWWindow::s_WindowCount = 0;
 
 GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     AbstractWindow(properties)
 {
-    m_Window = glfwCreateWindow(m_Properties.width,m_Properties.height,m_Properties.m_Title,nullptr,nullptr);
+    if(s_WindowCount == 0){
+        Logger::Info("Initializing GLFW...");
+        if(!glfwInit()){
+			Logger::Error("Failed to initialize GLFW!");
+			return;
+		}
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_SAMPLES,4);
+
+		glfwSetErrorCallback(glfwErrorCallback);
+		Logger::Info("GLFW initialized");
+    }
+    if(m_Properties.m_Title == nullptr)
+        m_Properties.m_Title = "Title";
+    m_Window = glfwCreateWindow(
+        m_Properties.width,
+        m_Properties.height,
+        m_Properties.m_Title,
+        nullptr,
+        nullptr
+    );
     Move(m_Properties.xPos,m_Properties.yPos);
     SetWindowMode(m_Properties.windowMode);
+    s_WindowCount++;
 
     Events::WindowOpenEvent e;
     Events::EventManager::GetInstance().PostEvent(e);
 
-    glfwSetWindowPosCallback(m_Window, moveCallback);
-    glfwSetWindowSizeCallback(m_Window, resizeCallback);
-    glfwSetWindowCloseCallback(m_Window, closeCallback);
-    glfwSetWindowFocusCallback(m_Window, focusCallback);
-    glfwSetKeyCallback(m_Window,keyCallback);
-    glfwSetMouseButtonCallback(m_Window,mouseButtonCallback);
-    glfwSetCursorPosCallback(m_Window,mouseMoveCallback);
-    glfwSetScrollCallback(m_Window, mouseScrollCallback);
+    glfwSetWindowPosCallback(m_Window, [](GLFWwindow* win, int x, int y){
+        Events::WindowMoveEvent e(x,y);
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
+    glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* win, int width, int height){
+        Events::WindowResizeEvent e(width,height);
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
+    glfwSetWindowCloseCallback(m_Window, [](GLFWwindow *win){
+        Events::WindowCloseEvent e;
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
+    glfwSetWindowFocusCallback(m_Window, [](GLFWwindow * win, int focus_gained){
+        Events::WindowFocusEvent e(focus_gained == GLFW_TRUE);
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
+    glfwSetKeyCallback(m_Window,[](GLFWwindow *win, int key, int scan, int action, int mods){
+        if(action == GLFW_PRESS){
+            Events::KeyboardPressEvent e(key);
+            Events::EventManager::GetInstance().PostEvent(e);
+        } else if (action == GLFW_REPEAT){
+            Events::KeyboardRepeatEvent e(key);
+            Events::EventManager::GetInstance().PostEvent(e);
+        } else if (action == GLFW_RELEASE){
+            Events::KeyboardReleaseEvent e(key);
+            Events::EventManager::GetInstance().PostEvent(e);
+        }
+    });
+    glfwSetMouseButtonCallback(m_Window,[](GLFWwindow *win, int button, int action, int mods){
+        if(action == GLFW_PRESS){
+            Events::MousePressedEvent e(button);
+            Events::EventManager::GetInstance().PostEvent(e);
+        } else if(action == GLFW_RELEASE){
+            Events::MousePressedEvent e(button);
+            Events::EventManager::GetInstance().PostEvent(e);
+        }
+    });
+    glfwSetCursorPosCallback(m_Window,[](GLFWwindow *win, double x, double y){
+        Events::MouseMoveEvent e(x,y);
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
+    glfwSetScrollCallback(m_Window, [](GLFWwindow *win, double x, double y){
+        Events::MouseScrollEvent e(y);
+        Events::EventManager::GetInstance().PostEvent(e);
+    });
 }
 
 GLFWWindow::~GLFWWindow() {
     glfwDestroyWindow(m_Window);
+    s_WindowCount--;
+    if(s_WindowCount == 0){
+        glfwTerminate();
+    }
 }
 
 

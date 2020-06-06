@@ -5,7 +5,7 @@
 extern Rush::Application* Rush::CreateApplication();
 
 namespace Rush{
-    void Init();
+    bool Init();
     void Exit();
 }
 
@@ -16,6 +16,5 @@ int main(int argc, char** argv){
     delete app;
     Rush::Exit();
 }
-
 #endif
 
