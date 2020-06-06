@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.17)
 
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
 option(RUSH_BUILD_SHARED "Build rush as a shared library" ON)
@@ -7,6 +7,7 @@ project(Rush VERSION 1.0)
 
 set(RUSH_INCLUDE_DIR "include")
 set(RUSH_SOURCE_DIR "src")
+set(RUSH_DEPS_DIR "Libraries")
 set(RUSH_CMAKE_CONFIG_DIR "cmake-config")
 set(RUSH_OUT_DIR "out")
 
@@ -51,8 +52,11 @@ if(RUSH_OPENGL)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    add_subdirectory(Libraries/glfw-3.2.1)
+    add_subdirectory(${RUSH_DEPS_DIR}/glfw-3.2.1)
     target_link_libraries(Rush glfw)
     find_package(OpenGL REQUIRED)
     target_link_libraries(Rush OpenGL::GL)
+
+    add_subdirectory(${RUSH_DEPS_DIR}/glad)
+    target_link_libraries(Rush glad)
 endif()
