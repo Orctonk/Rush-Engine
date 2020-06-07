@@ -4,10 +4,10 @@
 #include <thread>
 
 #include "Logger.h"
-#include "../events/EventManager.h"
-#include "../events/WindowEvent.h"
-#include "../events/KeyboardEvent.h"
-#include "../events/MouseEvent.h"
+#include "Rush/events/EventManager.h"
+#include "Rush/events/WindowEvent.h"
+#include "Rush/events/KeyboardEvent.h"
+#include "Rush/events/MouseEvent.h"
 
 namespace Rush {
 

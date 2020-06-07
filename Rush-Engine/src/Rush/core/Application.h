@@ -1,7 +1,7 @@
 #ifndef __RUSH_APPLICATION_H__
 #define __RUSH_APPLICATION_H__
 
-#include "../window/AbstractWindow.h"
+#include "AbstractWindow.h"
 
 namespace Rush {
 

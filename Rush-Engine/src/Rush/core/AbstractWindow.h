@@ -1,8 +1,8 @@
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
 
-#include "../graphics/Context.h"
-#include "../core/Core.h"
+#include "Context.h"
+#include "Core.h"
 
 namespace Rush {
 

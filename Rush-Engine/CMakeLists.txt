@@ -11,15 +11,15 @@ set(RUSH_DEPS_DIR "Libraries")
 set(RUSH_CMAKE_CONFIG_DIR "cmake-config")
 set(RUSH_OUT_DIR "out")
 
-set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/core/Application.cpp
-                    ${RUSH_SOURCE_DIR}/core/EntryPoint.cpp
-                    ${RUSH_SOURCE_DIR}/core/Logger.cpp
-                    ${RUSH_SOURCE_DIR}/window/AbstractWindow.cpp)
+set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/EntryPoint.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp)
 
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 
-                    ${RUSH_SOURCE_DIR}/window/GLFWWindow.cpp
-                    ${RUSH_SOURCE_DIR}/graphics/GLFWContext.cpp)
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWWindow.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWContext.cpp)
 else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
@@ -32,7 +32,7 @@ endif()
 
 configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
 target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(Rush INTERFACE ${RUSH_SOURCE_DIR})
+target_include_directories(Rush PUBLIC ${RUSH_SOURCE_DIR})
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DRUSH_DEBUG")
 

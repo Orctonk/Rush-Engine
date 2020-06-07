@@ -1,7 +1,7 @@
 #include "AbstractWindow.h"
 
 #ifdef RUSH_OPENGL
-#include "GLFWWindow.h"
+#include "Platform/OpenGL/GLFWWindow.h"
 #else
     #error "No window manager provided!";
 #endif

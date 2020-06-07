@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <functional>
 
-#include "../core/Core.h"
+#include "Rush/core/Core.h"
 #include "Event.h"
 
 namespace Rush { namespace Events {

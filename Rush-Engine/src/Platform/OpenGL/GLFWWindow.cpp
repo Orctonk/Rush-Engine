@@ -1,12 +1,13 @@
 #include <string>
 
 #include "GLFWWindow.h"
-#include "../graphics/GLFWContext.h"
-#include "../events/EventManager.h"
-#include "../events/WindowEvent.h"
-#include "../events/KeyboardEvent.h"
-#include "../events/MouseEvent.h"
-#include "../core/Logger.h"
+
+#include "GLFWContext.h"
+#include "Rush/events/EventManager.h"
+#include "Rush/events/WindowEvent.h"
+#include "Rush/events/KeyboardEvent.h"
+#include "Rush/events/MouseEvent.h"
+#include "Rush/core/Logger.h"
 
 namespace Rush{
 

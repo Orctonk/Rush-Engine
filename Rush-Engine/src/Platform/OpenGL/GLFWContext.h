@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Context.h"
+#include "Rush/core/Context.h"
 
 namespace Rush {
     

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../core/Core.h"
+#include "Rush/core/Core.h"
 
 namespace Rush { namespace Events {
 

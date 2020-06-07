@@ -1,17 +1,17 @@
 #include <RushVersion.h>
 
-#include "core/Application.h"
+#include "Rush/core/Application.h"
 
-#include "core/EntryPoint.h"
+#include "Rush/core/EntryPoint.h"
 
-#include "window/AbstractWindow.h"
-#include "core/Logger.h"
+#include "Rush/core/AbstractWindow.h"
+#include "Rush/core/Logger.h"
 
-#include "events/EventManager.h"
-#include "events/Event.h"
-#include "events/WindowEvent.h"
-#include "events/KeyboardEvent.h"
-#include "events/MouseEvent.h"
+#include "Rush/events/EventManager.h"
+#include "Rush/events/Event.h"
+#include "Rush/events/WindowEvent.h"
+#include "Rush/events/KeyboardEvent.h"
+#include "Rush/events/MouseEvent.h"
 
-#include "events/Keycodes.h"
-#include "events/Mousecodes.h"
+#include "Rush/events/Keycodes.h"
+#include "Rush/events/Mousecodes.h"
