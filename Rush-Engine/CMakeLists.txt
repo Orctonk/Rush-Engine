@@ -18,7 +18,8 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/core/Application.cpp
 
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 
-                    ${RUSH_SOURCE_DIR}/window/GLFWWindow.cpp)
+                    ${RUSH_SOURCE_DIR}/window/GLFWWindow.cpp
+                    ${RUSH_SOURCE_DIR}/graphics/GLFWContext.cpp)
 else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
@@ -33,18 +34,17 @@ configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
 target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(Rush INTERFACE ${RUSH_SOURCE_DIR})
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DRUSH_DEBUG")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 if(WINDOWS)
     message(WARNING "Windows has not yet been tested!")
-    add_compile_definitions(RUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
-    add_compile_definitions(RUSH_LINUX)
     target_link_libraries(Rush pthread)
 else()
     message(FATAL_ERROR "OSX is not yet supported")
-    add_compile_definitions(RUSH_APPLE)  
 endif()
 
 if(RUSH_OPENGL)

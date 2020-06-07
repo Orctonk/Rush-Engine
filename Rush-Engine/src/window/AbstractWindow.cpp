@@ -16,10 +16,10 @@ AbstractWindow::~AbstractWindow(){
     
 }
 
+Unique<AbstractWindow> AbstractWindow::CreateWindow(const WindowProperties &properties){
 #ifdef RUSH_OPENGL
-AbstractWindow *AbstractWindow::CreateWindow(const WindowProperties &properties){
-    return new GLFWWindow(properties);
-}
+    return CreateUnique<GLFWWindow>(properties);
 #endif
+}
 
 }

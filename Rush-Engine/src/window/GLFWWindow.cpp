@@ -1,6 +1,7 @@
 #include <string>
 
 #include "GLFWWindow.h"
+#include "../graphics/GLFWContext.h"
 #include "../events/EventManager.h"
 #include "../events/WindowEvent.h"
 #include "../events/KeyboardEvent.h"
@@ -10,7 +11,7 @@
 namespace Rush{
 
 static void glfwErrorCallback(int errorCode, const char * message){
-    Logger::Error("(" + std::to_string(errorCode) + ") " + message);
+    RUSH_LOG_ERROR("(" + std::to_string(errorCode) + ") " + message);
 }
 
 int GLFWWindow::s_WindowCount = 0;
@@ -19,9 +20,9 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     AbstractWindow(properties)
 {
     if(s_WindowCount == 0){
-        Logger::Info("Initializing GLFW...");
+        RUSH_LOG_INFO("Initializing GLFW...");
         if(!glfwInit()){
-			Logger::Error("Failed to initialize GLFW!");
+			RUSH_LOG_ERROR("Failed to initialize GLFW!");
 			return;
 		}
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -29,7 +30,7 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
 		glfwWindowHint(GLFW_SAMPLES,4);
 
 		glfwSetErrorCallback(glfwErrorCallback);
-		Logger::Info("GLFW initialized");
+		RUSH_LOG_INFO("GLFW initialized");
     }
     if(m_Properties.m_Title == nullptr)
         m_Properties.m_Title = "Title";
@@ -40,6 +41,10 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
         nullptr,
         nullptr
     );
+    
+    m_Context = CreateUnique<GLFWContext>(m_Window);
+    m_Context->Init();
+
     Move(m_Properties.xPos,m_Properties.yPos);
     SetWindowMode(m_Properties.windowMode);
     s_WindowCount++;
@@ -136,7 +141,7 @@ void GLFWWindow::SetWindowMode(WindowMode mode) {
 
 void GLFWWindow::Update() {
     glfwPollEvents();
-    glfwSwapBuffers(m_Window);
+    m_Context->SwapBuffer();
 }
 
 }

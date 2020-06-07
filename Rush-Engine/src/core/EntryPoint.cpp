@@ -15,15 +15,15 @@ namespace Rush {
 		Logger::Init();
 		Logger::SetAlias("Initialization");
 
-		Logger::Info("Initialization completed");
+		RUSH_LOG_INFO("Initialization completed");
 		Logger::SetAlias("Main");
 		return true;
 	}
 
 	void Exit(){
 		Logger::SetAlias("Exit");
-		Logger::Info("Exiting Rush");
-		Logger::Info("Exit completed");
+		RUSH_LOG_INFO("Exiting Rush");
+		RUSH_LOG_INFO("Exit completed");
 		Logger::Destroy();
 	}
 

@@ -8,7 +8,7 @@ namespace Rush {
 class Application {
 protected:
     bool m_Running;
-    AbstractWindow *m_Window;
+    Unique<AbstractWindow> m_Window;
 public:
     Application();
     virtual ~Application();

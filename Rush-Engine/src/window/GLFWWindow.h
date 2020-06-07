@@ -2,6 +2,7 @@
 #define __GLFWWINDOW_H__
 
 #include "AbstractWindow.h"
+#include "../graphics/Context.h"
 #include <GLFW/glfw3.h>
 
 namespace Rush{
@@ -10,6 +11,7 @@ class GLFWWindow : public AbstractWindow {
 private:
     static int s_WindowCount;
     GLFWwindow *m_Window;
+    Unique<Context> m_Context;
 
 public:
     GLFWWindow(const WindowProperties &properties);

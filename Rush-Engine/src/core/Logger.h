@@ -67,4 +67,10 @@ class RUSH_API Logger{
 };
 }
 
+#define RUSH_LOG_TRACE(x) Rush::Logger::getInstance().Trace(x)
+#define RUSH_LOG_DEBUG(x) Rush::Logger::getInstance().Debug(x)
+#define RUSH_LOG_INFO(x) Rush::Logger::getInstance().Info(x)
+#define RUSH_LOG_WARNING(x) Rush::Logger::getInstance().Warning(x)
+#define RUSH_LOG_ERROR(x) Rush::Logger::getInstance().Error(x)
+
 #endif  // __RUSH_LOGGER_H__
