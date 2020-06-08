@@ -1,13 +1,7 @@
 #ifndef __RUSH_LOGGER_H__
 #define __RUSH_LOGGER_H__
 
-#include <string>
-#include <chrono>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
-#include <unordered_map>
+#include "Rushpch.h"
 
 #include "Core.h"
 

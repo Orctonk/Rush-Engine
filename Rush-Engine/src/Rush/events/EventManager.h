@@ -1,10 +1,7 @@
 #ifndef __RUSH_EVENT_MANAGER_H__
 #define __RUSH_EVENT_MANAGER_H__
 
-#include <queue>
-#include <mutex>
-#include <unordered_map>
-#include <functional>
+#include "Rushpch.h"
 
 #include "Rush/core/Core.h"
 #include "Event.h"

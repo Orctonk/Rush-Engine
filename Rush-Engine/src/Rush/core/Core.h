@@ -60,7 +60,7 @@ namespace Rush {
 	template<typename T>
 	using Shared = std::shared_ptr<T>;
 	template<typename T, typename ... Args>
-	constexpr Unique<T> CreateShared(Args&& ... args){
+	constexpr Shared<T> CreateShared(Args&& ... args){
 		return std::make_shared<T>(std::forward<Args>(args) ...);
 	}
 	

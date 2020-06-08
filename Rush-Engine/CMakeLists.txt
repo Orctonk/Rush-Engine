@@ -33,6 +33,7 @@ endif()
 configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
 target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(Rush PUBLIC ${RUSH_SOURCE_DIR})
+target_precompile_headers(Rush PRIVATE ${RUSH_SOURCE_DIR}/Rushpch.h)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DRUSH_DEBUG")
 
