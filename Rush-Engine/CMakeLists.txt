@@ -14,12 +14,21 @@ set(RUSH_OUT_DIR "out")
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/EntryPoint.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
-                    ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp)
+                    ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/VertexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp)
 
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWWindow.cpp
-                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWContext.cpp)
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWContext.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/ShaderDataUtil.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLShader.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexArray.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp)
 else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
