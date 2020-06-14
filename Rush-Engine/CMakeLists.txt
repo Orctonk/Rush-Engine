@@ -5,10 +5,10 @@ option(RUSH_BUILD_SHARED "Build rush as a shared library" ON)
 
 project(Rush VERSION 1.0)
 
-set(RUSH_INCLUDE_DIR "include")
-set(RUSH_SOURCE_DIR "src")
-set(RUSH_DEPS_DIR "Libraries")
-set(RUSH_CMAKE_CONFIG_DIR "cmake-config")
+set(RUSH_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(RUSH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(RUSH_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Libraries")
+set(RUSH_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake-config")
 set(RUSH_OUT_DIR "out")
 
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
@@ -16,6 +16,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Texture.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
@@ -27,6 +28,7 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWContext.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/ShaderDataUtil.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLShader.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLTexture.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp)
@@ -58,11 +60,13 @@ else()
     message(FATAL_ERROR "OSX is not yet supported")
 endif()
 
-set(glm_DIR "${CMAKE_SOURCE_DIR}/Rush-Engine/${RUSH_DEPS_DIR}/glm/cmake/glm")
+set(glm_DIR "${RUSH_DEPS_DIR}/glm/cmake/glm")
 find_package(glm REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
 target_link_libraries(Rush glm::glm)
 target_include_directories(Rush PRIVATE ${GLM_INCLUDE_DIRS})
+
+target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 
 if(RUSH_OPENGL)
     add_compile_definitions(RUSH_OPENGL)
