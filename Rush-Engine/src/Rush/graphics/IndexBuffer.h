@@ -6,7 +6,7 @@
 
 namespace Rush {
     
-class IndexBuffer {
+class RUSH_API IndexBuffer {
 protected:
     IndexBuffer(const uint32_t *indices, uint32_t size);
 public:

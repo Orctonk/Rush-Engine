@@ -10,7 +10,7 @@
 
 namespace Rush {
 
-class VertexArray {
+class RUSH_API VertexArray {
 protected:
     Shared<IndexBuffer> m_IndexBuffer;
     std::vector<Shared<VertexBuffer>> m_VertexBuffers;

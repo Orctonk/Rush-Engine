@@ -9,14 +9,14 @@
 
 namespace Rush {
 
-struct LayoutElement {
+struct RUSH_API LayoutElement {
     ShaderData objType;
     uint32_t stride;
     uint32_t offset;
     bool normalized;
 };
 
-class VertexBuffer {
+class RUSH_API VertexBuffer {
 protected:
     std::vector<LayoutElement> m_Layout;
     

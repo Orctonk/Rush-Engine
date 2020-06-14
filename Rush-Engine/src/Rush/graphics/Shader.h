@@ -7,7 +7,7 @@
 
 namespace Rush {
 
-enum class ShaderData{
+enum class RUSH_API ShaderData{
     FLOAT,
     FLOAT2,
     FLOAT3,
@@ -21,7 +21,7 @@ enum class ShaderData{
     MAT4
 };
 
-class Shader {
+class RUSH_API Shader {
 protected:
     Shader(std::string shaderPath);
 public:
@@ -31,6 +31,8 @@ public:
 
     virtual void Bind() = 0;
     virtual void Unbind() = 0;
+
+    virtual void SetUniform(std::string name, ShaderData type, void *data) = 0;
 
     static Shared<Shader> Create(std::string shaderPath);
 };

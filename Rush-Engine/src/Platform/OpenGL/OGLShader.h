@@ -20,6 +20,7 @@ public:
 
     void Bind() override;
     void Unbind() override;
+    void SetUniform(std::string name, ShaderData type, void *data) override;
 };
     
 } // namespace Rush
