@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 project(Sandbox VERSION 1.0)
 
 set(SANDBOX_SOURCE_DIR "src")
-set(SANDBOX_OUT_DIR "out")
 
 set(SANDBOX_SOURCES ${SANDBOX_SOURCE_DIR}/main.cpp)
 
