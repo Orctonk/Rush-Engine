@@ -18,7 +18,8 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexBuffer.cpp
-                    ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp)
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/Camera.cpp)
 
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 
@@ -57,12 +58,18 @@ else()
     message(FATAL_ERROR "OSX is not yet supported")
 endif()
 
+set(glm_DIR "${CMAKE_SOURCE_DIR}/Rush-Engine/${RUSH_DEPS_DIR}/glm/cmake/glm")
+find_package(glm REQUIRED)
+message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
+target_link_libraries(Rush glm::glm)
+target_include_directories(Rush PRIVATE ${GLM_INCLUDE_DIRS})
+
 if(RUSH_OPENGL)
     add_compile_definitions(RUSH_OPENGL)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    add_subdirectory(${RUSH_DEPS_DIR}/glfw-3.2.1)
+    add_subdirectory("${RUSH_DEPS_DIR}/glfw")
     target_link_libraries(Rush glfw)
     find_package(OpenGL REQUIRED)
     target_link_libraries(Rush OpenGL::GL)
