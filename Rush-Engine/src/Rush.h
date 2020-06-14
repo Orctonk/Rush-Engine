@@ -10,6 +10,7 @@
 #include "Rush/graphics/VertexBuffer.h"
 #include "Rush/graphics/VertexArray.h"
 #include "Rush/graphics/Shader.h"
+#include "Rush/graphics/Texture.h"
 
 #include "Rush/events/EventManager.h"
 #include "Rush/events/Event.h"
