@@ -29,7 +29,6 @@ void OGLVertexArray::Unbind(){
 void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
     glBindVertexArray(m_VAO);
 
-    Bind();
     vb->Bind();
 
     for(auto e: vb->GetLayout()){
@@ -45,12 +44,13 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
 
         m_VertexIndex++;
     }
+    m_VertexBuffers.push_back(vb);
     Unbind();
 }
 
 void OGLVertexArray::SetIndexBuffer(Shared<IndexBuffer> ib) {
-    m_IndexBuffer = ib;
     glBindVertexArray(m_VAO);
+    m_IndexBuffer = ib;
     ib->Bind();
 }
 
