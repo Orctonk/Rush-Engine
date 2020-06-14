@@ -1,0 +1,6 @@
+[submodule "Rush-Engine/Libraries/glm"]
+	path = Rush-Engine/Libraries/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "Rush-Engine/Libraries/glfw"]
+	path = Rush-Engine/Libraries/glfw
+	url = git@github.com:glfw/glfw.git
