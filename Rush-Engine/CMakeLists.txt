@@ -20,6 +20,9 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Camera.cpp)
 
 if(RUSH_OPENGL)
@@ -31,7 +34,8 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLTexture.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
-                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp)
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLRenderingAPI.cpp)
 else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
