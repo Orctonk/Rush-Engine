@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
-option(RUSH_BUILD_SHARED "Build rush as a shared library" ON)
+option(RUSH_BUILD_SHARED "Build Rush as a shared library" OFF)
+option(RUSH_BUILD_ASSIMP "Build Assimp from source" OFF)
 
 project(Rush VERSION 1.0)
 
@@ -12,7 +13,6 @@ set(RUSH_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake-config")
 set(RUSH_OUT_DIR "out")
 
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
-                    ${RUSH_SOURCE_DIR}/Rush/core/EntryPoint.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
@@ -72,13 +72,29 @@ target_include_directories(Rush PRIVATE ${GLM_INCLUDE_DIRS})
 
 target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 
+if(RUSH_BUILD_ASSIMP)
+    set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
+    add_subdirectory("${RUSH_DEPS_DIR}/assimp")
+    target_link_libraries(Rush assimp)
+    message(STATUS "Building assimp")
+else()
+    find_package(Assimp REQUIRED)
+    target_include_directories(Rush PRIVATE ${ASSIMP_INCLUDE_DIRS})
+    target_link_libraries(Rush ${ASSIMP_LIBRARIES})
+endif()
+
 if(RUSH_OPENGL)
     add_compile_definitions(RUSH_OPENGL)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    if(RUSH_BUILD_SHARED)
+        set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+    endif()
     add_subdirectory("${RUSH_DEPS_DIR}/glfw")
     target_link_libraries(Rush glfw)
+
     find_package(OpenGL REQUIRED)
     target_link_libraries(Rush OpenGL::GL)
 
