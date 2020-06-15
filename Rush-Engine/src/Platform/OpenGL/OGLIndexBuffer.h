@@ -12,7 +12,7 @@ private:
 uint32_t m_EBO;
 
 public:
-    OGLIndexBuffer(const uint32_t *indices, uint32_t size);
+    OGLIndexBuffer(const uint32_t *indices, uint32_t count);
     ~OGLIndexBuffer();
     OGLIndexBuffer(OGLIndexBuffer &) = delete;
     OGLIndexBuffer(const OGLIndexBuffer &) = delete;

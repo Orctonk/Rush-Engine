@@ -7,8 +7,10 @@
 namespace Rush {
     
 class RUSH_API IndexBuffer {
+private:
+    uint32_t m_IndexCount;
 protected:
-    IndexBuffer(const uint32_t *indices, uint32_t size);
+    IndexBuffer(const uint32_t *indices, uint32_t count);
 public:
     virtual ~IndexBuffer();
     IndexBuffer(IndexBuffer &) = delete;
@@ -17,7 +19,9 @@ public:
     virtual void Bind() = 0; 
     virtual void Unbind() = 0;
 
-    static Shared<IndexBuffer> Create(const uint32_t *indices, uint32_t size);
+    uint32_t GetIndexCount() { return m_IndexCount; }
+
+    static Shared<IndexBuffer> Create(const uint32_t *indices, uint32_t count);
 };
 
 } // namespace Rush

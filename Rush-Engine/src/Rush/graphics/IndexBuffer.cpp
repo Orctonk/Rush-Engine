@@ -8,12 +8,14 @@
 
 namespace Rush {
 
-IndexBuffer::IndexBuffer(const uint32_t *indices, uint32_t size) { }
+IndexBuffer::IndexBuffer(const uint32_t *indices, uint32_t count) { 
+    m_IndexCount = count;
+}
 
 IndexBuffer::~IndexBuffer() { }
 
-Shared<IndexBuffer> IndexBuffer::Create(const uint32_t *indices, uint32_t size) {
-    return CreateShared<OGLIndexBuffer>(indices,size);
+Shared<IndexBuffer> IndexBuffer::Create(const uint32_t *indices, uint32_t count) {
+    return CreateShared<OGLIndexBuffer>(indices,count);
 }
 
 }
