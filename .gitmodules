@@ -4,3 +4,6 @@
 [submodule "Rush-Engine/Libraries/glfw"]
 	path = Rush-Engine/Libraries/glfw
 	url = git@github.com:glfw/glfw.git
+[submodule "Rush-Engine/Libraries/assimp"]
+	path = Rush-Engine/Libraries/assimp
+	url = git@github.com:assimp/assimp.git

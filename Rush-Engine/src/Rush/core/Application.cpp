@@ -5,23 +5,25 @@
 
 namespace Rush {
 
-Application::Application(){
-	WindowProperties props;
+Application::Application(){ 
+    Logger::Init();
+	Logger::SetAlias("Initialization");
+    WindowProperties props;
 	m_Window = AbstractWindow::CreateWindow(props);
+    Renderer::Init();
+	RUSH_LOG_INFO("Initialization completed");
+	Logger::SetAlias("Main");
 }
 
 Application::~Application(){
-
-}
-
-void Application::Start(){
-    Renderer::Init();
-}
-void Application::Shutdown(){
+    Logger::SetAlias("Exit");
+	RUSH_LOG_INFO("Exiting Rush");
     Renderer::Shutdown();
+	RUSH_LOG_INFO("Exit completed");
+	Logger::Destroy();
 }
+
 void Application::Run(){
-    Start();
     Init();
     m_Running = true;
     while(m_Running){
@@ -29,7 +31,6 @@ void Application::Run(){
         Update();
     }
     Exit();
-    Shutdown();
 }
 
 }
