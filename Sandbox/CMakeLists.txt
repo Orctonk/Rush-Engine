@@ -11,6 +11,8 @@ add_executable(Sandbox ${SANDBOX_SOURCES})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
+file(COPY res DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 if(WINDOWS)
     add_compile_definitions(RUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
