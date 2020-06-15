@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "Logger.h"
+#include "Rush/graphics/Renderer.h"
 
 namespace Rush {
 
@@ -13,16 +14,22 @@ Application::~Application(){
 
 }
 
-void Application::Init(){}
-void Application::Exit(){}
+void Application::Start(){
+    Renderer::Init();
+}
+void Application::Shutdown(){
+    Renderer::Shutdown();
+}
 void Application::Run(){
+    Start();
     Init();
     m_Running = true;
     while(m_Running){
+        Renderer::GetAPI()->Clear();
         Update();
     }
     Exit();
+    Shutdown();
 }
-void Application::Update(){}
 
 }

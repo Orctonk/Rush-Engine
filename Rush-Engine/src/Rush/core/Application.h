@@ -6,6 +6,9 @@
 namespace Rush {
 
 class Application {
+private:
+    void Start();
+    void Shutdown();
 protected:
     bool m_Running;
     Unique<AbstractWindow> m_Window;
