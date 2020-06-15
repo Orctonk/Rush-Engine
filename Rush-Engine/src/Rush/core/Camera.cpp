@@ -14,6 +14,7 @@ void Camera::recalcCamera(){
     glm::vec3 up = glm::normalize(glm::cross(m_Right,m_Front));
 
     m_View = glm::lookAt(m_Position,m_Position - m_Front,glm::vec3(0,1,0));
+    m_VP = m_Projection * m_View;
 }
 
 Camera::Camera(ProjectionMode mode) 
@@ -44,6 +45,7 @@ void Camera::SetProjection(ProjectionMode mode) {
     } else {
         m_Projection = glm::ortho(0.0f,640.0f,0.0f,480.0f);
     }
+    m_VP = m_Projection * m_View;
 }
 
 void Camera::Rotate(float yaw, float pitch, float roll) {
