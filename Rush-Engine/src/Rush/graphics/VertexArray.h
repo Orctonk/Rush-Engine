@@ -25,6 +25,9 @@ public:
     virtual void AddVertexBuffer(Shared<VertexBuffer> vb) = 0;
     virtual void SetIndexBuffer(Shared<IndexBuffer> ib) = 0;
 
+    Shared<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
+    std::vector<Shared<VertexBuffer>> GetVertexBuffers() { return m_VertexBuffers; }
+
     static Unique<VertexArray> Create();
 };
     
