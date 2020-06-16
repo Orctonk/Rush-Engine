@@ -55,6 +55,7 @@ void Application::PollEvents(){
     Event *e;
     while((e = EventQueue::GetInstance().ConsumeEvent()) != nullptr){
         e->Dispatch<WindowCloseEvent>(RUSH_BIND_FN(Application::WindowCloseHandle));
+        e->Dispatch<WindowResizeEvent>(RUSH_BIND_FN(Application::WindowResizeHandle));
         RUSH_LOG_TRACE(e->GetString());
         for(auto it = m_LayerStack.end()-1;it != m_LayerStack.begin() - 1; it--){
             (*it)->OnEvent(*e);
@@ -66,7 +67,12 @@ void Application::PollEvents(){
 
 bool Application::WindowCloseHandle(WindowCloseEvent &e){
     m_Running = false;
-    return true;
+    return false;
+}
+
+bool Application::WindowResizeHandle(WindowResizeEvent &e){
+    Renderer::GetAPI()->ResizeViewport(e.width,e.height);
+    return false;
 }
 
 }

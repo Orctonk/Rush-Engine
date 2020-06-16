@@ -15,6 +15,7 @@ private:
 
     void PollEvents();
     bool WindowCloseHandle(WindowCloseEvent &e);
+    bool WindowResizeHandle(WindowResizeEvent &e);
 protected:
     bool m_Running;
     Unique<AbstractWindow> m_Window;
