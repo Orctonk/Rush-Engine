@@ -70,6 +70,72 @@ void ImguiLayer::OnUpdate() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImguiLayer::OnEvent(Event &e) { }
+void ImguiLayer::OnEvent(Event &e) { 
+    e.Dispatch<KeyboardPressEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyPressHandle));
+    e.Dispatch<KeyboardReleaseEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyReleaseHandle));
+    e.Dispatch<MouseScrollEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseScrollHandle));
+    e.Dispatch<MouseMoveEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseMoveHandle));
+    e.Dispatch<MousePressedEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMousePressHandle));
+    e.Dispatch<MouseReleasedEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseReleaseHandle));    
+    e.Dispatch<WindowResizeEvent>(RUSH_BIND_FN(ImguiLayer::ImguiWindowResizeHandle));    
+}
+
+bool ImguiLayer::ImguiKeyPressHandle(KeyboardPressEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.KeysDown[e.keycode] = true;
+
+    io.KeyCtrl = io.KeysDown[RUSH_KEY_LEFT_CONTROL] || io.KeysDown[RUSH_KEY_RIGHT_CONTROL];
+    io.KeyShift = io.KeysDown[RUSH_KEY_LEFT_SHIFT] || io.KeysDown[RUSH_KEY_RIGHT_SHIFT];
+    io.KeyAlt = io.KeysDown[RUSH_KEY_LEFT_ALT] || io.KeysDown[RUSH_KEY_RIGHT_ALT];
+    io.KeySuper = io.KeysDown[RUSH_KEY_LEFT_SUPER] || io.KeysDown[RUSH_KEY_RIGHT_SUPER];
+
+    return false;
+}
+
+bool ImguiLayer::ImguiKeyReleaseHandle(KeyboardReleaseEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.KeysDown[e.keycode] = false;
+
+    io.KeyCtrl = io.KeysDown[RUSH_KEY_LEFT_CONTROL] || io.KeysDown[RUSH_KEY_RIGHT_CONTROL];
+    io.KeyShift = io.KeysDown[RUSH_KEY_LEFT_SHIFT] || io.KeysDown[RUSH_KEY_RIGHT_SHIFT];
+    io.KeyAlt = io.KeysDown[RUSH_KEY_LEFT_ALT] || io.KeysDown[RUSH_KEY_RIGHT_ALT];
+    io.KeySuper = io.KeysDown[RUSH_KEY_LEFT_SUPER] || io.KeysDown[RUSH_KEY_RIGHT_SUPER];
+
+    return false;
+}
+
+bool ImguiLayer::ImguiMouseScrollHandle(MouseScrollEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.MouseWheelH += (float)0;
+    io.MouseWheel += (float)e.delta;
+    return false;
+}
+
+bool ImguiLayer::ImguiMouseMoveHandle(MouseMoveEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.MousePos = ImVec2(e.x, e.y);
+
+    return false;
+}
+
+bool ImguiLayer::ImguiMousePressHandle(MousePressedEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.MouseDown[e.keycode] = true;
+    return false;
+}
+
+bool ImguiLayer::ImguiMouseReleaseHandle(MouseReleasedEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.MouseDown[e.keycode] = false;
+    return false;
+}
+
+bool ImguiLayer::ImguiWindowResizeHandle(WindowResizeEvent &e){
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2(e.width, e.height);
+    io.DisplayFramebufferScale = ImVec2(1.0f,1.0f);
+
+    return false;
+}
 
 }

@@ -3,10 +3,22 @@
 
 #include "Rush/core/Core.h"
 #include "Rush/core/Layer.h"
+#include "Rush/events/WindowEvent.h"
+#include "Rush/events/KeyboardEvent.h"
+#include "Rush/events/MouseEvent.h"
 
 namespace Rush {
 
 class RUSH_API ImguiLayer : public Layer {
+private:
+    bool ImguiKeyPressHandle(KeyboardPressEvent &e);
+    bool ImguiKeyReleaseHandle(KeyboardReleaseEvent &e);
+    bool ImguiMouseScrollHandle(MouseScrollEvent &e);
+    bool ImguiMouseMoveHandle(MouseMoveEvent &e);
+    bool ImguiMousePressHandle(MousePressedEvent &e);
+    bool ImguiMouseReleaseHandle(MouseReleasedEvent &e);
+    bool ImguiWindowResizeHandle(WindowResizeEvent &e);
+
 public:
     ImguiLayer();
     ~ImguiLayer();
