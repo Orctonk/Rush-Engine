@@ -15,8 +15,8 @@ enum class WindowMode{
 struct WindowProperties{
     char *m_Title = nullptr;
     WindowMode windowMode = WindowMode::WINDOWED;
-    int xPos = 0,yPos = 0;
-    int width = 640,height = 480;
+    int xPos = 0, yPos = 0;
+    int width = 1024, height = 768;
 };
 
 class AbstractWindow{
@@ -31,6 +31,9 @@ public:
     virtual void Resize(int width, int height) = 0;
     virtual void SetWindowMode(WindowMode mode) = 0;
     virtual void Update() = 0;
+
+    int GetWidth() { return m_Properties.width; }
+    int GetHeight() { return m_Properties.height; }
 
     static Unique<AbstractWindow> CreateWindow(const WindowProperties &properties);
 };

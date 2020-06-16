@@ -7,3 +7,6 @@
 [submodule "Rush-Engine/Libraries/assimp"]
 	path = Rush-Engine/Libraries/assimp
 	url = git@github.com:assimp/assimp.git
+[submodule "Rush-Engine/Libraries/imgui"]
+	path = Rush-Engine/Libraries/imgui
+	url = git@github.com:ocornut/imgui.git
