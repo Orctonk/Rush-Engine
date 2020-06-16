@@ -3,7 +3,7 @@
 #include "GLFWWindow.h"
 
 #include "GLFWContext.h"
-#include "Rush/events/EventManager.h"
+#include "Rush/events/EventQueue.h"
 #include "Rush/events/WindowEvent.h"
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/MouseEvent.h"
@@ -50,53 +50,41 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     SetWindowMode(m_Properties.windowMode);
     s_WindowCount++;
 
-    Events::WindowOpenEvent e;
-    Events::EventManager::GetInstance().PostEvent(e);
+    EventQueue::GetInstance().PostEvent(new WindowOpenEvent());
 
     glfwSetWindowPosCallback(m_Window, [](GLFWwindow* win, int x, int y){
-        Events::WindowMoveEvent e(x,y);
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new WindowMoveEvent(x,y));
     });
     glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* win, int width, int height){
-        Events::WindowResizeEvent e(width,height);
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new WindowResizeEvent(width,height));
     });
     glfwSetWindowCloseCallback(m_Window, [](GLFWwindow *win){
-        Events::WindowCloseEvent e;
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new WindowCloseEvent());
     });
     glfwSetWindowFocusCallback(m_Window, [](GLFWwindow * win, int focus_gained){
-        Events::WindowFocusEvent e(focus_gained == GLFW_TRUE);
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new WindowFocusEvent(focus_gained == GLFW_TRUE));
     });
     glfwSetKeyCallback(m_Window,[](GLFWwindow *win, int key, int scan, int action, int mods){
         if(action == GLFW_PRESS){
-            Events::KeyboardPressEvent e(key);
-            Events::EventManager::GetInstance().PostEvent(e);
+            EventQueue::GetInstance().PostEvent(new KeyboardPressEvent(key));
         } else if (action == GLFW_REPEAT){
-            Events::KeyboardRepeatEvent e(key);
-            Events::EventManager::GetInstance().PostEvent(e);
+            EventQueue::GetInstance().PostEvent(new KeyboardRepeatEvent(key));
         } else if (action == GLFW_RELEASE){
-            Events::KeyboardReleaseEvent e(key);
-            Events::EventManager::GetInstance().PostEvent(e);
+            EventQueue::GetInstance().PostEvent(new KeyboardReleaseEvent(key));
         }
     });
     glfwSetMouseButtonCallback(m_Window,[](GLFWwindow *win, int button, int action, int mods){
         if(action == GLFW_PRESS){
-            Events::MousePressedEvent e(button);
-            Events::EventManager::GetInstance().PostEvent(e);
+            EventQueue::GetInstance().PostEvent(new MousePressedEvent(button));
         } else if(action == GLFW_RELEASE){
-            Events::MousePressedEvent e(button);
-            Events::EventManager::GetInstance().PostEvent(e);
+            EventQueue::GetInstance().PostEvent(new MouseReleasedEvent(button));
         }
     });
     glfwSetCursorPosCallback(m_Window,[](GLFWwindow *win, double x, double y){
-        Events::MouseMoveEvent e(x,y);
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new MouseMoveEvent(x,y));
     });
     glfwSetScrollCallback(m_Window, [](GLFWwindow *win, double x, double y){
-        Events::MouseScrollEvent e(y);
-        Events::EventManager::GetInstance().PostEvent(e);
+        EventQueue::GetInstance().PostEvent(new MouseScrollEvent(y));
     });
 }
 

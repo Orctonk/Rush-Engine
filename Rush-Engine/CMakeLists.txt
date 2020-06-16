@@ -15,6 +15,8 @@ set(RUSH_OUT_DIR "out")
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/Layer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/LayerStack.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Texture.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
@@ -23,7 +25,8 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
-                    ${RUSH_SOURCE_DIR}/Rush/core/Camera.cpp)
+                    ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
+                    )
 
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 

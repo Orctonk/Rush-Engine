@@ -2,7 +2,7 @@
 #define __MOUSEEVENT_H__
 #include "Event.h"
 
-namespace Rush{ namespace Events{
+namespace Rush{ 
 
 class MouseMoveEvent : public Event{
 public:
@@ -44,5 +44,5 @@ public:
     virtual std::string GetString() const override { return "MouseReleasedEvent(" + std::to_string(keycode) + ")"; }
 };
 
-} }
+} 
 #endif // __MOUSEEVENT_H__

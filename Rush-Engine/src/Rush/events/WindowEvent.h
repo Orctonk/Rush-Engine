@@ -2,7 +2,7 @@
 #define __WINDOWEVENT_H__
 #include "Event.h"
 
-namespace Rush{ namespace Events{
+namespace Rush{
 
 class RUSH_API WindowOpenEvent : public Event{
 public:
@@ -55,5 +55,5 @@ public:
     }
 };
 
-} }
+} 
 #endif // __WINDOWEVENT_H__

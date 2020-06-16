@@ -2,25 +2,61 @@
 #include <iostream>
 #include <string>
 
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace Rush;
 
 float vertices[] = {
-	 0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 	// back top right
-	 0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,	// back bottom right
-	-0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,	// back bottom left
-	-0.5f,  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 	// back top left 
-	 0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,	// front top right
-	 0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// front bottom right
-	-0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,	// front bottom left
-	-0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f 	// front top left 
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 };
 unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 3, 1, 2, 3,    // Back face
-	3, 2, 7, 7, 2, 6,    // Left face
-	4, 1, 0, 4, 5, 1,    // Back face
-	3, 7, 0, 0, 7, 4,    // Top face
-	6, 2, 5, 5, 2, 1,    // Bottom face
-	7, 6, 5, 5, 4, 7    // Front face
+	0, 1, 2, 3, 4, 5,    // Back face
+	6, 7, 8, 9, 10, 11,    // Left face
+	12, 13, 14, 15, 16, 17,    // Back face
+	18, 19, 20, 21, 22, 23,    // Top face
+	24, 25, 26, 27, 28, 29,    // Bottom face
+	30, 31, 32, 33, 34, 35    // Front face
 }; 
 
 class Sandbox : public Application{
@@ -29,21 +65,9 @@ private:
 	Camera m_Cam;
 	Shared<Shader> m_Shader;
 	Shared<Texture> m_Texture;
+	PointLight m_Light;
 
 	float a,b;
-
-	bool WindowCloseHandler(Events::WindowCloseEvent e){
-		m_Running = false;
-		return true;
-	}
-
-	bool KeyPressHandler(Events::KeyboardPressEvent e){
-		if(e.keycode == RUSH_KEY_ESCAPE){
-			m_Running = false;
-			return true;
-		}
-		return false;
-	}
 
 public:
 	Sandbox() : m_Cam(ProjectionMode::PERSPECTIVE) {}
@@ -53,16 +77,6 @@ public:
 					+ 	std::to_string(RUSH_VERSION_MAJOR) 
 					+ 	"." 
 					+ 	std::to_string(RUSH_VERSION_MINOR));	
-
-		Events::EventManager::GetInstance()
-			.RegisterHandler<Events::WindowCloseEvent>(
-				std::bind(
-					&Sandbox::WindowCloseHandler, this,std::placeholders::_1));
-					
-		Events::EventManager::GetInstance()
-			.RegisterHandler<Events::KeyboardPressEvent>(
-				std::bind(
-					&Sandbox::KeyPressHandler, this,std::placeholders::_1));
 
 		auto test = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 		m_Cam.SetPosition(glm::vec3(0.0f,1.0f,3.0f));
@@ -78,6 +92,26 @@ public:
 		m_VA->SetIndexBuffer(ib);
 
 		m_Texture = Texture::Create("res/container.jpg");
+
+		m_Light.position = glm::vec3(1.0f,1.0f,1.0f);
+
+		m_Light.ambient = glm::vec3(0.1f);
+		m_Light.diffuse = glm::vec3(1.0f);
+		m_Light.specular = glm::vec3(1.0f);
+
+		m_Light.constant = 1.0f;
+		m_Light.linear = .09f;
+		m_Light.quadratic = .032f;
+
+		bool active = true;
+		m_Shader->SetUniform("u_PLights[0].activated",ShaderData::BOOL, &active);
+		m_Shader->SetUniform("u_PLights[0].position",ShaderData::FLOAT3, glm::value_ptr(m_Light.position));
+		m_Shader->SetUniform("u_PLights[0].constant",ShaderData::FLOAT, &m_Light.constant);
+		m_Shader->SetUniform("u_PLights[0].linear",ShaderData::FLOAT, &m_Light.linear);
+		m_Shader->SetUniform("u_PLights[0].quadratic",ShaderData::FLOAT, &m_Light.quadratic);
+		m_Shader->SetUniform("u_PLights[0].ambient",ShaderData::FLOAT3, glm::value_ptr(m_Light.ambient));
+		m_Shader->SetUniform("u_PLights[0].diffuse",ShaderData::FLOAT3, glm::value_ptr(m_Light.diffuse));
+		m_Shader->SetUniform("u_PLights[0].specular",ShaderData::FLOAT3, glm::value_ptr(m_Light.specular));
 	}
 
 	void Exit() override {

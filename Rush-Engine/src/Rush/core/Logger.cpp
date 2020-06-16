@@ -4,7 +4,6 @@
 #include <thread>
 
 #include "Logger.h"
-#include "Rush/events/EventManager.h"
 #include "Rush/events/WindowEvent.h"
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/MouseEvent.h"
@@ -13,29 +12,12 @@ namespace Rush {
 
 bool Logger::s_close = false;
 
-template<typename EventT>
-bool generalEventHandler(EventT e){
-    Logger::Info(e.GetString(),"Event");
-    return false;
-}
-
 Logger::Logger()
 :   m_LogQueue(), m_Threshold(INFO), m_QueueLock(), m_AliasMap(){
     m_LoggerStart = std::chrono::system_clock::now();
     s_close = false;
     m_LoggerThread = std::thread(LogPump);
     Log("Logger started!","Logger",INFO);
-    Events::EventManager::GetInstance().RegisterHandler<Events::WindowCloseEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::WindowOpenEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::WindowMoveEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::WindowResizeEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::WindowFocusEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::KeyboardPressEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::KeyboardRepeatEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::KeyboardReleaseEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::MousePressedEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::MouseMoveEvent>(generalEventHandler);
-    Events::EventManager::GetInstance().RegisterHandler<Events::MouseScrollEvent>(generalEventHandler);
 }
 
 void Logger::Log(std::string message, std::string sender, LogLevel level){

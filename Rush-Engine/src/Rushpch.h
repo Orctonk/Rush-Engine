@@ -9,3 +9,6 @@
 #include <functional>
 #include <fstream>
 #include <sstream>
+#include <vector>
+#include <iterator>
+#include <algorithm>

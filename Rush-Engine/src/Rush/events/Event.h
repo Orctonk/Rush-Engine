@@ -3,9 +3,12 @@
 
 #include <string>
 
+#include "Rushpch.h"
 #include "Rush/core/Core.h"
 
-namespace Rush { namespace Events {
+#define RUSH_BIND_FN(x) (std::bind(&x,this,std::placeholders::_1))
+
+namespace Rush { 
 
 enum class EventType{
     WindowOpen, WindowClose, WindowResize, WindowMove, WindowFocus,
@@ -22,7 +25,8 @@ enum EventGroup{
 };
     
 #define EVENT_BODY(x) static EventType GetStaticType() { return EventType::x; } \
-    virtual std::string GetName() const { return #x; }
+    virtual std::string GetName() const override { return #x; } \
+    virtual EventType GetEventType() const override { return GetStaticType(); }
 
 class RUSH_API Event {
 protected:
@@ -32,7 +36,15 @@ public:
     static EventType GetStaticType();
     virtual std::string GetName() const = 0;
     virtual std::string GetString() const { return GetName(); }
-    EventType GetEventType() { return GetStaticType(); };
+    virtual EventType GetEventType() const = 0;
+
+    template<typename EventT, typename EventF>
+    void Dispatch(const EventF &eventFn){
+        if(GetEventType() == EventT::GetStaticType()){
+            m_IsHandled = eventFn(static_cast<EventT&>(*this));
+        }
+    }
 };
-} }
+
+} 
 #endif

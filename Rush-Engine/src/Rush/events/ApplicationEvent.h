@@ -2,7 +2,7 @@
 #define __APPLICATIONEVENT_H__
 #include "Event.h"
 
-namespace Rush{ namespace Events{
+namespace Rush{ 
 
 class ApplicationStartEvent : public Event{
 public:
@@ -18,5 +18,5 @@ public:
     virtual std::string GetString() const override { return "ApplicationStopEvent"; }
 };
 
-} }
+} 
 #endif // __APPLICATIONEVENT_H__

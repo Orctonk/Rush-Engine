@@ -2,7 +2,7 @@
 #define __KEYBOARDEVENT_H__
 #include "Event.h"
 
-namespace Rush{ namespace Events{
+namespace Rush{ 
 
 class KeyboardPressEvent : public Event{
 public:
@@ -34,5 +34,5 @@ public:
     virtual std::string GetString() const override { return "KeyboardReleaseEvent(" + std::to_string(keycode) + ")"; }
 };
 
-} }
+} 
 #endif // __KEYBOARDEVENT_H__

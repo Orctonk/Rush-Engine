@@ -6,6 +6,7 @@ namespace Rush{
 
 Unique<RenderingAPI> Renderer::s_API = RenderingAPI::Create();
 glm::mat4 Renderer::s_SceneVP = glm::mat4();
+glm::vec3 Renderer::s_CameraPos = glm::vec3();
 
 void Renderer::Init(){
     s_API = RenderingAPI::Create();
@@ -22,6 +23,7 @@ void Renderer::OnResize(uint32_t width, uint32_t height){
 
 void Renderer::BeginScene(Camera &camera){
     s_SceneVP = camera.GetVPMatrix();
+    s_CameraPos = camera.GetPosition();
 }
 
 void Renderer::EndScene(){
@@ -32,6 +34,7 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
     shader->Bind();
     shader->SetUniform("u_ViewProjection", ShaderData::MAT4, glm::value_ptr(s_SceneVP));
     shader->SetUniform("u_Model", ShaderData::MAT4, glm::value_ptr(model));
+    shader->SetUniform("u_CamPos", ShaderData::FLOAT3, glm::value_ptr(s_CameraPos));
     s_API->DrawIndexed(va);
 }
 

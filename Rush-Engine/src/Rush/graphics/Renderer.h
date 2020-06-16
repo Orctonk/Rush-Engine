@@ -1,7 +1,7 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
-#include "Rush/core/Camera.h"
+#include "Rush/scene/Camera.h"
 #include "Rush/core/Core.h"
 #include "RenderingAPI.h"
 #include "VertexArray.h"
@@ -15,6 +15,7 @@ class RUSH_API Renderer {
 private:
     static Unique<RenderingAPI> s_API;
     static glm::mat4 s_SceneVP;
+    static glm::vec3 s_CameraPos;
 public:
     static void Init();
     static void Shutdown();

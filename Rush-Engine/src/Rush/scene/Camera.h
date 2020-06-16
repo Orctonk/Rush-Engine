@@ -40,6 +40,7 @@ public:
     glm::mat4 GetVPMatrix() { return m_VP; }
     glm::mat4 GetProjection() { return m_Projection; }
     glm::mat4 GetView() { return m_View; }
+    glm::vec3 GetPosition() { return m_Position; }
 };
 
 }
