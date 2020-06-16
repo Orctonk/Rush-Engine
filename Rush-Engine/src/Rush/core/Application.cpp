@@ -6,6 +6,8 @@
 
 namespace Rush {
 
+Application *Application::s_Instance;
+
 Application::Application(){ 
     Logger::Init();
 	Logger::SetAlias("Initialization");
@@ -14,6 +16,7 @@ Application::Application(){
     Renderer::Init();
 	RUSH_LOG_INFO("Initialization completed");
 	Logger::SetAlias("Main");
+    s_Instance = this;
 }
 
 Application::~Application(){
@@ -40,17 +43,24 @@ void Application::Run(){
 
 void Application::PushLayer(Layer *layer){
     m_LayerStack.PushLayer(layer);
+    layer->OnAttach();
 }
 
 void Application::PushOverlay(Layer *layer){
     m_LayerStack.PushOverlay(layer);
+    layer->OnAttach();
 }
 
 void Application::PollEvents(){
     Event *e;
     while((e = EventQueue::GetInstance().ConsumeEvent()) != nullptr){
         e->Dispatch<WindowCloseEvent>(RUSH_BIND_FN(Application::WindowCloseHandle));
-        RUSH_LOG_INFO(e->GetString());
+        RUSH_LOG_TRACE(e->GetString());
+        for(auto it = m_LayerStack.end()-1;it != m_LayerStack.begin() - 1; it--){
+            (*it)->OnEvent(*e);
+            if(e->IsHandled())
+                break;
+        }
     }
 }
 

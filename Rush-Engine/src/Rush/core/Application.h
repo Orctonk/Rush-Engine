@@ -10,6 +10,7 @@ namespace Rush {
 
 class Application {
 private:
+    static Application *s_Instance;
     LayerStack m_LayerStack;
 
     void PollEvents();
@@ -25,9 +26,12 @@ public:
     virtual void Exit() = 0;
     virtual void Update() = 0;
 
+    Unique<AbstractWindow> &GetWindow() { return m_Window; }
     void PushLayer(Layer *layer);
     void PushOverlay(Layer *layer);
     void Run();
+
+    static Application &GetInstance() { return *s_Instance; }
 };
 
 Application* CreateApplication();

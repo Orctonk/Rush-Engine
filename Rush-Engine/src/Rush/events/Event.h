@@ -33,6 +33,8 @@ protected:
     bool m_IsHandled = false;
 public:
 
+    bool IsHandled() { return m_IsHandled; }
+
     static EventType GetStaticType();
     virtual std::string GetName() const = 0;
     virtual std::string GetString() const { return GetName(); }
