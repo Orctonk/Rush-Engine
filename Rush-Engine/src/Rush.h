@@ -15,6 +15,8 @@
 #include "Rush/scene/Camera.h"
 #include "Rush/scene/Light.h"
 
+#include "Rush/imgui/ImguiLayer.h"
+
 #include "Rush/events/EventQueue.h"
 #include "Rush/events/Event.h"
 #include "Rush/events/WindowEvent.h"

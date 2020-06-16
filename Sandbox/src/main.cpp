@@ -112,6 +112,8 @@ public:
 		m_Shader->SetUniform("u_PLights[0].ambient",ShaderData::FLOAT3, glm::value_ptr(m_Light.ambient));
 		m_Shader->SetUniform("u_PLights[0].diffuse",ShaderData::FLOAT3, glm::value_ptr(m_Light.diffuse));
 		m_Shader->SetUniform("u_PLights[0].specular",ShaderData::FLOAT3, glm::value_ptr(m_Light.specular));
+
+		PushOverlay(new ImguiLayer());
 	}
 
 	void Exit() override {

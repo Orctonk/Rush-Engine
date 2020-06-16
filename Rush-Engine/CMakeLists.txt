@@ -1,17 +1,19 @@
 cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
+# Rush options
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
 option(RUSH_BUILD_SHARED "Build Rush as a shared library" OFF)
 option(RUSH_BUILD_ASSIMP "Build Assimp from source" OFF)
 
 project(Rush VERSION 1.0)
 
+# Define directory structure
 set(RUSH_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(RUSH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(RUSH_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Libraries")
 set(RUSH_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake-config")
-set(RUSH_OUT_DIR "out")
 
+# Set Rush implementation independent sources
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/AbstractWindow.cpp
@@ -26,8 +28,14 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
+                    ${RUSH_DEPS_DIR}/imgui/imgui.cpp  
+                    ${RUSH_DEPS_DIR}/imgui/imgui_demo.cpp 
+                    ${RUSH_DEPS_DIR}/imgui/imgui_draw.cpp 
+                    ${RUSH_DEPS_DIR}/imgui/imgui_widgets.cpp 
                     )
 
+# Add implementation specific sources
 if(RUSH_OPENGL)
     list(APPEND RUSH_SOURCES 
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/GLFWWindow.cpp
@@ -38,27 +46,38 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp
-                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLRenderingAPI.cpp)
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLRenderingAPI.cpp
+                    ${RUSH_DEPS_DIR}/imgui/examples/imgui_impl_opengl3.cpp
+                    )
 else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
 
+# Specify library type
 if(RUSH_BUILD_SHARED)
     add_library(Rush SHARED ${RUSH_SOURCES})
 else()
     add_library(Rush STATIC ${RUSH_SOURCES})
 endif()
 
+# Configure RushVersion file for use in applications
 configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
-target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(Rush PUBLIC ${RUSH_SOURCE_DIR})
+
+# Add precompiled header
 target_precompile_headers(Rush PRIVATE ${RUSH_SOURCE_DIR}/Rushpch.h)
 
+# Set public includes for rush
+target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(Rush PUBLIC ${RUSH_SOURCE_DIR})
+
+# Set Rush debug flag
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DRUSH_DEBUG")
 
+# Ensure C++17 standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
+# Add platform dependent libraries
 if(WINDOWS)
     message(WARNING "Windows has not yet been tested!")
 elseif(UNIX AND NOT APPLE)
@@ -67,14 +86,26 @@ else()
     message(FATAL_ERROR "OSX is not yet supported")
 endif()
 
+# Add GLM as dependency
 set(glm_DIR "${RUSH_DEPS_DIR}/glm/cmake/glm")
 find_package(glm REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
 target_link_libraries(Rush glm::glm)
 target_include_directories(Rush PRIVATE ${GLM_INCLUDE_DIRS})
 
+# Add stb_image as dependency
 target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 
+# Add ImGui as dependency
+
+target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/imgui)
+if(RUSH_OPENGL)
+    add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+else()
+    message(ERROR "No ImGui rendering implementation provided!")
+endif()
+
+# Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
     set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
@@ -87,6 +118,7 @@ else()
     target_link_libraries(Rush ${ASSIMP_LIBRARIES})
 endif()
 
+# Add Window manager and renderer implementation as dependency
 if(RUSH_OPENGL)
     add_compile_definitions(RUSH_OPENGL)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
