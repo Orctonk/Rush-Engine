@@ -116,17 +116,18 @@ void OGLShader::Unbind() {
 }
 
 void OGLShader::SetUniform(std::string name, ShaderData type, void *data) {
+    glUseProgram(m_Shader);
     auto loc = glGetUniformLocation(m_Shader,name.c_str());
     switch (type) {
     case ShaderData::FLOAT: glUniform1fv(loc,1,static_cast<GLfloat *>(data)); break;
-    case ShaderData::FLOAT2: glUniform2fv(loc,2,static_cast<GLfloat *>(data)); break;
-    case ShaderData::FLOAT3: glUniform3fv(loc,3,static_cast<GLfloat *>(data)); break;
-    case ShaderData::FLOAT4: glUniform4fv(loc,4,static_cast<GLfloat *>(data)); break;
+    case ShaderData::FLOAT2: glUniform2fv(loc,1,static_cast<GLfloat *>(data)); break;
+    case ShaderData::FLOAT3: glUniform3fv(loc,1,static_cast<GLfloat *>(data)); break;
+    case ShaderData::FLOAT4: glUniform4fv(loc,1,static_cast<GLfloat *>(data)); break;
     case ShaderData::INT: glUniform1iv(loc,1,static_cast<GLint *>(data)); break;
     case ShaderData::INT2: glUniform2iv(loc,1,static_cast<GLint *>(data)); break;
     case ShaderData::INT3: glUniform3iv(loc,1,static_cast<GLint *>(data)); break;
     case ShaderData::INT4: glUniform4iv(loc,1,static_cast<GLint *>(data)); break;
-    case ShaderData::BOOL: RUSH_ASSERT(false); break;
+    case ShaderData::BOOL: glUniform1iv(loc,1,static_cast<GLint *>(data)); break;
     case ShaderData::MAT3: glUniformMatrix3fv(loc,1,GL_FALSE,static_cast<GLfloat *>(data)); break;
     case ShaderData::MAT4: glUniformMatrix4fv(loc,1,GL_FALSE,static_cast<GLfloat *>(data)); break;
     default: RUSH_ASSERT(false); break;
