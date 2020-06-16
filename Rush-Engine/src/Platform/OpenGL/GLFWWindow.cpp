@@ -42,6 +42,8 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
         nullptr,
         nullptr
     );
+
+    glfwSetWindowUserPointer(m_Window,&m_Properties);
     
     m_Context = CreateUnique<GLFWContext>(m_Window);
     m_Context->Init();
@@ -53,9 +55,15 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     EventQueue::GetInstance().PostEvent(new WindowOpenEvent());
 
     glfwSetWindowPosCallback(m_Window, [](GLFWwindow* win, int x, int y){
+        WindowProperties *props = (WindowProperties*)glfwGetWindowUserPointer(win);
+        props->xPos = x;
+        props->yPos = y;
         EventQueue::GetInstance().PostEvent(new WindowMoveEvent(x,y));
     });
     glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* win, int width, int height){
+        WindowProperties *props = (WindowProperties*)glfwGetWindowUserPointer(win);
+        props->width = width;
+        props->height = height;
         EventQueue::GetInstance().PostEvent(new WindowResizeEvent(width,height));
     });
     glfwSetWindowCloseCallback(m_Window, [](GLFWwindow *win){
