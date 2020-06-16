@@ -5,7 +5,7 @@
 
 namespace Rush {
     
-class Layer {
+class RUSH_API Layer {
 public:
     Layer();
     virtual ~Layer();
@@ -13,7 +13,7 @@ public:
     virtual void OnAttach() = 0;
     virtual void OnDetach() = 0;
     virtual void OnUpdate() = 0;
-    virtual void OnEvent(Event &e);
+    virtual void OnEvent(Event &e) = 0;
 };
 
 } // namespace Rush
