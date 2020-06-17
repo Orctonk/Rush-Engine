@@ -21,6 +21,7 @@ public:
     void Resize(int width, int height) override;
     void SetWindowMode(WindowMode mode) override;
     void Update() override;
+    void SetVSync(bool enable) override;
 };
 
 }

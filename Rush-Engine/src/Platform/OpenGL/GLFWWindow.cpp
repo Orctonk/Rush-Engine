@@ -141,4 +141,7 @@ void GLFWWindow::Update() {
     m_Context->SwapBuffer();
 }
 
+void GLFWWindow::SetVSync(bool enable) {
+    glfwSwapInterval(enable ? 1 : 0);
+}
 }
