@@ -49,25 +49,16 @@ void ImguiLayer::OnAttach() {
     io.KeyMap[ImGuiKey_Z]           = RUSH_KEY_Z;
 
     ImGui_ImplOpenGL3_Init("#version 410");
+
+    Application& app = Application::GetInstance();
+    io.DisplaySize = ImVec2(app.GetWindow()->GetWidth(), app.GetWindow()->GetHeight());
 }
 
 void ImguiLayer::OnDetach() { }
 
 void ImguiLayer::OnUpdate() { 
     ImGuiIO& io = ImGui::GetIO();
-    Application& app = Application::GetInstance();
-    io.DisplaySize = ImVec2(app.GetWindow()->GetWidth(), app.GetWindow()->GetHeight());
-
     io.DeltaTime = (1.0f / 60.0f);
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
-
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImguiLayer::OnEvent(Event &e) { 
@@ -78,6 +69,16 @@ void ImguiLayer::OnEvent(Event &e) {
     e.Dispatch<MousePressedEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMousePressHandle));
     e.Dispatch<MouseReleasedEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseReleaseHandle));    
     e.Dispatch<WindowResizeEvent>(RUSH_BIND_FN(ImguiLayer::ImguiWindowResizeHandle));    
+}
+
+void ImguiLayer::Begin() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui::NewFrame();
+}
+
+void ImguiLayer::End() {
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 bool ImguiLayer::ImguiKeyPressHandle(KeyboardPressEvent &e){
