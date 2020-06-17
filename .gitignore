@@ -36,3 +36,6 @@ build/**
 
 # VSCode project settings
 .vscode/
+
+# Cmake file is edited to remove -Werror for assimp
+Rush-Engine/Libraries/assimp
