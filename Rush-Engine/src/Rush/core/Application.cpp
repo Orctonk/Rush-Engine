@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include "Time.h"
 #include "Logger.h"
 #include "Rush/graphics/Renderer.h"
 #include "Rush/events/EventQueue.h"
@@ -9,6 +10,7 @@ namespace Rush {
 Application *Application::s_Instance;
 
 Application::Application(){ 
+    Time::Init();
     Logger::Init();
 	Logger::SetAlias("Initialization");
     WindowProperties props;
@@ -25,14 +27,17 @@ Application::~Application(){
     Renderer::Shutdown();
 	RUSH_LOG_INFO("Exit completed");
 	Logger::Destroy();
+    Time::Shutdown();
 }
 
 void Application::Run(){
     Init();
     m_Running = true;
     while(m_Running){
-        PollEvents();
+        Time::Update();
 
+        PollEvents();
+        
         Renderer::GetAPI()->Clear();
         for(auto l : m_LayerStack)
             l->OnUpdate();

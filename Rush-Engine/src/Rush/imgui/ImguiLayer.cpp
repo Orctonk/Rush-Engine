@@ -1,6 +1,7 @@
 #include "ImguiLayer.h"
 
 #include "Rush/core/Application.h"
+#include "Rush/core/Time.h"
 #include "Rush/events/Keycodes.h"
 
 #include <examples/imgui_impl_opengl3.h>
@@ -58,7 +59,7 @@ void ImguiLayer::OnDetach() { }
 
 void ImguiLayer::OnUpdate() { 
     ImGuiIO& io = ImGui::GetIO();
-    io.DeltaTime = (1.0f / 60.0f);
+    io.DeltaTime = Time::Delta();
 }
 
 void ImguiLayer::OnEvent(Event &e) { 
