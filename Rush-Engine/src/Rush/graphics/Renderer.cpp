@@ -18,7 +18,7 @@ void Renderer::Shutdown(){
 }
 
 void Renderer::OnResize(uint32_t width, uint32_t height){
-    s_API->ResizeViewport(width, height);
+    s_API->SetViewport(0,0,width, height);
 }
 
 void Renderer::BeginScene(Camera &camera){

@@ -37,6 +37,7 @@ void Application::Run(){
         for(auto l : m_LayerStack)
             l->OnUpdate();
         Update();
+        m_Window->Update();
     }
     Exit();
 }
@@ -71,7 +72,7 @@ bool Application::WindowCloseHandle(WindowCloseEvent &e){
 }
 
 bool Application::WindowResizeHandle(WindowResizeEvent &e){
-    Renderer::GetAPI()->ResizeViewport(e.width,e.height);
+    Renderer::OnResize(e.width,e.height);
     return false;
 }
 

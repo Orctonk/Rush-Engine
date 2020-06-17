@@ -12,8 +12,8 @@ void OGLRenderingAPI::Shutdown(){
 
 }
 
-void OGLRenderingAPI::ResizeViewport(uint32_t width, uint32_t height){
-    glViewport(0,0,width,height);
+void OGLRenderingAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height){
+    glViewport(x,y,width,height);
 }
 
 void OGLRenderingAPI::SetClearColor(glm::vec4 color){
