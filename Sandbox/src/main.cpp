@@ -70,7 +70,7 @@ private:
 	float a,b;
 
 public:
-	Sandbox() : m_Cam(ProjectionMode::PERSPECTIVE) {}
+	Sandbox() : m_Cam(ProjectionMode::PERSPECTIVE, 1024.f /768.0f) {}
 	~Sandbox(){}
 	void Init() override {
 		Logger::Info(	"Rush Version: " 
@@ -78,9 +78,8 @@ public:
 					+ 	"." 
 					+ 	std::to_string(RUSH_VERSION_MINOR));	
 
-		auto test = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 		m_Cam.SetPosition(glm::vec3(0.0f,1.0f,3.0f));
-		m_Cam.SetRotation(90.0f,0.0f,0.0f);
+		m_Cam.SetRotation(90.0f,20.0f,0.0f);
 
 		m_Shader = Shader::Create("res/test.glsl");
 
@@ -122,12 +121,12 @@ public:
 
 	void Update() override{
 		a++;
-		m_Cam.SetRotation(a,20,0);
+		m_Cam.SetRotation(a,20.0f,0);
 		m_Cam.SetPosition(glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a))));
 		Renderer::BeginScene(m_Cam);
 		Renderer::Submit(m_Shader,m_VA,glm::mat4(1.0f));
 		Renderer::EndScene();
-		m_Window->Update();
+		
 	}
 };
 
