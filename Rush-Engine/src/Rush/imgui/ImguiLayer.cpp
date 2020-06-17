@@ -23,9 +23,9 @@ void ImguiLayer::OnAttach() {
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-    // ImGuiStyle& style = ImGui::GetStyle();
-    // style.WindowRounding = 0.0f;
-    // style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowRounding = 0.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
     io.KeyMap[ImGuiKey_Tab]         = RUSH_KEY_TAB;
     io.KeyMap[ImGuiKey_LeftArrow]   = RUSH_KEY_LEFT;

@@ -30,6 +30,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
                     ${RUSH_DEPS_DIR}/imgui/imgui.cpp  
                     ${RUSH_DEPS_DIR}/imgui/imgui_demo.cpp 
                     ${RUSH_DEPS_DIR}/imgui/imgui_draw.cpp 

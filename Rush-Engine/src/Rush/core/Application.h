@@ -5,6 +5,7 @@
 #include "LayerStack.h"
 #include "AbstractWindow.h"
 #include "Rush/events/WindowEvent.h"
+#include "Rush/imgui/ImguiLayer.h"
 
 namespace Rush {
 
@@ -12,6 +13,7 @@ class Application {
 private:
     static Application *s_Instance;
     LayerStack m_LayerStack;
+    ImguiLayer *m_ImguiLayer;
 
     void PollEvents();
     bool WindowCloseHandle(WindowCloseEvent &e);

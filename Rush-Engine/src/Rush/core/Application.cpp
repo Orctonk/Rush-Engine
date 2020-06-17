@@ -4,12 +4,14 @@
 #include "Logger.h"
 #include "Rush/graphics/Renderer.h"
 #include "Rush/events/EventQueue.h"
+#include "Rush/debug/DebugLayer.h"
 
 namespace Rush {
 
 Application *Application::s_Instance;
 
 Application::Application(){ 
+    s_Instance = this;
     Time::Init();
     Logger::Init();
 	Logger::SetAlias("Initialization");
@@ -18,7 +20,6 @@ Application::Application(){
     Renderer::Init();
 	RUSH_LOG_INFO("Initialization completed");
 	Logger::SetAlias("Main");
-    s_Instance = this;
 }
 
 Application::~Application(){
@@ -31,6 +32,9 @@ Application::~Application(){
 }
 
 void Application::Run(){
+    m_ImguiLayer = new ImguiLayer();
+    PushOverlay(m_ImguiLayer);
+    PushOverlay(new DebugLayer());
     Init();
     m_Running = true;
     while(m_Running){
@@ -42,6 +46,11 @@ void Application::Run(){
         for(auto l : m_LayerStack)
             l->OnUpdate();
         Update();
+
+        m_ImguiLayer->Begin();
+        for(auto l : m_LayerStack)
+            l->OnImguiRender();
+        m_ImguiLayer->End();
         m_Window->Update();
     }
     Exit();
