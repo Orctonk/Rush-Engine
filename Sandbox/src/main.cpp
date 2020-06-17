@@ -120,7 +120,7 @@ public:
 	}
 
 	void Update() override{
-		a++;
+		a += 45.0f * Time::Delta();
 		m_Cam.SetRotation(a,20.0f,0);
 		m_Cam.SetPosition(glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a))));
 		Renderer::BeginScene(m_Cam);
