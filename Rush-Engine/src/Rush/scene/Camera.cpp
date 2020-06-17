@@ -17,12 +17,12 @@ void Camera::recalcCamera(){
     m_VP = m_Projection * m_View;
 }
 
-Camera::Camera(ProjectionMode mode) 
+Camera::Camera(ProjectionMode mode, float aspect) 
 :   m_Yaw(0), m_Pitch(0), m_Roll(0), m_FOV(45), m_Position(glm::vec3(0,0,1)), m_Front(), m_Right() {
     m_Projection = glm::mat4(1.0f);
     m_View = glm::mat4(1.0f);
     recalcCamera();
-    SetProjection(mode);
+    SetProjection(mode,aspect);
 }
 
 Camera::~Camera() { }
@@ -39,11 +39,11 @@ void Camera::SetRotation(float yaw, float pitch, float roll){
     recalcCamera();
 }
 
-void Camera::SetProjection(ProjectionMode mode) {
+void Camera::SetProjection(ProjectionMode mode, float aspect) {
     if(mode == ProjectionMode::PERSPECTIVE){
-        m_Projection = glm::perspective(glm::radians(m_FOV),640.0f/480.0f,0.1f,100.0f);
+        m_Projection = glm::perspective(glm::radians(m_FOV),aspect,0.1f,100.0f);
     } else {
-        m_Projection = glm::ortho(0.0f,640.0f,0.0f,480.0f);
+        m_Projection = glm::ortho(-1.0f,1.0f,-1/aspect,1/aspect,0.1f,100.0f);
     }
     m_VP = m_Projection * m_View;
 }

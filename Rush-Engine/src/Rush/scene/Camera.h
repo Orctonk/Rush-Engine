@@ -28,12 +28,12 @@ private:
 
     void recalcCamera();
 public:
-    Camera(ProjectionMode mode);
+    Camera(ProjectionMode mode, float aspect);
     ~Camera();
 
     void SetPosition(glm::vec3 position);
     void SetRotation(float yaw, float pitch, float roll);
-    void SetProjection(ProjectionMode mode);
+    void SetProjection(ProjectionMode mode, float aspect);
     void Rotate(float yaw, float pitch, float roll);
     void Translate(glm::vec3 offset);
 
