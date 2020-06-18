@@ -20,8 +20,6 @@ void DebugLayer::OnUpdate(){
 }
 void DebugLayer::OnEvent(Event &e){}
 void DebugLayer::OnImguiRender(){
-    bool show = true;
-    ImGui::ShowDemoWindow(&show);
     ImGui::Begin("Debug info");
     
     float tot = 0.0f;

@@ -10,3 +10,9 @@
 [submodule "Rush-Engine/Libraries/imgui"]
 	path = Rush-Engine/Libraries/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "Rush-Engine/Libraries/entt"]
+	path = Rush-Engine/Libraries/entt
+	url = git@github.com:skypjack/entt.git
+[submodule "Rudder/Libraries/imgui_entt_entity_editor"]
+	path = Rudder/Libraries/imgui_entt_entity_editor
+	url = git@github.com:Green-Sky/imgui_entt_entity_editor.git
