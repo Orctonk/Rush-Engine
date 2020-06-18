@@ -1,4 +1,5 @@
 #include <Rush.h>
+#include <Rush/core/EntryPoint.h>
 #include <iostream>
 #include <string>
 
