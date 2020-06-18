@@ -1,7 +1,6 @@
 #include <RushVersion.h>
 
 #include "Rush/core/Application.h"
-#include "Rush/core/EntryPoint.h"
 #include "Rush/core/AbstractWindow.h"
 #include "Rush/core/Logger.h"
 #include "Rush/core/Time.h"
