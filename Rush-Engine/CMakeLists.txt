@@ -100,7 +100,7 @@ target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 
 # Add ImGui as dependency
 
-target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/imgui)
+target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/imgui)
 if(RUSH_OPENGL)
     add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
 else()
@@ -119,6 +119,10 @@ else()
     target_include_directories(Rush PRIVATE ${ASSIMP_INCLUDE_DIRS})
     target_link_libraries(Rush ${ASSIMP_LIBRARIES})
 endif()
+
+# Add EnTT as dependency
+add_subdirectory("${RUSH_DEPS_DIR}/entt")
+target_link_libraries(Rush EnTT::EnTT)
 
 # Add Window manager and renderer implementation as dependency
 if(RUSH_OPENGL)
