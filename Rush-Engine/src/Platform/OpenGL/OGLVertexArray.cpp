@@ -52,6 +52,7 @@ void OGLVertexArray::SetIndexBuffer(Shared<IndexBuffer> ib) {
     glBindVertexArray(m_VAO);
     m_IndexBuffer = ib;
     ib->Bind();
+    glBindVertexArray(0);
 }
 
 }
