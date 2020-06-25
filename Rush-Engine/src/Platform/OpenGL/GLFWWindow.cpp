@@ -81,6 +81,10 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
             EventQueue::GetInstance().PostEvent(new KeyboardReleaseEvent(key));
         }
     });
+    glfwSetCharCallback(m_Window, [](GLFWwindow *win, unsigned int character){
+        EventQueue::GetInstance().PostEvent(new KeyboardTypeEvent(character));
+    });
+
     glfwSetMouseButtonCallback(m_Window,[](GLFWwindow *win, int button, int action, int mods){
         if(action == GLFW_PRESS){
             EventQueue::GetInstance().PostEvent(new MousePressedEvent(button));
