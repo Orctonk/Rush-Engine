@@ -28,13 +28,16 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Framebuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/scene/SceneLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
                     ${RUSH_DEPS_DIR}/imgui/imgui.cpp  
                     ${RUSH_DEPS_DIR}/imgui/imgui_demo.cpp 
                     ${RUSH_DEPS_DIR}/imgui/imgui_draw.cpp 
                     ${RUSH_DEPS_DIR}/imgui/imgui_widgets.cpp 
+                    ${RUSH_DEPS_DIR}/imgui/misc/cpp/imgui_stdlib.cpp 
                     )
 
 # Add implementation specific sources
@@ -49,6 +52,7 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLRenderingAPI.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLFramebuffer.cpp
                     ${RUSH_DEPS_DIR}/imgui/examples/imgui_impl_opengl3.cpp
                     )
 else()
