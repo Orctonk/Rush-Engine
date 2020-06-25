@@ -41,6 +41,8 @@ public:
     glm::mat4 GetProjection() { return m_Projection; }
     glm::mat4 GetView() { return m_View; }
     glm::vec3 GetPosition() { return m_Position; }
+    glm::vec3 GetFront() { return m_Front; }
+    glm::vec3 GetRight() { return m_Right; }
 };
 
 }
