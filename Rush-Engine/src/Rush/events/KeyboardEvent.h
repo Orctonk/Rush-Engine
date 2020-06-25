@@ -34,5 +34,15 @@ public:
     virtual std::string GetString() const override { return "KeyboardReleaseEvent(" + std::to_string(keycode) + ")"; }
 };
 
+class KeyboardTypeEvent : public Event {
+public:
+    unsigned int typed;
+
+    KeyboardTypeEvent(unsigned int typed)
+    : typed(typed) {}
+    EVENT_BODY(KeyboardType);
+    virtual std::string GetString() const override { return "KeyboardTypeEvent(" + std::to_string(typed) + ")"; }
+};
+
 } 
 #endif // __KEYBOARDEVENT_H__

@@ -13,7 +13,7 @@ namespace Rush {
 enum class EventType{
     WindowOpen, WindowClose, WindowResize, WindowMove, WindowFocus,
     MouseMove, MouseScroll, MousePressed, MouseReleased,
-    KeyboardPress, KeyboardRelease, KeyboardRepeat,
+    KeyboardPress, KeyboardRelease, KeyboardRepeat, KeyboardType,
     ApplicationStart, ApplicationStop
 };
 
