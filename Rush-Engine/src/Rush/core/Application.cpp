@@ -5,6 +5,7 @@
 #include "Rush/graphics/Renderer.h"
 #include "Rush/events/EventQueue.h"
 #include "Rush/debug/DebugLayer.h"
+#include "Rush/scene/SceneLayer.h"
 
 namespace Rush {
 
@@ -32,10 +33,10 @@ Application::~Application(){
 }
 
 void Application::Run(){
+    Init();
     m_ImguiLayer = new ImguiLayer();
     PushOverlay(m_ImguiLayer);
     PushOverlay(new DebugLayer());
-    Init();
     m_Running = true;
     while(m_Running){
         Time::Update();
