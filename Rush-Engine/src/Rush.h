@@ -11,7 +11,9 @@
 #include "Rush/graphics/Shader.h"
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Renderer.h"
+#include "Rush/graphics/Framebuffer.h"
 
+#include "Rush/scene/Transform.h"
 #include "Rush/scene/Camera.h"
 #include "Rush/scene/Light.h"
 
