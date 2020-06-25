@@ -5,7 +5,6 @@
 #include "Rush/graphics/Renderer.h"
 #include "Rush/events/EventQueue.h"
 #include "Rush/debug/DebugLayer.h"
-#include "Rush/scene/SceneLayer.h"
 
 namespace Rush {
 
