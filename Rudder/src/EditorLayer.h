@@ -2,14 +2,22 @@
 #define __EDITORLAYER_H__
 
 #include <Rush.h>
-#include <imgui_entt_entity_editor.hpp>
+#include "EntityEditorWidget.h"
 
 class EditorLayer : public Rush::Layer {
 private:
-    MM::EntityEditor<entt::entity> m_EntEditor;
+    Rush::Shared<Rush::Shader> m_MeshShader;
+    Rush::Shared<Rush::Shader> m_LightingShader;
+    Rush::Shared<Rush::Shader> m_LightBoxShader;
+    Rush::Shared<Rush::Texture> m_Texture;
+    Rush::Unique<Rush::Framebuffer> m_GBuffer;
+    Rush::Camera m_EditorCamera;
     entt::entity m_SelectedEnt;
+    EntityEditor m_EE;
+    bool m_Renaming;
 
-    void RenderEntity(entt::registry &reg,const entt::entity e);
+    void RenderEntity(const entt::entity e);
+    bool KeyPressHandle(Rush::KeyboardPressEvent &e);
 public:
     EditorLayer();
     ~EditorLayer();
