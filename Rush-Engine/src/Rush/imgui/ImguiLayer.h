@@ -13,6 +13,7 @@ class RUSH_API ImguiLayer : public Layer {
 private:
     bool ImguiKeyPressHandle(KeyboardPressEvent &e);
     bool ImguiKeyReleaseHandle(KeyboardReleaseEvent &e);
+    bool ImguiKeyTypeHandle(KeyboardTypeEvent &e);
     bool ImguiMouseScrollHandle(MouseScrollEvent &e);
     bool ImguiMouseMoveHandle(MouseMoveEvent &e);
     bool ImguiMousePressHandle(MousePressedEvent &e);

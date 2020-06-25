@@ -65,6 +65,7 @@ void ImguiLayer::OnUpdate() {
 void ImguiLayer::OnEvent(Event &e) { 
     e.Dispatch<KeyboardPressEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyPressHandle));
     e.Dispatch<KeyboardReleaseEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyReleaseHandle));
+    e.Dispatch<KeyboardTypeEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyTypeHandle));
     e.Dispatch<MouseScrollEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseScrollHandle));
     e.Dispatch<MouseMoveEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMouseMoveHandle));
     e.Dispatch<MousePressedEvent>(RUSH_BIND_FN(ImguiLayer::ImguiMousePressHandle));
@@ -103,6 +104,13 @@ bool ImguiLayer::ImguiKeyReleaseHandle(KeyboardReleaseEvent &e){
     io.KeyAlt = io.KeysDown[RUSH_KEY_LEFT_ALT] || io.KeysDown[RUSH_KEY_RIGHT_ALT];
     io.KeySuper = io.KeysDown[RUSH_KEY_LEFT_SUPER] || io.KeysDown[RUSH_KEY_RIGHT_SUPER];
 
+    return false;
+}
+
+bool ImguiLayer::ImguiKeyTypeHandle(KeyboardTypeEvent &e){
+    ImGuiIO &io = ImGui::GetIO();
+
+    io.AddInputCharacterUTF16(e.typed);
     return false;
 }
 
