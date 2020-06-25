@@ -2,7 +2,9 @@
 
 namespace Rush {
 
-LayerStack::LayerStack() { }
+LayerStack::LayerStack() {
+    m_LayerInsertIndex = 0;
+ }
 
 LayerStack::~LayerStack() { 
     for(auto l : m_Layers)
@@ -10,14 +12,15 @@ LayerStack::~LayerStack() {
 }
 
 void LayerStack::PushLayer(Layer *layer){
-    m_LayersEnd = m_Layers.emplace(m_LayersEnd, layer);
+    m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
+    m_LayerInsertIndex++;
 }
 
 void LayerStack::PopLayer(Layer *layer){
-    auto it = std::find(begin(),m_LayersEnd,layer);
-    if(it != m_LayersEnd){
+    auto it = std::find(m_Layers.begin(),m_Layers.end(),layer);
+    if(it != m_Layers.end()){
         m_Layers.erase(it);
-        m_LayersEnd--;
+        m_LayerInsertIndex--;
     }
 }
 
@@ -26,7 +29,7 @@ void LayerStack::PushOverlay(Layer *layer){
 }
 
 void LayerStack::PopOverlay(Layer *layer){
-    auto it = std::find(m_LayersEnd,end(),layer);
+    auto it = std::find(m_Layers.begin(),m_Layers.end(),layer);
     if(it != end()){
         m_Layers.erase(it);
     }

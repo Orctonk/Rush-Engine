@@ -26,7 +26,7 @@ public:
     void PopOverlay(Layer *layer);
     
 private:
-    iterator m_LayersEnd;
+    int m_LayerInsertIndex;
     std::vector<Layer *> m_Layers;
 };
     
