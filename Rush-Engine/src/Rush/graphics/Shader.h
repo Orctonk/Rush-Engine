@@ -32,7 +32,7 @@ public:
     virtual void Bind() = 0;
     virtual void Unbind() = 0;
 
-    virtual void SetUniform(std::string name, ShaderData type, void *data) = 0;
+    virtual void SetUniform(std::string name, ShaderData type, const void *data) = 0;
 
     static Shared<Shader> Create(std::string shaderPath);
 };
