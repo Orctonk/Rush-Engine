@@ -12,12 +12,14 @@ private:
     uint32_t m_Texture;
 
 public:
+    OGLTexture(uint32_t width, uint32_t height, uint8_t precision);
     OGLTexture(std::string filepath);
     ~OGLTexture();
     OGLTexture(OGLTexture &) = delete;
     OGLTexture(const OGLTexture &) = delete;
 
-    void Bind();
+    void Bind(uint8_t textureSlot) override;
+    uint32_t GetID(){ return m_Texture; }
 };
     
 } // namespace Rush

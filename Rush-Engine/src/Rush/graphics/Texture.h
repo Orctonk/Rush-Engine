@@ -8,13 +8,15 @@ namespace Rush {
 
 class RUSH_API Texture {
 protected:
-    Texture(std::string filepath);
+    Texture();
 
 public:
     virtual ~Texture();
 
     Texture(Texture &) = delete;
     Texture(const Texture &) = delete;
+
+    virtual void Bind(uint8_t textureSlot) = 0;
 
     static Shared<Texture> Create(std::string filepath);
 };

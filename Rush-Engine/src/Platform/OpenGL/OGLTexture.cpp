@@ -8,8 +8,21 @@
 
 namespace Rush {
 
-OGLTexture::OGLTexture(std::string filepath) 
-:   Texture(filepath) {
+OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision){
+    glGenTextures(1,&m_Texture);
+    glBindTexture(GL_TEXTURE_2D,m_Texture);
+    uint32_t format, type;
+    switch(precision){
+        case 8: format = GL_RGBA; type = GL_UNSIGNED_BYTE; break;
+        case 16: format = GL_RGBA16F; type = GL_FLOAT; break;
+        default: RUSH_ASSERT(false);
+    }
+    glTexImage2D(GL_TEXTURE_2D,0,format,width,height,0,GL_RGBA,type,NULL);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+OGLTexture::OGLTexture(std::string filepath) {
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
 
@@ -18,6 +31,8 @@ OGLTexture::OGLTexture(std::string filepath)
     if(data){
         glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
         glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     } else {
         Logger::Error("Failed to load texture '" + filepath + "'");
     }
@@ -28,7 +43,8 @@ OGLTexture::~OGLTexture(){
     glDeleteTextures(1,&m_Texture);
 }
 
-void OGLTexture::Bind(){
+void OGLTexture::Bind(uint8_t textureSlot){
+    glActiveTexture(GL_TEXTURE0 + textureSlot);
     glBindTexture(GL_TEXTURE_2D, m_Texture);
 }
 

@@ -8,7 +8,7 @@
 
 namespace Rush {
 
-Texture::Texture(std::string filepath) {}
+Texture::Texture() {}
 
 Texture::~Texture() {}
 
