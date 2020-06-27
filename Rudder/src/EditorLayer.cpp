@@ -1,6 +1,7 @@
 #include "EditorLayer.h"
 
 #include "EditorComponents.h"
+#include "FileBrowser.h"
 
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/Keycodes.h"
@@ -8,6 +9,7 @@
 #include "Rush/graphics/Renderer.h"
 #include "Rush/scene/Mesh.h"
 #include "Rush/scene/Transform.h"
+#include "Rush/scene/Material.h"
 #include "Rush/scene/Light.h"
 
 #include <functional>
@@ -19,48 +21,48 @@
 #include <misc/cpp/imgui_stdlib.h>
 
 float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+        // positions          // normals           // Tangent           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f
 };
 unsigned int indices[] = {  // note that we start from 0!
 	0, 1, 2, 3, 4, 5,    // Back face
@@ -76,11 +78,17 @@ EditorLayer::~EditorLayer() {}
 
 void EditorLayer::OnAttach() {
     using namespace Rush;
-    m_LightBoxShader = Shader::Create("res/lightBoxShader.glsl");
-    m_LightingShader = Shader::Create("res/lightingPass.glsl");
-    m_MeshShader = Shader::Create("res/geometryPass.glsl");
+    m_LightBoxShader = ResourceLoader::LoadShader("res/lightBoxShader.glsl");
+    m_LightingShader = ResourceLoader::LoadShader("res/lightingPass.glsl");
+    m_BasicShader = ResourceLoader::LoadShader("res/basicShader.glsl");
+    m_MaterialShader = ResourceLoader::LoadShader("res/materialShader.glsl");
+    int i = 0;
+    m_MaterialShader->SetUniform("u_Material.diffuse",ShaderData::INT,&i);
+    i = 1;
+    m_MaterialShader->SetUniform("u_Material.specular",ShaderData::INT,&i);
 
-    m_Texture = Texture::Create("res/container.jpg");
+    m_WhiteTex = ResourceLoader::LoadTexture("res/white.png");
+    m_BlueTex = ResourceLoader::LoadTexture("res/blue.png");
     m_GBuffer = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
         Application::GetInstance().GetWindow()->GetHeight(),
@@ -96,6 +104,7 @@ void EditorLayer::OnAttach() {
 
     Shared<VertexBuffer> vb = VertexBuffer::Create(vertices, sizeof(vertices));
     vb->SetInterleavedLayout({
+        Rush::ShaderData::FLOAT3,
         Rush::ShaderData::FLOAT3,
         Rush::ShaderData::FLOAT3,
         Rush::ShaderData::FLOAT2
@@ -116,6 +125,7 @@ void EditorLayer::OnAttach() {
 
     auto box = reg.create();
     auto &m = reg.emplace<Mesh>(box,VertexArray::Create());
+    reg.emplace<Material>(box,nullptr,nullptr,nullptr,8.0f);
     m.vertices->AddVertexBuffer(vb);
     m.vertices->SetIndexBuffer(ib);
 
@@ -128,6 +138,61 @@ void EditorLayer::OnAttach() {
         ImGui::DragFloat3("Position", &t.translation.x, 0.01f);
         ImGui::DragFloat3("Rotation", &t.rotation.x, 1.0f);
         ImGui::DragFloat3("Scale", &t.scale.x, 0.01f);
+    });
+    m_EE.Register<Material>("Material",[](entt::registry &reg, entt::entity e){
+        auto& m = reg.get<Material>(e);
+        ImGui::Text("Diffuse:  ");
+        ImGui::SameLine();
+        if(m.diffuseTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button( m.diffuseTexture->GetDebugPath().c_str());
+
+        static FileBrowser diffDialog;
+        if(ImGui::IsItemClicked()){
+            diffDialog.SetTitle("Select Diffuse map...");
+            diffDialog.Open();
+        }
+        diffDialog.Render();
+        if(diffDialog.Finished()){
+            m.diffuseTexture = ResourceLoader::LoadTexture(diffDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::Text("Specular: ");
+        ImGui::SameLine();
+        if(m.specularTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button(m.specularTexture->GetDebugPath().c_str());
+
+        static FileBrowser specDialog;
+        if(ImGui::IsItemClicked()){
+            specDialog.SetTitle("Select Specular map...");
+            specDialog.Open();
+        }
+        specDialog.Render();
+        if(specDialog.Finished()){
+            m.specularTexture = ResourceLoader::LoadTexture(specDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::Text("Normal: ");
+        ImGui::SameLine();
+        if(m.normalTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button(m.normalTexture->GetDebugPath().c_str());
+
+        static FileBrowser normDialog;
+        if(ImGui::IsItemClicked()){
+            normDialog.SetTitle("Select Normal map...");
+            normDialog.Open();
+        }
+        normDialog.Render();
+        if(normDialog.Finished()){
+            m.specularTexture = ResourceLoader::LoadTexture(normDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::DragFloat("Shininess",&m.shininess,0.1f,0.0f);
     });
     m_EE.Register<DirectionalLight>("Directional light",[](entt::registry &reg,entt::entity e){
         auto& l = reg.get<DirectionalLight>(e);
@@ -142,7 +207,7 @@ void EditorLayer::OnAttach() {
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
         ImGui::ColorEdit3("Specular", &l.specular.r);
-        ImGui::DragFloat3("Coef.", &l.constant,0.01f);
+        ImGui::DragFloat3("Coef.", &l.constant,0.01f,0.0f);
     });
 }
 void EditorLayer::OnDetach() {}
@@ -151,7 +216,6 @@ void EditorLayer::OnUpdate() {
     auto &reg = Application::GetInstance().GetRegistry();
     m_GBuffer->Bind();
     Renderer::GetAPI()->Clear();
-    m_Texture->Bind(0);
     Renderer::BeginScene(m_EditorCamera);
     for(auto e : reg.view<Mesh>()){
         Transform &t = reg.get_or_emplace<Transform>(e);
@@ -160,7 +224,20 @@ void EditorLayer::OnUpdate() {
         model = glm::translate(glm::mat4(1.0f),t.translation) * model;
         model = glm::scale(model,t.scale);
 
-        Renderer::Submit(m_MeshShader,m.vertices,model);
+        if(reg.has<Material>(e)){
+            Material &mat = reg.get<Material>(e);
+            if(mat.diffuseTexture != nullptr) mat.diffuseTexture->Bind(0); else m_WhiteTex->Bind(0);
+            if(mat.specularTexture != nullptr) mat.specularTexture->Bind(1); else m_WhiteTex->Bind(1);
+            if(mat.normalTexture != nullptr) mat.normalTexture->Bind(2); else m_BlueTex->Bind(2);
+            m_MaterialShader->SetUniform("u_Material.shininess",ShaderData::FLOAT,&mat.shininess);
+            
+            Renderer::Submit(m_MaterialShader,m.vertices,model);
+        } else {
+            m_WhiteTex->Bind(0);
+            m_WhiteTex->Bind(1);
+            m_BlueTex->Bind(2);
+            Renderer::Submit(m_MaterialShader,m.vertices,model);
+        }
     }
     Renderer::EndScene();
     m_GBuffer->Unbind();

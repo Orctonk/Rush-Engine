@@ -6,10 +6,12 @@
 
 class EditorLayer : public Rush::Layer {
 private:
-    Rush::Shared<Rush::Shader> m_MeshShader;
+    Rush::Shared<Rush::Shader> m_BasicShader;
+    Rush::Shared<Rush::Shader> m_MaterialShader;
     Rush::Shared<Rush::Shader> m_LightingShader;
     Rush::Shared<Rush::Shader> m_LightBoxShader;
-    Rush::Shared<Rush::Texture> m_Texture;
+    Rush::Shared<Rush::Texture> m_WhiteTex;
+    Rush::Shared<Rush::Texture> m_BlueTex;
     Rush::Unique<Rush::Framebuffer> m_GBuffer;
     Rush::Camera m_EditorCamera;
     entt::entity m_SelectedEnt;
