@@ -7,8 +7,10 @@
 namespace Rush {
 
 class RUSH_API Texture {
+private:
+    std::string m_DebugPath;
 protected:
-    Texture();
+    Texture(std::string filepath);
 
 public:
     virtual ~Texture();
@@ -19,6 +21,8 @@ public:
     virtual void Bind(uint8_t textureSlot) = 0;
 
     static Shared<Texture> Create(std::string filepath);
+
+    std::string GetDebugPath() { return m_DebugPath; }
 };
     
 } // namespace Rush

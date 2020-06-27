@@ -8,7 +8,8 @@
 
 namespace Rush {
 
-OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision){
+OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision)
+: Texture("Created texture") {
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
     uint32_t format, type;
@@ -22,14 +23,18 @@ OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision){
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-OGLTexture::OGLTexture(std::string filepath) {
+OGLTexture::OGLTexture(std::string filepath)
+: Texture(filepath) {
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
 
     int width, height, nrChannels;
     unsigned char *data = stbi_load(filepath.c_str(),&width,&height,&nrChannels,0);
     if(data){
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+        if(nrChannels == 3)
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+        else if(nrChannels == 4)
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);

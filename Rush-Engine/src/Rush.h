@@ -4,6 +4,7 @@
 #include "Rush/core/AbstractWindow.h"
 #include "Rush/core/Logger.h"
 #include "Rush/core/Time.h"
+#include "Rush/core/ResourceLoader.h"
 
 #include "Rush/graphics/IndexBuffer.h"
 #include "Rush/graphics/VertexBuffer.h"

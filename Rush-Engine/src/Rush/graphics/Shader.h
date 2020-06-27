@@ -22,6 +22,8 @@ enum class RUSH_API ShaderData{
 };
 
 class RUSH_API Shader {
+private:
+    std::string m_DebugPath;
 protected:
     Shader(std::string shaderPath);
 public:
