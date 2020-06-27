@@ -20,6 +20,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Layer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/LayerStack.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Time.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/ResourceLoader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Texture.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
@@ -31,6 +32,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Framebuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/SceneLayer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/scene/Model.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
                     ${RUSH_DEPS_DIR}/imgui/imgui.cpp  
