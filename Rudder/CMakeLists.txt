@@ -9,6 +9,7 @@ set(RUDDER_SOURCES
         ${RUDDER_SOURCE_DIR}/EditorApplication.cpp
         ${RUDDER_SOURCE_DIR}/EditorLayer.cpp
         ${RUDDER_SOURCE_DIR}/EntityEditorWidget.cpp
+        ${RUDDER_SOURCE_DIR}/FileBrowser.cpp
     )
 
 add_executable(Rudder ${RUDDER_SOURCES})
