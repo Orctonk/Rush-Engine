@@ -1,3 +1,6 @@
+#ifndef __MATERIAL_H__
+#define __MATERIAL_H__
+
 #include "Rush/core/Core.h"
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Shader.h"
@@ -13,3 +16,5 @@ struct Material {
 };
 
 }
+
+#endif // __MATERIAL_H__

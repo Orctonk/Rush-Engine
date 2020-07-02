@@ -44,7 +44,7 @@ OGLShader::OGLShader(std::string shaderPath)
     m_Shader = glCreateProgram();
     std::ifstream fs;
     fs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    uint32_t shaders[SHADER_TYPE_COUNT];
+    uint32_t shaders[SHADER_TYPE_COUNT] = {0,0,0};
     try{
         fs.open(shaderPath);
         std::stringstream ss;

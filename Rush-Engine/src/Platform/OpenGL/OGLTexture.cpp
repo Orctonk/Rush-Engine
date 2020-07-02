@@ -29,6 +29,7 @@ OGLTexture::OGLTexture(std::string filepath)
     glBindTexture(GL_TEXTURE_2D,m_Texture);
 
     int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(1);
     unsigned char *data = stbi_load(filepath.c_str(),&width,&height,&nrChannels,0);
     if(data){
         if(nrChannels == 3)

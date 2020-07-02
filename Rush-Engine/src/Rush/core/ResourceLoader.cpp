@@ -2,10 +2,10 @@
 
 namespace Rush {
 
-std::unordered_map<const char *,Shared<Texture>> ResourceLoader::s_TexCache;
-std::unordered_map<const char *,Shared<Shader>> ResourceLoader::s_ShaderCache;
-std::unordered_map<const char *,Shared<VertexBuffer>> ResourceLoader::s_VertexCache;
-std::unordered_map<const char *,Shared<IndexBuffer>> ResourceLoader::s_IndexCache;
+std::unordered_map<std::string,Shared<Texture>> ResourceLoader::s_TexCache;
+std::unordered_map<std::string,Shared<Shader>> ResourceLoader::s_ShaderCache;
+std::unordered_map<std::string,Shared<VertexBuffer>> ResourceLoader::s_VertexCache;
+std::unordered_map<std::string,Shared<IndexBuffer>> ResourceLoader::s_IndexCache;
 
 void ResourceLoader::Init(){
 
@@ -15,7 +15,7 @@ void ResourceLoader::Shutdown(){
 
 }
 
-Shared<Texture> ResourceLoader::LoadTexture(const char *path){
+Shared<Texture> ResourceLoader::LoadTexture(std::string path){
     auto cachedTex = s_TexCache.find(path);
     if(cachedTex != s_TexCache.end()){
         return cachedTex->second;
@@ -26,7 +26,7 @@ Shared<Texture> ResourceLoader::LoadTexture(const char *path){
     }
 }
 
-Shared<Shader> ResourceLoader::LoadShader(const char *path){
+Shared<Shader> ResourceLoader::LoadShader(std::string path){
     auto cachedShader = s_ShaderCache.find(path);
     if(cachedShader != s_ShaderCache.end()){
         return cachedShader->second;
@@ -37,8 +37,8 @@ Shared<Shader> ResourceLoader::LoadShader(const char *path){
     }
 }
 
-Unique<VertexArray> ResourceLoader::LoadModel(const char *path){
-    
+Shared<Model> ResourceLoader::LoadModel(std::string path){
+    return CreateShared<Model>(path);
 }
 
 

@@ -1,4 +1,5 @@
 #include <string>
+#include <glad/glad.h>
 
 #include "GLFWWindow.h"
 
@@ -15,6 +16,49 @@ static void glfwErrorCallback(int errorCode, const char * message){
     RUSH_LOG_ERROR("(" + std::to_string(errorCode) + ") " + message);
 }
 
+static void APIENTRY glDebugOutput(  GLenum source, 
+                                        GLenum type, 
+                                        unsigned int id, 
+                                        GLenum severity, 
+                                        GLsizei length, 
+                                        const char *message, 
+                                        const void *userParam){
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+
+    std::string messagestr = std::string("OpenGL Message (") + std::to_string(id) + "): " +  message;
+    std::string sourcestr;
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:             sourcestr = std::string("API"); break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   sourcestr = std::string("Window System"); break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: sourcestr = std::string("Shader Compiler"); break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:     sourcestr = std::string("Third Party"); break;
+        case GL_DEBUG_SOURCE_APPLICATION:     sourcestr = std::string("Application"); break;
+        case GL_DEBUG_SOURCE_OTHER:           sourcestr = std::string("Other"); break;
+    }
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:               messagestr += std::string(" Type: Error"); break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: messagestr += std::string(" Type: Deprecated Behaviour"); break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  messagestr += std::string(" Type: Undefined Behaviour"); break; 
+        case GL_DEBUG_TYPE_PORTABILITY:         messagestr += std::string(" Type: Portability"); break;
+        case GL_DEBUG_TYPE_PERFORMANCE:         messagestr += std::string(" Type: Performance"); break;
+        case GL_DEBUG_TYPE_MARKER:              messagestr += std::string(" Type: Marker"); break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:          messagestr += std::string(" Type: Push Group"); break;
+        case GL_DEBUG_TYPE_POP_GROUP:           messagestr += std::string(" Type: Pop Group"); break;
+        case GL_DEBUG_TYPE_OTHER:               messagestr += std::string(" Type: Other"); break;
+    }
+    
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:         Logger::Error(messagestr,sourcestr);; break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       Logger::Warning(messagestr,sourcestr);; break;
+        case GL_DEBUG_SEVERITY_LOW:          Logger::Info(messagestr,sourcestr);; break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: Logger::Trace(messagestr,sourcestr);; break;
+    }
+}
+
 int GLFWWindow::s_WindowCount = 0;
 
 GLFWWindow::GLFWWindow(const WindowProperties &properties) :
@@ -29,6 +73,9 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_SAMPLES,4);
+#ifdef RUSH_DEBUG
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT,true);
+#endif
 
 		glfwSetErrorCallback(glfwErrorCallback);
 		RUSH_LOG_INFO("GLFW initialized");
@@ -47,6 +94,17 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     
     m_Context = CreateUnique<GLFWContext>(m_Window);
     m_Context->Init();
+
+#ifdef RUSH_DEBUG
+    GLint flags; 
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT){
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+        glDebugMessageCallback(glDebugOutput, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);        
+    }
+#endif
 
     Move(m_Properties.xPos,m_Properties.yPos);
     SetWindowMode(m_Properties.windowMode);
