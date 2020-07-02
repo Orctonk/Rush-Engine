@@ -19,6 +19,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <glad/glad.h>
 
 float vertices[] = {
         // positions          // normals           // Tangent           // texture coords
@@ -64,13 +65,13 @@ float vertices[] = {
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f
 };
-unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 2, 3, 4, 5,    // Back face
-	6, 7, 8, 9, 10, 11,    // Left face
-	12, 13, 14, 15, 16, 17,    // Back face
-	18, 19, 20, 21, 22, 23,    // Top face
-	24, 25, 26, 27, 28, 29,    // Bottom face
-	30, 31, 32, 33, 34, 35    // Front face
+unsigned int indices[] = {      // note that we start from 0!
+	0, 1, 2, 3, 4, 5,           // Back face
+	6, 7, 8, 9, 10, 11,         // Left face
+	12, 13, 14, 15, 16, 17,     // Back face
+	18, 19, 20, 21, 22, 23,     // Top face
+	24, 25, 26, 27, 28, 29,     // Bottom face
+	30, 31, 32, 33, 34, 35      // Front face
 }; 
 
 EditorLayer::EditorLayer() : m_EditorCamera(Rush::ProjectionMode::PERSPECTIVE, 1024.0f/720.0f) {}
@@ -86,6 +87,8 @@ void EditorLayer::OnAttach() {
     m_MaterialShader->SetUniform("u_Material.diffuse",ShaderData::INT,&i);
     i = 1;
     m_MaterialShader->SetUniform("u_Material.specular",ShaderData::INT,&i);
+    i = 2;
+    m_MaterialShader->SetUniform("u_Material.normal",ShaderData::INT,&i);
 
     m_WhiteTex = ResourceLoader::LoadTexture("res/white.png");
     m_BlueTex = ResourceLoader::LoadTexture("res/blue.png");
@@ -124,8 +127,9 @@ void EditorLayer::OnAttach() {
     l2.position = {1.0f,1.0f,1.0f};
 
     auto box = reg.create();
-    auto &m = reg.emplace<Mesh>(box,VertexArray::Create());
-    reg.emplace<Material>(box,nullptr,nullptr,nullptr,8.0f);
+    m_Model = ResourceLoader::LoadModel("res/backpack/backpack.obj");
+    auto &mater = reg.emplace<Material>(box,nullptr,nullptr,nullptr,8.0f);
+    auto &m = reg.emplace<Mesh>(box,VertexArray::Create(),mater);
     m.vertices->AddVertexBuffer(vb);
     m.vertices->SetIndexBuffer(ib);
 
@@ -189,7 +193,7 @@ void EditorLayer::OnAttach() {
         }
         normDialog.Render();
         if(normDialog.Finished()){
-            m.specularTexture = ResourceLoader::LoadTexture(normDialog.GetSelectedFile().c_str());
+            m.normalTexture = ResourceLoader::LoadTexture(normDialog.GetSelectedFile().c_str());
         }
 
         ImGui::DragFloat("Shininess",&m.shininess,0.1f,0.0f);
@@ -209,9 +213,11 @@ void EditorLayer::OnAttach() {
         ImGui::ColorEdit3("Specular", &l.specular.r);
         ImGui::DragFloat3("Coef.", &l.constant,0.01f,0.0f);
     });
+    
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
+    
     using namespace Rush;
     auto &reg = Application::GetInstance().GetRegistry();
     m_GBuffer->Bind();
@@ -224,21 +230,30 @@ void EditorLayer::OnUpdate() {
         model = glm::translate(glm::mat4(1.0f),t.translation) * model;
         model = glm::scale(model,t.scale);
 
-        if(reg.has<Material>(e)){
-            Material &mat = reg.get<Material>(e);
-            if(mat.diffuseTexture != nullptr) mat.diffuseTexture->Bind(0); else m_WhiteTex->Bind(0);
-            if(mat.specularTexture != nullptr) mat.specularTexture->Bind(1); else m_WhiteTex->Bind(1);
-            if(mat.normalTexture != nullptr) mat.normalTexture->Bind(2); else m_BlueTex->Bind(2);
-            m_MaterialShader->SetUniform("u_Material.shininess",ShaderData::FLOAT,&mat.shininess);
-            
-            Renderer::Submit(m_MaterialShader,m.vertices,model);
-        } else {
-            m_WhiteTex->Bind(0);
-            m_WhiteTex->Bind(1);
-            m_BlueTex->Bind(2);
+        m_MaterialShader->Bind();
+        for(auto &m : m_Model->getMeshes()){
+            m.material.diffuseTexture->Bind(0);
+            m.material.specularTexture->Bind(1);
+            m.material.normalTexture->Bind(2);
             Renderer::Submit(m_MaterialShader,m.vertices,model);
         }
+        // if(reg.has<Material>(e)){
+        //     Material &mat = reg.get<Material>(e);
+        //     if(mat.diffuseTexture != nullptr) mat.diffuseTexture->Bind(0); else m_WhiteTex->Bind(0);
+        //     if(mat.specularTexture != nullptr) mat.specularTexture->Bind(1); else m_WhiteTex->Bind(1);
+        //     if(mat.normalTexture != nullptr) mat.normalTexture->Bind(2); else m_BlueTex->Bind(2);
+        //     m_MaterialShader->SetUniform("u_Material.shininess",ShaderData::FLOAT,&mat.shininess);
+            
+        //     Renderer::Submit(m_MaterialShader,m.vertices,model);
+        // } else {
+        //     m_WhiteTex->Bind(0);
+        //     m_WhiteTex->Bind(1);
+        //     m_BlueTex->Bind(2);
+        //     Renderer::Submit(m_MaterialShader,m.vertices,model);
+        // }
     }
+
+    
     Renderer::EndScene();
     m_GBuffer->Unbind();
 

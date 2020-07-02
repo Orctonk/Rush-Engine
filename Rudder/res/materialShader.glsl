@@ -18,10 +18,10 @@ void main()
     FragPos = vec3(u_Model * vec4(aPos, 1.0)); 
     uv = uvPos;
 
-    normal = mat3(transpose(inverse(u_Model))) * aNormal;
+    normal = normalize(mat3(transpose(inverse(u_Model))) * aNormal);
 
-    vec3 T = normalize(vec3(u_Model * vec4(aTangent,   0.0)));;
-    vec3 N = normalize(vec3(u_Model * vec4(aNormal,   0.0)));;
+    vec3 T = normalize(mat3(transpose(inverse(u_Model))) * aTangent);;
+    vec3 N = normalize(mat3(transpose(inverse(u_Model))) * aNormal);;
     vec3 B = cross(N,T);
     TBN = mat3(T,B,N);
     gl_Position = u_ViewProjection * u_Model * vec4(aPos, 1.0);
@@ -52,9 +52,9 @@ uniform Material u_Material;
 void main() {   
     gPosition = vec4(FragPos,1.0);
 
-    // vec3 normal = //texture(u_Material.normal,uv).rgb;
+    // vec3 normal = texture(u_Material.normal,uv).rgb;
     // normal = normal * 2 - 1;
-    // gNormal = vec4(T*2-1,1.0);
+    // gNormal = vec4(TBN * normal, 1.0);
     gNormal = vec4(normal,1.0);
 
     gColor = vec4(texture(u_Material.diffuse,uv).rgb,texture(u_Material.specular,uv).r);

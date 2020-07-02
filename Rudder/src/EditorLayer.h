@@ -6,6 +6,7 @@
 
 class EditorLayer : public Rush::Layer {
 private:
+    Rush::Shared<Rush::Model> m_Model;
     Rush::Shared<Rush::Shader> m_BasicShader;
     Rush::Shared<Rush::Shader> m_MaterialShader;
     Rush::Shared<Rush::Shader> m_LightingShader;
