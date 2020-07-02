@@ -34,12 +34,8 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/SceneLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Model.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiImpl.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
-                    ${RUSH_DEPS_DIR}/imgui/imgui.cpp  
-                    ${RUSH_DEPS_DIR}/imgui/imgui_demo.cpp 
-                    ${RUSH_DEPS_DIR}/imgui/imgui_draw.cpp 
-                    ${RUSH_DEPS_DIR}/imgui/imgui_widgets.cpp 
-                    ${RUSH_DEPS_DIR}/imgui/misc/cpp/imgui_stdlib.cpp 
                     )
 
 # Add implementation specific sources
@@ -55,7 +51,6 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLRenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLFramebuffer.cpp
-                    ${RUSH_DEPS_DIR}/imgui/examples/imgui_impl_opengl3.cpp
                     )
 else()
     message(FATAL_ERROR "No window manager provided!")
@@ -107,11 +102,6 @@ target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 # Add ImGui as dependency
 
 target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/imgui)
-if(RUSH_OPENGL)
-    add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
-else()
-    message(ERROR "No ImGui rendering implementation provided!")
-endif()
 
 # Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
