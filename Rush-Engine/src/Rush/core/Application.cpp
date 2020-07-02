@@ -2,6 +2,7 @@
 
 #include "Time.h"
 #include "Logger.h"
+#include "ResourceLoader.h"
 #include "Rush/graphics/Renderer.h"
 #include "Rush/events/EventQueue.h"
 #include "Rush/debug/DebugLayer.h"
@@ -18,6 +19,7 @@ Application::Application(){
     WindowProperties props;
 	m_Window = AbstractWindow::CreateWindow(props);
     Renderer::Init();
+    ResourceLoader::Init();
 	RUSH_LOG_INFO("Initialization completed");
 	Logger::SetAlias("Main");
 }
@@ -25,6 +27,7 @@ Application::Application(){
 Application::~Application(){
     Logger::SetAlias("Exit");
 	RUSH_LOG_INFO("Exiting Rush");
+    ResourceLoader::Shutdown();
     Renderer::Shutdown();
 	RUSH_LOG_INFO("Exit completed");
 	Logger::Destroy();

@@ -1,5 +1,8 @@
 #include "ResourceLoader.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 namespace Rush {
 
 std::unordered_map<std::string,Shared<Texture>> ResourceLoader::s_TexCache;
@@ -8,7 +11,7 @@ std::unordered_map<std::string,Shared<VertexBuffer>> ResourceLoader::s_VertexCac
 std::unordered_map<std::string,Shared<IndexBuffer>> ResourceLoader::s_IndexCache;
 
 void ResourceLoader::Init(){
-
+    stbi_set_flip_vertically_on_load(1);
 }
 
 void ResourceLoader::Shutdown(){
