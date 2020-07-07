@@ -81,6 +81,7 @@ void main() {
     for(int i = 0; i < DLIGHT_COUNT; i++)
         if(u_DLights[i].activated)
             result += CalcDirLight(u_DLights[i],norm,viewDir);
+
     for(int i = 0; i < PLIGHT_COUNT; i++)
         if(u_PLights[i].activated)
             result += CalcPointLight(u_PLights[i],norm,fragPos,viewDir);
@@ -101,8 +102,8 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
     // combine results
-    vec3 ambient = light.ambient * vec3(texture(gColor, uv));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(gColor, uv));
+    vec3 ambient = light.ambient * vec3(texture(gColor, uv).rgb);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(gColor, uv).rgb);
     vec3 specular = light.specular * spec * vec3(texture(gColor, uv).a);
     return (ambient + diffuse + specular);
 }
@@ -141,8 +142,8 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
     float epsilon = light.cutoff - light.outerCutoff;
     float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);
     // combine results
-    vec3 ambient = light.ambient * vec3(texture(gColor, uv));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(gColor, uv));
+    vec3 ambient = light.ambient * vec3(texture(gColor, uv).rgb);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(gColor, uv).rgb);
     vec3 specular = light.specular * spec * vec3(texture(gColor, uv).a);
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
