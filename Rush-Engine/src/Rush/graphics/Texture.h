@@ -19,6 +19,7 @@ public:
     Texture(const Texture &) = delete;
 
     virtual void Bind(uint8_t textureSlot) = 0;
+    virtual uint32_t GetID() = 0;
 
     static Shared<Texture> Create(std::string filepath);
 

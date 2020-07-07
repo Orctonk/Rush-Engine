@@ -19,7 +19,7 @@ public:
     OGLTexture(const OGLTexture &) = delete;
 
     void Bind(uint8_t textureSlot) override;
-    uint32_t GetID(){ return m_Texture; }
+    uint32_t GetID() override { return m_Texture; }
 };
     
 } // namespace Rush
