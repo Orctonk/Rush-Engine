@@ -13,7 +13,7 @@ void Camera::recalcCamera(){
     m_Right = glm::normalize(glm::cross(m_Front, glm::vec3(0,1,0)));
     glm::vec3 up = glm::normalize(glm::cross(m_Right,m_Front));
 
-    m_View = glm::lookAt(m_Position,m_Position - m_Front,glm::vec3(0,1,0));
+    m_View = glm::lookAt(m_Position,m_Position + m_Front,glm::vec3(0,1,0));
     m_VP = m_Projection * m_View;
 }
 
