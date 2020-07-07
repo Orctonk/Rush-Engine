@@ -16,7 +16,7 @@ struct WindowProperties{
     char *m_Title = nullptr;
     WindowMode windowMode = WindowMode::WINDOWED;
     int xPos = 0, yPos = 0;
-    int width = 1024, height = 768;
+    uint32_t width = 1024, height = 768;
 };
 
 class AbstractWindow{
@@ -33,8 +33,8 @@ public:
     virtual void Update() = 0;
     virtual void SetVSync(bool enable) = 0;
 
-    int GetWidth() { return m_Properties.width; }
-    int GetHeight() { return m_Properties.height; }
+    uint32_t GetWidth() { return m_Properties.width; }
+    uint32_t GetHeight() { return m_Properties.height; }
 
     static Unique<AbstractWindow> CreateWindow(const WindowProperties &properties);
 };

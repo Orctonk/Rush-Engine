@@ -81,14 +81,21 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
 		RUSH_LOG_INFO("GLFW initialized");
     }
     if(m_Properties.m_Title == nullptr)
-        m_Properties.m_Title = "Title";
-    m_Window = glfwCreateWindow(
-        m_Properties.width,
-        m_Properties.height,
-        m_Properties.m_Title,
-        nullptr,
-        nullptr
-    );
+        m_Window = glfwCreateWindow(
+            m_Properties.width,
+            m_Properties.height,
+            "Title",
+            nullptr,
+            nullptr
+        );
+    else 
+        m_Window = glfwCreateWindow(
+            m_Properties.width,
+            m_Properties.height,
+            m_Properties.m_Title,
+            nullptr,
+            nullptr
+        );
 
     glfwSetWindowUserPointer(m_Window,&m_Properties);
     
