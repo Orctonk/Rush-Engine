@@ -34,7 +34,7 @@ public:
         m_CompMap.emplace(entt::type_info<Comp>::id(), d );
     }    
 
-    void Render(entt::registry &reg, entt::entity e);
+    void Render(entt::registry &reg, entt::entity e, bool *shown);
 };
 
 #endif // __ENTITYEDITORWIDGET_H__

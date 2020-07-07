@@ -1,5 +1,5 @@
 #include "EntityEditorWidget.h"
-#include "EditorComponents.h"
+#include "views/EditorComponents.h"
 
 EntityEditor::EntityEditor(){
 
@@ -9,11 +9,12 @@ EntityEditor::~EntityEditor(){
     
 }
 
-void EntityEditor::Render(entt::registry &reg, entt::entity e){
-    if(e == entt::null)
+void EntityEditor::Render(entt::registry &reg, entt::entity e, bool *shown){
+    ImGui::Begin("Entity editor",shown);
+    if(e == entt::null){
+        ImGui::End();
         return;
-    ImGui::Text("Entity Editor: ");
-    ImGui::SameLine();
+    }
     const char * name = "";
     if(reg.has<EntityName>(e))
         name = reg.get<EntityName>(e).name.c_str();
@@ -52,4 +53,5 @@ void EntityEditor::Render(entt::registry &reg, entt::entity e){
             ImGui::EndPopup();
         }
     }
+    ImGui::End();
 }

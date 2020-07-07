@@ -2,19 +2,14 @@
 #define __EDITORLAYER_H__
 
 #include <Rush.h>
-#include "EntityEditorWidget.h"
 #include "views/RenderViews.h"
+#include "views/SceneGraphView.h"
 
 class EditorLayer : public Rush::Layer {
 private:
     Rush::Shared<Rush::Model> m_Model;
     RenderViews m_RenderViews;
-    entt::entity m_SelectedEnt;
-    EntityEditor m_EE;
-    bool m_Renaming;
-
-    void RenderEntity(const entt::entity e);
-    bool KeyPressHandle(Rush::KeyboardPressEvent &e);
+    SceneGraphView m_SceneGraph;
 public:
     EditorLayer();
     ~EditorLayer();

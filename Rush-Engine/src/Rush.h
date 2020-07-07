@@ -18,6 +18,8 @@
 #include "Rush/scene/Transform.h"
 #include "Rush/scene/Camera.h"
 #include "Rush/scene/Light.h"
+#include "Rush/scene/Mesh.h"
+#include "Rush/scene/Material.h"
 
 #include "Rush/imgui/ImguiLayer.h"
 
