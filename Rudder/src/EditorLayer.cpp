@@ -3,6 +3,7 @@
 #include "EditorComponents.h"
 #include "FileBrowser.h"
 
+#include "Rush/core/Input.h"
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/Keycodes.h"
 #include "Rush/graphics/VertexArray.h"
@@ -21,98 +22,15 @@
 #include <misc/cpp/imgui_stdlib.h>
 #include <glad/glad.h>
 
-float vertices[] = {
-        // positions          // normals           // Tangent           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+EditorLayer::EditorLayer() {}
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f
-};
-unsigned int indices[] = {      // note that we start from 0!
-	0, 1, 2, 3, 4, 5,           // Back face
-	6, 7, 8, 9, 10, 11,         // Left face
-	12, 13, 14, 15, 16, 17,     // Back face
-	18, 19, 20, 21, 22, 23,     // Top face
-	24, 25, 26, 27, 28, 29,     // Bottom face
-	30, 31, 32, 33, 34, 35      // Front face
-}; 
-
-EditorLayer::EditorLayer() : m_EditorCamera(Rush::ProjectionMode::PERSPECTIVE, 1024.0f/720.0f) {}
 EditorLayer::~EditorLayer() {}
 
 void EditorLayer::OnAttach() {
     using namespace Rush;
-    m_LightBoxShader = ResourceLoader::LoadShader("res/lightBoxShader.glsl");
-    m_LightingShader = ResourceLoader::LoadShader("res/lightingPass.glsl");
-    m_BasicShader = ResourceLoader::LoadShader("res/basicShader.glsl");
-    m_MaterialShader = ResourceLoader::LoadShader("res/materialShader.glsl");
-    int i = 0;
-    m_MaterialShader->SetUniform("u_Material.diffuse",ShaderData::INT,&i);
-    i = 1;
-    m_MaterialShader->SetUniform("u_Material.specular",ShaderData::INT,&i);
-    i = 2;
-    m_MaterialShader->SetUniform("u_Material.normal",ShaderData::INT,&i);
-
-    m_WhiteTex = ResourceLoader::LoadTexture("res/white.png");
-    m_BlueTex = ResourceLoader::LoadTexture("res/blue.png");
-    m_GBuffer = Framebuffer::Create({
-        Application::GetInstance().GetWindow()->GetWidth(),
-        Application::GetInstance().GetWindow()->GetHeight(),
-        {16,16,8}
-    });
-    
-    m_GBuffer->Unbind();
-
-    m_EditorCamera.SetPosition(glm::vec3(0.0f,1.0f,3.0f));
-	m_EditorCamera.SetRotation(90.0f,20.0f,0.0f);
+    m_RenderViews.Init();
 
     auto &reg = Application::GetInstance().GetRegistry();
-
-    Shared<VertexBuffer> vb = VertexBuffer::Create(vertices, sizeof(vertices));
-    vb->SetInterleavedLayout({
-        Rush::ShaderData::FLOAT3,
-        Rush::ShaderData::FLOAT3,
-        Rush::ShaderData::FLOAT3,
-        Rush::ShaderData::FLOAT2
-    });
-    Shared<IndexBuffer> ib = IndexBuffer::Create(indices, 36);
 
     auto globalLight = reg.create();
     reg.emplace<EntityName>(globalLight,"Global editor lighting");
@@ -126,15 +44,13 @@ void EditorLayer::OnAttach() {
     auto &l2 = reg.emplace<PointLight>(testLight);
     l2.position = {1.0f,1.0f,1.0f};
 
-    auto box = reg.create();
+    auto model = reg.create();
     m_Model = ResourceLoader::LoadModel("res/backpack/backpack.obj");
-    auto &mater = reg.emplace<Material>(box,nullptr,nullptr,nullptr,8.0f);
-    auto &m = reg.emplace<Mesh>(box,VertexArray::Create(),mater);
-    m.vertices->AddVertexBuffer(vb);
-    m.vertices->SetIndexBuffer(ib);
+    auto &mater = reg.emplace<Material>(model,nullptr,nullptr,nullptr,8.0f);
+    auto &m = reg.emplace<Mesh>(model,VertexArray::Create(),mater);
 
-    reg.emplace<Transform>(box,glm::vec3(0.0f),glm::vec3(0.0f));
-    reg.emplace<EntityName>(box, "Mesh Test");
+    reg.emplace<Transform>(model,glm::vec3(0.0f),glm::vec3(0.0f));
+    reg.emplace<EntityName>(model, "Mesh Test");
 
     m_SelectedEnt = entt::null;
     m_EE.Register<Transform>("Transform",[](entt::registry &reg,entt::entity e){
@@ -217,111 +133,71 @@ void EditorLayer::OnAttach() {
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
-    
-    using namespace Rush;
-    auto &reg = Application::GetInstance().GetRegistry();
-    m_GBuffer->Bind();
-    Renderer::GetAPI()->Clear();
-    Renderer::BeginScene(m_EditorCamera);
-    for(auto e : reg.view<Mesh>()){
-        Transform &t = reg.get_or_emplace<Transform>(e);
-        Mesh &m = reg.get<Mesh>(e);
-        glm::mat4 model = glm::eulerAngleXYZ(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
-        model = glm::translate(glm::mat4(1.0f),t.translation) * model;
-        model = glm::scale(model,t.scale);
-
-        m_MaterialShader->Bind();
-        for(auto &m : m_Model->getMeshes()){
-            m.material.diffuseTexture->Bind(0);
-            m.material.specularTexture->Bind(1);
-            m.material.normalTexture->Bind(2);
-            Renderer::Submit(m_MaterialShader,m.vertices,model);
-        }
-        // if(reg.has<Material>(e)){
-        //     Material &mat = reg.get<Material>(e);
-        //     if(mat.diffuseTexture != nullptr) mat.diffuseTexture->Bind(0); else m_WhiteTex->Bind(0);
-        //     if(mat.specularTexture != nullptr) mat.specularTexture->Bind(1); else m_WhiteTex->Bind(1);
-        //     if(mat.normalTexture != nullptr) mat.normalTexture->Bind(2); else m_BlueTex->Bind(2);
-        //     m_MaterialShader->SetUniform("u_Material.shininess",ShaderData::FLOAT,&mat.shininess);
-            
-        //     Renderer::Submit(m_MaterialShader,m.vertices,model);
-        // } else {
-        //     m_WhiteTex->Bind(0);
-        //     m_WhiteTex->Bind(1);
-        //     m_BlueTex->Bind(2);
-        //     Renderer::Submit(m_MaterialShader,m.vertices,model);
-        // }
-    }
-
-    
-    Renderer::EndScene();
-    m_GBuffer->Unbind();
-
-    Renderer::GetAPI()->Clear();
-
-    m_LightingShader->Bind();
-    const char *uniforms[] = {
-        "gPos",
-        "gNorm",
-        "gColor"
-    };
-    std::vector<Shared<Texture>> &gBufTextures = m_GBuffer->GetTextures();
-    for(int i = 0; i < gBufTextures.size(); i++){
-        gBufTextures.at(i)->Bind(i);
-        m_LightingShader->SetUniform(uniforms[i],ShaderData::INT,&i);
-    }
-    bool activated = true;
-    uint8_t lightCount = 0;
-    for(auto e : reg.view<DirectionalLight>()){
-        DirectionalLight &l = reg.get<DirectionalLight>(e);
-        m_LightingShader->SetUniform("u_DLights[" + std::to_string(lightCount) + "].activated",ShaderData::BOOL,&activated);
-        m_LightingShader->SetUniform("u_DLights[" + std::to_string(lightCount) + "].direction",ShaderData::FLOAT3,glm::value_ptr(l.direction));
-        m_LightingShader->SetUniform("u_DLights[" + std::to_string(lightCount) + "].ambient",ShaderData::FLOAT3,glm::value_ptr(l.ambient));
-        m_LightingShader->SetUniform("u_DLights[" + std::to_string(lightCount) + "].diffuse",ShaderData::FLOAT3,glm::value_ptr(l.diffuse));
-        m_LightingShader->SetUniform("u_DLights[" + std::to_string(lightCount) + "].specular",ShaderData::FLOAT3,glm::value_ptr(l.specular));
-        lightCount++;
-        if(lightCount >= 5)
-            break;
-    }
-    lightCount = 0;
-    for(auto e : reg.view<PointLight>()){
-        PointLight &l = reg.get<PointLight>(e);
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].activated",ShaderData::BOOL,&activated);
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].position",ShaderData::FLOAT3,glm::value_ptr(l.position));
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].ambient",ShaderData::FLOAT3,glm::value_ptr(l.ambient));
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].diffuse",ShaderData::FLOAT3,glm::value_ptr(l.diffuse));
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].specular",ShaderData::FLOAT3,glm::value_ptr(l.specular));
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].constant",ShaderData::FLOAT,&l.constant);
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].linear",ShaderData::FLOAT,&l.linear);
-        m_LightingShader->SetUniform("u_PLights[" + std::to_string(lightCount) + "].quadratic",ShaderData::FLOAT,&l.quadratic);
-        lightCount++;
-        if(lightCount >= 10)
-            break;
-    }
-    m_LightingShader->SetUniform("u_CamPos",ShaderData::FLOAT3,glm::value_ptr(m_EditorCamera.GetPosition()));
-    Renderer::RenderTexturedQuad(m_LightingShader,{0.0f,0.0f},{1.0f,1.0f});
-    
-    Unique<Framebuffer> fb = nullptr;
-    m_GBuffer->Blit(fb);
-
-    Renderer::BeginScene(m_EditorCamera);
-    for(auto e: reg.view<PointLight>()){
-        PointLight &l = reg.get<PointLight>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),l.position);
-        model = glm::scale(model,glm::vec3(0.1f));
-        glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
-        m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
-        Renderer::RenderCube(m_LightBoxShader,model);
-    }
-    Renderer::EndScene();
+    m_RenderViews.OnUpdate();
 }
 
 void EditorLayer::OnEvent(Rush::Event &e) {
+    m_RenderViews.OnEvent(e);
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(EditorLayer::KeyPressHandle));
 }
 void EditorLayer::OnImguiRender() {
     entt::registry &reg = Rush::Application::GetInstance().GetRegistry();
 
+    ImGui::ShowDemoWindow();
+
+    ImGui::BeginMainMenuBar();
+    if(ImGui::BeginMenu("File")){
+        if(ImGui::MenuItem("New")); // TODO: Implement New button
+        if(ImGui::MenuItem("Save")); // TODO: Implement Save button
+        if(ImGui::MenuItem("Open")); // TODO: Implement Open button
+        if(ImGui::BeginMenu("Open recent")){
+            if(ImGui::MenuItem("recent_file_1.scene")); // TODO: Implement Open recent button
+            if(ImGui::MenuItem("recent_file_2.scene"));
+            if(ImGui::MenuItem("recent_file_3.scene"));
+            if(ImGui::MenuItem("recent_file_4.scene"));
+            ImGui::EndMenu();
+        } 
+        ImGui::EndMenu();
+    }
+    if(ImGui::BeginMenu("Edit")){
+        if(ImGui::MenuItem("Undo")); // TODO: Implement Undo button
+        if(ImGui::MenuItem("Redo")); // TODO: Implement Redo button
+        if(ImGui::MenuItem("Copy")); // TODO: Implement Copy button
+        if(ImGui::MenuItem("Cut")); // TODO: Implement Cut button
+        if(ImGui::MenuItem("Paste")); // TODO: Implement Paste button
+        ImGui::EndMenu();
+    }
+    if(ImGui::BeginMenu("View")){
+        if(ImGui::BeginMenu("Render views")){
+            ImGui::MenuItem("Render preview", "", &m_RenderViews.enabledViews[RENDERVIEW_RENDER]);
+            ImGui::MenuItem("Normals", "", &m_RenderViews.enabledViews[RENDERVIEW_NORMALS]);
+            ImGui::MenuItem("Albedo", "", &m_RenderViews.enabledViews[RENDERVIEW_ALBEDO]);
+            ImGui::MenuItem("Specular", "", &m_RenderViews.enabledViews[RENDERVIEW_SPECULAR]);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+
+    ImGuiViewport *viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+
+    ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking
+        | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
+        | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus 
+        | ImGuiWindowFlags_NoTitleBar;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f,0.0f));
+    ImGui::Begin("Main window",NULL,flags);
+    ImGui::DockSpace(ImGui::GetID("Main window dockspace"),ImVec2(0.0f,0.0f),ImGuiDockNodeFlags_PassthruCentralNode);
+    ImGui::End();
+    ImGui::PopStyleVar();
+
+    m_RenderViews.OnImguiRender();
+    
     ImGui::Begin("Scene Editor");
     ImGui::Text("Scene graph");
     float width = ImGui::GetWindowWidth();
@@ -329,6 +205,7 @@ void EditorLayer::OnImguiRender() {
     if(ImGui::Button("+")) reg.create();
     ImGui::SameLine();
     if(ImGui::Button("-") && m_SelectedEnt != entt::null) {
+        reg.remove_all(m_SelectedEnt);
         reg.destroy(m_SelectedEnt);
         m_SelectedEnt = entt::null;
     }

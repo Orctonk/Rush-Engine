@@ -3,18 +3,12 @@
 
 #include <Rush.h>
 #include "EntityEditorWidget.h"
+#include "views/RenderViews.h"
 
 class EditorLayer : public Rush::Layer {
 private:
     Rush::Shared<Rush::Model> m_Model;
-    Rush::Shared<Rush::Shader> m_BasicShader;
-    Rush::Shared<Rush::Shader> m_MaterialShader;
-    Rush::Shared<Rush::Shader> m_LightingShader;
-    Rush::Shared<Rush::Shader> m_LightBoxShader;
-    Rush::Shared<Rush::Texture> m_WhiteTex;
-    Rush::Shared<Rush::Texture> m_BlueTex;
-    Rush::Unique<Rush::Framebuffer> m_GBuffer;
-    Rush::Camera m_EditorCamera;
+    RenderViews m_RenderViews;
     entt::entity m_SelectedEnt;
     EntityEditor m_EE;
     bool m_Renaming;

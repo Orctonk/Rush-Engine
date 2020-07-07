@@ -10,6 +10,8 @@ set(RUDDER_SOURCES
         ${RUDDER_SOURCE_DIR}/EditorLayer.cpp
         ${RUDDER_SOURCE_DIR}/EntityEditorWidget.cpp
         ${RUDDER_SOURCE_DIR}/FileBrowser.cpp
+        ${RUDDER_SOURCE_DIR}/views/RenderViews.cpp
+        ${RUDDER_SOURCE_DIR}/views/CameraController.cpp
     )
 
 add_executable(Rudder ${RUDDER_SOURCES})
