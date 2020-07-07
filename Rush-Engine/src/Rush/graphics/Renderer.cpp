@@ -61,7 +61,7 @@ void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
         0,3,7,7,4,0
     };
         auto vb = VertexBuffer::Create(boxVert,sizeof(boxVert));
-        vb->SetInterleavedLayout({ShaderData::FLOAT2});
+        vb->SetInterleavedLayout({ShaderData::FLOAT3});
         boxVA->AddVertexBuffer(vb);
         auto ib = IndexBuffer::Create(boxInd,36);
         boxVA->SetIndexBuffer(ib);
