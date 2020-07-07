@@ -121,3 +121,4 @@
 #define RUSH_KEY_RIGHT_ALT          346
 #define RUSH_KEY_RIGHT_SUPER        347
 #define RUSH_KEY_MENU               348
+#define RUSH_KEYCODE_LAST           RUSH_KEY_MENU

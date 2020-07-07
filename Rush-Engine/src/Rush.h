@@ -3,6 +3,7 @@
 #include "Rush/core/Application.h"
 #include "Rush/core/AbstractWindow.h"
 #include "Rush/core/Logger.h"
+#include "Rush/core/Input.h"
 #include "Rush/core/Time.h"
 #include "Rush/core/ResourceLoader.h"
 
