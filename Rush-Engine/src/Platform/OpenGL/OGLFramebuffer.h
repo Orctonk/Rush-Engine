@@ -14,6 +14,7 @@ public:
 
     void Bind() override;
     void Unbind() override;
+    void Resize(uint32_t width, uint32_t height) override;
     void Blit(Unique<Framebuffer> &other) override;
 };
 

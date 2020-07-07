@@ -18,7 +18,7 @@ OGLFramebuffer::OGLFramebuffer(FramebufferOptions options)
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+i,GL_TEXTURE_2D,tex->GetID(),0);
         atts.push_back(GL_COLOR_ATTACHMENT0+i);
     }
-    glDrawBuffers(3,atts.data());
+    glDrawBuffers(atts.size(),atts.data());
 
     glGenRenderbuffers(1,&m_DRO);
     glBindRenderbuffer(GL_RENDERBUFFER,m_DRO);
@@ -38,10 +38,35 @@ OGLFramebuffer::~OGLFramebuffer(){
 
 void OGLFramebuffer::Bind(){
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+    glViewport(0,0,m_Options.width,m_Options.height);
 }
 
 void OGLFramebuffer::Unbind(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void OGLFramebuffer::Resize(uint32_t width, uint32_t height){
+    m_Options.width = width;
+    m_Options.height = height;
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+    m_Textures.clear();
+    std::vector<uint32_t> atts;
+    for(int i = 0; i < m_Options.texturePrecisions.size(); i++){
+        Shared<OGLTexture> tex = CreateShared<OGLTexture>(width,height,m_Options.texturePrecisions.at(i));
+        m_Textures.push_back(tex);
+        glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+i,GL_TEXTURE_2D,tex->GetID(),0);
+        atts.push_back(GL_COLOR_ATTACHMENT0+i);
+    }
+    glDrawBuffers(atts.size(),atts.data());
+
+    glBindRenderbuffer(GL_RENDERBUFFER,m_DRO);
+    glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_DRO);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+        RUSH_LOG_ERROR("Framebuffer not complete!");
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
 }
 
 void OGLFramebuffer::Blit(Unique<Framebuffer> &other){
