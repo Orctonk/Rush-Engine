@@ -2,10 +2,12 @@
 #define __DEBUGLAYER_H__
 #include "Rush/core/Layer.h"
 
+#define DEBUG_FPS_SAMPLES 300
+
 namespace Rush {
 
 class DebugLayer : public Layer {
-    float m_FrameTimes[60];
+    float m_FrameTimes[DEBUG_FPS_SAMPLES];
     int m_FrameTimeOffset;
 public:
     DebugLayer();
