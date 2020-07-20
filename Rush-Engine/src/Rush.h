@@ -5,7 +5,6 @@
 #include "Rush/core/Logger.h"
 #include "Rush/core/Input.h"
 #include "Rush/core/Time.h"
-#include "Rush/core/ResourceLoader.h"
 
 #include "Rush/graphics/IndexBuffer.h"
 #include "Rush/graphics/VertexBuffer.h"
@@ -18,8 +17,13 @@
 #include "Rush/scene/Transform.h"
 #include "Rush/scene/Camera.h"
 #include "Rush/scene/Light.h"
-#include "Rush/scene/Mesh.h"
-#include "Rush/scene/Material.h"
+#include "Rush/scene/Scene.h"
+
+#include "Rush/resources/AssetManager.h"
+#include "Rush/resources/Material.h"
+#include "Rush/resources/MeshInstance.h"
+#include "Rush/resources/MaterialInstance.h"
+#include "Rush/resources/RootMesh.h"
 
 #include "Rush/imgui/ImguiLayer.h"
 
