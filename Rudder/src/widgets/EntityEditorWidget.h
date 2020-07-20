@@ -1,12 +1,13 @@
 #ifndef __ENTITYEDITORWIDGET_H__
 #define __ENTITYEDITORWIDGET_H__
 
+#include <Rush.h>
 #include <entt/entt.hpp>
 #include <imgui.h>
 #include <string>
 #include <unordered_map>
 
-typedef void(*ComponentFunc)(entt::registry &, entt::entity);
+typedef void(*ComponentFunc)(Rush::Scene &, Rush::Scene::EntityType);
 
 struct ComponentData {
     std::string name;
@@ -27,14 +28,14 @@ public:
         ComponentData d;
         d.name = name;
         d.drawWidget = draw;
-        d.create = [](entt::registry &reg, entt::entity e){reg.emplace<Comp>(e);};
-        d.remove = [](entt::registry &reg, entt::entity e){
-            reg.remove<Comp>(e);
+        d.create = [](Rush::Scene &scene, Rush::Scene::EntityType e){scene.Add<Comp>(e);};
+        d.remove = [](Rush::Scene &scene, Rush::Scene::EntityType e){
+            scene.Remove<Comp>(e);
             };
         m_CompMap.emplace(entt::type_info<Comp>::id(), d );
     }    
 
-    void Render(entt::registry &reg, entt::entity e, bool *shown);
+    void Render(Rush::Scene &scene, Rush::Scene::EntityType e, bool *shown);
 };
 
 #endif // __ENTITYEDITORWIDGET_H__

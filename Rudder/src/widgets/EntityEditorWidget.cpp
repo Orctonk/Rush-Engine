@@ -9,15 +9,15 @@ EntityEditor::~EntityEditor(){
     
 }
 
-void EntityEditor::Render(entt::registry &reg, entt::entity e, bool *shown){
+void EntityEditor::Render(Rush::Scene &scene, Rush::Scene::EntityType e, bool *shown){
     ImGui::Begin("Entity editor",shown);
-    if(e == entt::null){
+    if(e == Rush::Scene::nullEnt){
         ImGui::End();
         return;
     }
     const char * name = "";
-    if(reg.has<EntityName>(e))
-        name = reg.get<EntityName>(e).name.c_str();
+    if(scene.Has<EntityName>(e))
+        name = scene.Get<EntityName>(e).name.c_str();
     if(strlen(name) == 0)
         ImGui::Text("Entity: %d", entt::to_integral(e));
     else
@@ -27,14 +27,14 @@ void EntityEditor::Render(entt::registry &reg, entt::entity e, bool *shown){
     for(auto &[id, data] : m_CompMap){
         ImGui::PushID("Widget");
         entt::id_type c[] = {id};
-        if(reg.runtime_view(std::begin(c),std::end(c)).contains(e)){
+        if(scene.GetRegistry()->runtime_view(std::begin(c),std::end(c)).contains(e)){
             if(ImGui::Button("-")) {
-                data.remove(reg,e);
+                data.remove(scene,e);
                 ImGui::PopID();
                 continue;
             }
             ImGui::SameLine();
-            if(ImGui::CollapsingHeader(data.name.c_str())) data.drawWidget(reg,e);
+            if(ImGui::CollapsingHeader(data.name.c_str())) data.drawWidget(scene,e);
         } else {
             unused.push_back(id);
         }
@@ -47,7 +47,7 @@ void EntityEditor::Render(entt::registry &reg, entt::entity e, bool *shown){
         if(ImGui::BeginPopup("Comp popup")){
             for(auto id : unused){
                 if(ImGui::Button(m_CompMap.at(id).name.c_str())){
-                    m_CompMap.at(id).create(reg,e);
+                    m_CompMap.at(id).create(scene,e);
                 }
             }
             ImGui::EndPopup();

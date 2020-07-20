@@ -7,77 +7,32 @@
 
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
-    m_SelectedEnt = entt::null;
-    m_EE.Register<Transform>("Transform",[](entt::registry &reg,entt::entity e){
-        auto& t = reg.get<Transform>(e);
+    m_SelectedEnt = Scene::nullEnt;
+    m_EE.Register<Transform>("Transform",[](Rush::Scene &scene, Rush::Scene::EntityType e){
+        auto& t = scene.Get<Transform>(e);
         ImGui::DragFloat3("Position", &t.translation.x, 0.01f);
         ImGui::DragFloat3("Rotation", &t.rotation.x, 1.0f);
         ImGui::DragFloat3("Scale", &t.scale.x, 0.01f);
     });
-    m_EE.Register<Material>("Material",[](entt::registry &reg, entt::entity e){
-        auto& m = reg.get<Material>(e);
-        ImGui::Text("Diffuse:  ");
-        ImGui::SameLine();
-        if(m.diffuseTexture == nullptr)
-            ImGui::Button("None");
-        else
-            ImGui::Button( m.diffuseTexture->GetDebugPath().c_str());
-
-        static FileBrowser diffDialog;
-        if(ImGui::IsItemClicked()){
-            diffDialog.SetTitle("Select Diffuse map...");
-            diffDialog.Open();
+    m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Scene &scene, Rush::Scene::EntityType e){
+        for(auto &mesh : scene.Get<MeshInstance>(e).mesh->submeshes){
+            if(ImGui::TreeNode(mesh.meshName.c_str())){
+                ImGui::Text("Mesh data...");
+                ImGui::Separator();
+                SceneGraphView::RenderMaterial(*mesh.material);
+                ImGui::TreePop();
+            }
         }
-        diffDialog.Render();
-        if(diffDialog.Finished()){
-            m.diffuseTexture = ResourceLoader::LoadTexture(diffDialog.GetSelectedFile().c_str());
-        }
-
-        ImGui::Text("Specular: ");
-        ImGui::SameLine();
-        if(m.specularTexture == nullptr)
-            ImGui::Button("None");
-        else
-            ImGui::Button(m.specularTexture->GetDebugPath().c_str());
-
-        static FileBrowser specDialog;
-        if(ImGui::IsItemClicked()){
-            specDialog.SetTitle("Select Specular map...");
-            specDialog.Open();
-        }
-        specDialog.Render();
-        if(specDialog.Finished()){
-            m.specularTexture = ResourceLoader::LoadTexture(specDialog.GetSelectedFile().c_str());
-        }
-
-        ImGui::Text("Normal: ");
-        ImGui::SameLine();
-        if(m.normalTexture == nullptr)
-            ImGui::Button("None");
-        else
-            ImGui::Button(m.normalTexture->GetDebugPath().c_str());
-
-        static FileBrowser normDialog;
-        if(ImGui::IsItemClicked()){
-            normDialog.SetTitle("Select Normal map...");
-            normDialog.Open();
-        }
-        normDialog.Render();
-        if(normDialog.Finished()){
-            m.normalTexture = ResourceLoader::LoadTexture(normDialog.GetSelectedFile().c_str());
-        }
-
-        ImGui::DragFloat("Shininess",&m.shininess,0.1f,0.0f);
     });
-    m_EE.Register<DirectionalLight>("Directional light",[](entt::registry &reg,entt::entity e){
-        auto& l = reg.get<DirectionalLight>(e);
+    m_EE.Register<DirectionalLight>("Directional light",[](Rush::Scene &scene, Rush::Scene::EntityType e){
+        auto& l = scene.Get<DirectionalLight>(e);
         ImGui::DragFloat3("Direction", &l.direction.x, 0.1f);
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
         ImGui::ColorEdit3("Specular", &l.specular.r);
     });
-    m_EE.Register<PointLight>("Point light",[](entt::registry &reg,entt::entity e){
-        auto& l = reg.get<PointLight>(e);
+    m_EE.Register<PointLight>("Point light",[](Rush::Scene &scene, Rush::Scene::EntityType e){
+        auto& l = scene.Get<PointLight>(e);
         ImGui::DragFloat3("Position", &l.position.x, 0.1f);
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
@@ -94,38 +49,37 @@ void SceneGraphView::OnEvent(Rush::Event &e){
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(SceneGraphView::KeyPressHandle));
 }
 
-void SceneGraphView::OnImguiRender(){
+void SceneGraphView::OnImguiRender(Rush::Scene &scene){
     using namespace Rush; 
+    m_SceneRenderAccess = &scene;
     if(!enabled)
         return;
     
-    auto &reg = Application::GetInstance().GetRegistry();
     ImGui::Begin("Scene graph",&enabled);
     float width = ImGui::GetWindowWidth();
     ImGui::SameLine(width - 50.0f);
-    if(ImGui::Button("+")) reg.create();
+    if(ImGui::Button("+")) scene.NewEntity();
     ImGui::SameLine();
-    if(ImGui::Button("-") && m_SelectedEnt != entt::null) {
-        reg.remove_all(m_SelectedEnt);
-        reg.destroy(m_SelectedEnt);
-        m_SelectedEnt = entt::null;
+    if(ImGui::Button("-") && m_SelectedEnt != scene.nullEnt) {
+        scene.DeleteEntity(m_SelectedEnt);
+        m_SelectedEnt = scene.nullEnt;
     }
 
-    reg.each([=](const entt::entity e){
+    scene.ForEach([=](const entt::entity e){
         RenderEntity(e);
     });
 
     ImGui::End();
     
-    if(m_SelectedEnt != entt::null && m_EEVisible)
-        m_EE.Render(reg,m_SelectedEnt,&m_EEVisible);
+    if(m_SelectedEnt != scene.nullEnt && m_EEVisible)
+        m_EE.Render(scene,m_SelectedEnt,&m_EEVisible);
 }
 
-void SceneGraphView::RenderEntity(const entt::entity e){
-    entt::registry &reg = Rush::Application::GetInstance().GetRegistry();
+void SceneGraphView::RenderEntity(const Rush::Scene::EntityType e){
     const char *name = "";
-    if(reg.has<EntityName>(e))
-        name = reg.get<EntityName>(e).name.c_str();
+    Rush::Scene &scene = *m_SceneRenderAccess;
+    if(scene.Has<EntityName>(e))
+        name = scene.Get<EntityName>(e).name.c_str();
     if (strlen(name) == 0)
         name = std::to_string(entt::to_integral(e)).c_str();
 
@@ -136,11 +90,11 @@ void SceneGraphView::RenderEntity(const entt::entity e){
             name = "##renaming";
         }
     }
-    if(reg.has<entt::entity>(e)){
-        if(ImGui::TreeNodeEx(name,flags)){
-            RenderEntity(reg.get<entt::entity>(e));
-            ImGui::TreePop();
-        }
+    if(false){ // Nested entities
+        // if(ImGui::TreeNodeEx(name,flags)){
+        //     RenderEntity(reg.get<entt::entity>(e));
+        //     ImGui::TreePop();
+        // }
     } else {
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
         ImGui::TreeNodeEx(name,flags);
@@ -158,10 +112,10 @@ void SceneGraphView::RenderEntity(const entt::entity e){
     if(e == m_SelectedEnt){
         if(ImGui::BeginPopupContextItem()){
             if(ImGui::MenuItem("New Entity")){
-                reg.create();
+                scene.NewEntity();
             }
             if(ImGui::MenuItem("Delete")){
-                reg.destroy(e);
+                scene.DeleteEntity(e);
                 m_SelectedEnt = entt::null;
             }
             if(ImGui::MenuItem("Rename")){
@@ -172,10 +126,10 @@ void SceneGraphView::RenderEntity(const entt::entity e){
         }
     } 
     if(m_Renaming && e == m_SelectedEnt){
-        if(!reg.has<EntityName>(e))
-            reg.emplace<EntityName>(e);
+        if(!scene.Has<EntityName>(e))
+            scene.Add<EntityName>(e);
     
-        EntityName &name = reg.get<EntityName>(e);
+        EntityName &name = scene.Get<EntityName>(e);
         ImGui::SameLine();
         ImGui::InputText("##rename_field",&name.name);
         ImGui::SetKeyboardFocusHere();
@@ -186,20 +140,75 @@ void SceneGraphView::RenderEntity(const entt::entity e){
     }
 }
 
+void SceneGraphView::RenderMaterial(Rush::Material &mat) {
+    using namespace Rush;
+        ImGui::Text("Diffuse:  ");
+        ImGui::SameLine();
+        if(mat.diffuseTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button( mat.diffuseTexture->GetDebugPath().c_str());
+
+        static FileBrowser diffDialog;
+        if(ImGui::IsItemClicked()){
+            diffDialog.SetTitle("Select Diffuse map...");
+            diffDialog.Open();
+        }
+        diffDialog.Render();
+        if(diffDialog.Finished()){
+            mat.diffuseTexture = AssetManager::GetTexture(diffDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::Text("Specular: ");
+        ImGui::SameLine();
+        if(mat.specularTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button(mat.specularTexture->GetDebugPath().c_str());
+
+        static FileBrowser specDialog;
+        if(ImGui::IsItemClicked()){
+            specDialog.SetTitle("Select Specular map...");
+            specDialog.Open();
+        }
+        specDialog.Render();
+        if(specDialog.Finished()){
+            mat.specularTexture = AssetManager::GetTexture(specDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::Text("Normal: ");
+        ImGui::SameLine();
+        if(mat.normalTexture == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button(mat.normalTexture->GetDebugPath().c_str());
+
+        static FileBrowser normDialog;
+        if(ImGui::IsItemClicked()){
+            normDialog.SetTitle("Select Normal map...");
+            normDialog.Open();
+        }
+        normDialog.Render();
+        if(normDialog.Finished()){
+            mat.normalTexture = AssetManager::GetTexture(normDialog.GetSelectedFile().c_str());
+        }
+
+        ImGui::DragFloat("Shininess",&mat.shininess,0.1f,0.0f);
+}
+
 bool SceneGraphView::KeyPressHandle(Rush::KeyboardPressEvent &e){
-    entt::registry &reg = Rush::Application::GetInstance().GetRegistry();
-    if(e.keycode == RUSH_KEY_DELETE && m_SelectedEnt != entt::null){
-        reg.destroy(m_SelectedEnt);
-        m_SelectedEnt = entt::null;
-        return true;
-    }
-    else if(e.keycode == RUSH_KEY_F2 && m_SelectedEnt != entt::null){
-        m_Renaming = true;
-        return true;
-    }
-    else if(e.keycode == RUSH_KEY_ENTER && m_Renaming){
-        m_Renaming = false;
-        return true;
-    }
+    // if(e.keycode == RUSH_KEY_DELETE && m_SelectedEnt != entt::null){
+    //     reg.destroy(m_SelectedEnt);
+    //     m_SelectedEnt = entt::null;
+    //     return true;
+    // }
+    // else if(e.keycode == RUSH_KEY_F2 && m_SelectedEnt != entt::null){
+    //     m_Renaming = true;
+    //     return true;
+    // }
+    // else if(e.keycode == RUSH_KEY_ENTER && m_Renaming){
+    //     m_Renaming = false;
+    //     return true;
+    // }
     return false;
 }

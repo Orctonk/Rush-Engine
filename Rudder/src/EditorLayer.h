@@ -7,7 +7,7 @@
 
 class EditorLayer : public Rush::Layer {
 private:
-    Rush::Shared<Rush::Model> m_Model;
+    Rush::Scene m_Scene;
     RenderViews m_RenderViews;
     SceneGraphView m_SceneGraph;
 public:

@@ -6,12 +6,14 @@
 
 class SceneGraphView {
 private:
-    entt::entity m_SelectedEnt;
+    Rush::Scene *m_SceneRenderAccess;   // TODO: Remove this hack
+    Rush::Scene::EntityType m_SelectedEnt;
     EntityEditor m_EE;
     bool m_Renaming;
     bool m_EEVisible;
 
-    void RenderEntity(const entt::entity e);
+
+    void RenderEntity(const Rush::Scene::EntityType e);
     bool KeyPressHandle(Rush::KeyboardPressEvent &e);
 public:
     bool enabled;
@@ -20,7 +22,9 @@ public:
     ~SceneGraphView();
 
     void OnEvent(Rush::Event &e);
-    void OnImguiRender();
+    void OnImguiRender(Rush::Scene &scene);
+    
+    static void RenderMaterial(Rush::Material &mat);
 };
 
 #endif // __SCENEGRAPHVIEW_H__

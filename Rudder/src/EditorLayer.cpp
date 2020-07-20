@@ -19,31 +19,27 @@ void EditorLayer::OnAttach() {
     using namespace Rush;
     m_RenderViews.Init();
 
-    auto &reg = Application::GetInstance().GetRegistry();
-
-    auto globalLight = reg.create();
-    reg.emplace<EntityName>(globalLight,"Global editor lighting");
-    auto &l = reg.emplace<DirectionalLight>(globalLight);
+    auto globalLight = m_Scene.NewEntity();
+    m_Scene.Add<EntityName>(globalLight,"Global editor lighting");
+    auto &l = m_Scene.Add<DirectionalLight>(globalLight);
     l.ambient = {0.2f,0.2f,0.2f};
     l.diffuse = {0.0f,0.0f,0.0f};
     l.specular = {0.0f,0.0f,0.0f};
 
-    auto testLight = reg.create();
-    reg.emplace<EntityName>(testLight, "Test point Light");
-    auto &l2 = reg.emplace<PointLight>(testLight);
+    auto testLight = m_Scene.NewEntity();
+    m_Scene.Add<EntityName>(testLight, "Test point Light");
+    auto &l2 = m_Scene.Add<PointLight>(testLight);
     l2.position = {1.0f,1.0f,1.0f};
 
-    auto model = reg.create();
-    m_Model = ResourceLoader::LoadModel("res/backpack/backpack.obj");
-    auto &mater = reg.emplace<Material>(model,nullptr,nullptr,nullptr,8.0f);
-    auto &m = reg.emplace<Mesh>(model,VertexArray::Create(),mater);
+    auto model = m_Scene.NewEntity();
+    m_Scene.Add<MeshInstance>(model,AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
 
-    reg.emplace<Transform>(model,glm::vec3(0.0f),glm::vec3(0.0f));
-    reg.emplace<EntityName>(model, "Mesh Test");
+    m_Scene.Add<Transform>(model,glm::vec3(0.0f),glm::vec3(0.0f));
+    m_Scene.Add<EntityName>(model, "Model Test");
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
-    m_RenderViews.OnUpdate();
+    m_RenderViews.OnUpdate(m_Scene);
 }
 
 void EditorLayer::OnEvent(Rush::Event &e) {
@@ -105,5 +101,5 @@ void EditorLayer::OnImguiRender() {
     ImGui::PopStyleVar();
 
     m_RenderViews.OnImguiRender();
-    m_SceneGraph.OnImguiRender();
+    m_SceneGraph.OnImguiRender(m_Scene);
 }
