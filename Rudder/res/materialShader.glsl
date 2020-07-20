@@ -49,6 +49,7 @@ void main() {
     gPosition = vec4(FragPos,1.0);
 
     vec3 normal = texture(u_Material.normal,uv).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
     gNormal = vec4(normalize(TBN * normal), 1.0);
 
     gColor = vec4(texture(u_Material.diffuse,uv).rgb,texture(u_Material.specular,uv).r);
