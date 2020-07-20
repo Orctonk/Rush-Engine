@@ -15,7 +15,6 @@ enum RenderView{
 
 class RenderViews {
 private:
-    Rush::Shared<Rush::Model> m_Model;
     Rush::Shared<Rush::Shader> m_MaterialShader;
     Rush::Shared<Rush::Shader> m_LightBoxShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
@@ -24,8 +23,8 @@ private:
     CameraController m_CamController;
     glm::vec2 m_RenderViewportSize;
 
-    void RenderGBuffer(Rush::Camera &cam);
-    void FillRenderView(Rush::Camera &cam);
+    void RenderGBuffer(Rush::Scene &scene, Rush::Camera &cam);
+    void FillRenderView(Rush::Scene &scene, Rush::Camera &cam);
     void PopulateView(RenderView type);
     void RenderImguiView(const char *name, RenderView type, bool resized);
 
@@ -36,7 +35,7 @@ public:
     ~RenderViews();
 
     void Init();
-    void OnUpdate();
+    void OnUpdate(Rush::Scene &scene);
     void OnEvent(Rush::Event &e);
     void OnImguiRender();
 };

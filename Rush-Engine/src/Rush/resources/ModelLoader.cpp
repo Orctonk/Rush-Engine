@@ -1,7 +1,7 @@
-#include "Model.h"
+#include "ModelLoader.h"
 
 #include "Rush/core/Logger.h"
-#include "Rush/core/ResourceLoader.h"
+#include "Rush/resources/AssetManager.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -9,35 +9,38 @@
 
 namespace Rush {
 
-Model::Model(std::string path){
+std::string ModelLoader::s_CurDirectory;
+
+RootMesh ModelLoader::LoadModel(const std::string &path){
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     
+    RootMesh rm;
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
         RUSH_LOG_ERROR("Failed to load model '" + path + "'");
-        return;
+        return rm;
     }
 
-    m_Directory = path.substr(0,path.find_last_of("/")+1);
+    s_CurDirectory = path.substr(0,path.find_last_of("/")+1);
 
-    ProcessNode(scene->mRootNode, scene);
+    rm.name = path;
+
+    ProcessNode(rm, scene->mRootNode, scene);
+    return rm;
 }
 
-Model::~Model(){
-
-}
-
-void Model::ProcessNode(const aiNode *node, const aiScene *scene){
+void ModelLoader::ProcessNode(RootMesh &root, const aiNode *node, const aiScene *scene){
     for(unsigned int i= 0; i < node->mNumMeshes; i++){
-        m_Meshes.push_back(ProcessMesh(scene->mMeshes[node->mMeshes[i]],scene));
+        root.submeshes.push_back(ProcessMesh(scene->mMeshes[node->mMeshes[i]],scene));
     }
     for(unsigned int i= 0; i < node->mNumChildren; i++){
-        ProcessNode(node->mChildren[i],scene);
+        ProcessNode(root,node->mChildren[i],scene);
     }
 }
 
-Mesh Model::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
-    Mesh m;
+SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
+    SubMesh m;
+    m.meshName = std::string(mesh->mName.C_Str());
     m.vertices = VertexArray::Create();
     std::vector<Vertex> vertices;
 
@@ -84,19 +87,19 @@ Mesh Model::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
 
     m.vertices->SetIndexBuffer(IndexBuffer::Create(indices.data(),indices.size()));
 
-    m.material = ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene);
+    m.material = Rush::CreateShared<Material>(ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene));
     return m;
 }
 
-Material Model::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
+Material ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
     Material mat;
     aiString str;
     material->GetTexture(aiTextureType_DIFFUSE,0,&str);
-    mat.diffuseTexture = ResourceLoader::LoadTexture(m_Directory + str.C_Str());
+    mat.diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     material->GetTexture(aiTextureType_SPECULAR,0,&str);
-    mat.specularTexture = ResourceLoader::LoadTexture(m_Directory + str.C_Str());
-    //material->GetTexture(aiTextureType_NORMALS,0,&str);
-    mat.normalTexture = ResourceLoader::LoadTexture("res/blue.png");
+    mat.specularTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    material->GetTexture(aiTextureType_NORMALS,0,&str);
+    mat.normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     return mat;
 }
 

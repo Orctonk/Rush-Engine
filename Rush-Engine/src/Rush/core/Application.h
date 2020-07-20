@@ -1,8 +1,6 @@
 #ifndef __RUSH_APPLICATION_H__
 #define __RUSH_APPLICATION_H__
 
-#include <entt/entity/registry.hpp>
-
 #include "Core.h"
 #include "LayerStack.h"
 #include "AbstractWindow.h"
@@ -16,7 +14,6 @@ private:
     static Application *s_Instance;
     LayerStack m_LayerStack;
     ImguiLayer *m_ImguiLayer;
-    entt::registry m_Registry;
 
     void PollEvents();
     bool WindowCloseHandle(WindowCloseEvent &e);
@@ -33,7 +30,6 @@ public:
     virtual void Update() = 0;
 
     Unique<AbstractWindow> &GetWindow() { return m_Window; }
-    entt::registry &GetRegistry() { return m_Registry; }
     void PushLayer(Layer *layer);
     void PushOverlay(Layer *layer);
     void Run();

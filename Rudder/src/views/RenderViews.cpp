@@ -22,8 +22,8 @@ void RenderViews::Init(){
     m_CamController.GetCamera().SetPosition(glm::vec3(0.0f,0.0f,3.0f));
 	m_CamController.GetCamera().SetRotation(-90.0f,0.0f,0.0f);
 
-    m_LightBoxShader = ResourceLoader::LoadShader("res/lightBoxShader.glsl");
-    m_MaterialShader = ResourceLoader::LoadShader("res/materialShader.glsl");
+    m_LightBoxShader = AssetManager::GetShader("res/lightBoxShader.glsl");
+    m_MaterialShader = AssetManager::GetShader("res/materialShader.glsl");
     int i = 0;
     m_MaterialShader->SetUniform("u_Material.diffuse",ShaderData::INT,&i);
     i = 1;
@@ -31,10 +31,10 @@ void RenderViews::Init(){
     i = 2;
     m_MaterialShader->SetUniform("u_Material.normal",ShaderData::INT,&i);
 
-    m_RenderViewShaders[RENDERVIEW_RENDER] = ResourceLoader::LoadShader("res/renderviewPreview.glsl");
-    m_RenderViewShaders[RENDERVIEW_NORMALS] = ResourceLoader::LoadShader("res/renderviewNormals.glsl");
-    m_RenderViewShaders[RENDERVIEW_ALBEDO] = ResourceLoader::LoadShader("res/renderviewAlbedo.glsl");
-    m_RenderViewShaders[RENDERVIEW_SPECULAR] = ResourceLoader::LoadShader("res/renderviewSpecular.glsl");
+    m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/renderviewPreview.glsl");
+    m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/renderviewNormals.glsl");
+    m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/renderviewAlbedo.glsl");
+    m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/renderviewSpecular.glsl");
 
     m_GBuffer = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
@@ -48,15 +48,14 @@ void RenderViews::Init(){
             {16}
         });
     }
-    m_Model = ResourceLoader::LoadModel("res/backpack/backpack.obj");
 }
 
-void RenderViews::OnUpdate(){
+void RenderViews::OnUpdate(Rush::Scene &scene){
     using namespace Rush;
 
     auto &cam = m_CamController.GetCamera();
-    RenderGBuffer(cam);
-    FillRenderView(cam);
+    RenderGBuffer(scene, cam);
+    FillRenderView(scene, cam);
     for(int i = 1; i < RENDERVIEW_COUNT; i++)
         PopulateView((RenderView)i);
     
@@ -94,24 +93,25 @@ void RenderViews::OnImguiRender(){
     ImGui::PopStyleVar();
 }
 
-void RenderViews::RenderGBuffer(Rush::Camera &cam){
+void RenderViews::RenderGBuffer(Rush::Scene &scene, Rush::Camera &cam){
     using namespace Rush;
-    auto &reg = Application::GetInstance().GetRegistry();
     m_GBuffer->Bind();
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(cam);
-    for(auto e : reg.view<Mesh>()){
-        Transform &t = reg.get_or_emplace<Transform>(e);
-        Mesh &m = reg.get<Mesh>(e);
+    for(auto e : scene.View<MeshInstance>()){
+        if(!scene.Has<Transform>(e))
+            scene.Add<Transform>(e);
+        auto &t = scene.Get<Transform>(e);
+        MeshInstance &mesh = scene.Get<MeshInstance>(e);
         glm::mat4 model = glm::eulerAngleXYZ(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
         model = glm::translate(glm::mat4(1.0f),t.translation) * model;
         model = glm::scale(model,t.scale);
 
         m_MaterialShader->Bind();
-        for(auto &m : m_Model->getMeshes()){
-            m.material.diffuseTexture->Bind(0);
-            m.material.specularTexture->Bind(1);
-            m.material.normalTexture->Bind(2);
+        for(auto &m : mesh.mesh->submeshes){
+            m.material->diffuseTexture->Bind(0);
+            m.material->specularTexture->Bind(1);
+            m.material->normalTexture->Bind(2);
             Renderer::Submit(m_MaterialShader,m.vertices,model);
         }
     }
@@ -120,9 +120,8 @@ void RenderViews::RenderGBuffer(Rush::Camera &cam){
     m_GBuffer->Unbind();
 }
 
-void RenderViews::FillRenderView(Rush::Camera &cam){
+void RenderViews::FillRenderView(Rush::Scene &scene, Rush::Camera &cam){
     using namespace Rush;
-    auto &reg = Application::GetInstance().GetRegistry();
     m_RenderViews[RENDERVIEW_RENDER]->Bind();
     Renderer::GetAPI()->Clear();
 
@@ -155,8 +154,8 @@ void RenderViews::FillRenderView(Rush::Camera &cam){
     m_GBuffer->Blit(m_RenderViews[RENDERVIEW_RENDER]);
 
     Renderer::BeginScene(cam);
-    for(auto e: reg.view<PointLight>()){
-        PointLight &l = reg.get<PointLight>(e);
+    for(auto e: scene.View<PointLight>()){
+        PointLight &l = scene.Get<PointLight>(e);
         glm::mat4 model = glm::translate(glm::mat4(1.0f),l.position);
         model = glm::scale(model,glm::vec3(0.1f));
         glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
