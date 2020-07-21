@@ -102,4 +102,5 @@ void EditorLayer::OnImguiRender() {
 
     m_RenderViews.OnImguiRender();
     m_SceneGraph.OnImguiRender(m_Scene);
+    m_AssetView.OnImguiRender();
 }

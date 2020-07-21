@@ -4,12 +4,14 @@
 #include <Rush.h>
 #include "views/RenderViews.h"
 #include "views/SceneGraphView.h"
+#include "views/AssetView.h"
 
 class EditorLayer : public Rush::Layer {
 private:
     Rush::Scene m_Scene;
     RenderViews m_RenderViews;
     SceneGraphView m_SceneGraph;
+    AssetView m_AssetView;
 public:
     EditorLayer();
     ~EditorLayer();
