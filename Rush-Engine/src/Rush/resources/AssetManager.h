@@ -42,6 +42,11 @@ public:
     static bool HasMaterial(const std::string &path);
     static bool HasTexture(const std::string &path);
     static bool HasShader(const std::string &path);
+
+    static std::vector<std::string> GetMeshKeys();
+    static std::vector<std::string> GetMaterialKeys();
+    static std::vector<std::string> GetTextureKeys();
+    static std::vector<std::string> GetShaderKeys();
 };
 
 }

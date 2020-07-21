@@ -79,5 +79,37 @@ bool AssetManager::HasShader(const std::string &path){
     return s_Shaders.find(path) != s_Shaders.end();
 }
 
+std::vector<std::string> AssetManager::GetMeshKeys(){
+    std::vector<std::string> keys;
+    keys.reserve(s_Meshes.size());
+    for(auto &val : s_Meshes)
+        keys.push_back(val.first);
+    return keys;
+}
+
+std::vector<std::string> AssetManager::GetMaterialKeys(){
+    std::vector<std::string> keys;
+    keys.reserve(s_Materials.size());
+    for(auto &val : s_Materials)
+        keys.push_back(val.first);
+    return keys;
+}
+
+std::vector<std::string> AssetManager::GetTextureKeys(){
+    std::vector<std::string> keys;
+    keys.reserve(s_Textures.size());
+    for(auto &val : s_Textures)
+        keys.push_back(val.first);
+    return keys;
+}
+
+std::vector<std::string> AssetManager::GetShaderKeys(){
+    std::vector<std::string> keys;
+    keys.reserve(s_Shaders.size());
+    for(auto &val : s_Shaders)
+        keys.push_back(val.first);
+    return keys;
+}
+
 
 }
