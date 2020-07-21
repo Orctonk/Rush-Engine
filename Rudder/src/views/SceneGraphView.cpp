@@ -19,7 +19,7 @@ SceneGraphView::SceneGraphView(){
             if(ImGui::TreeNode(mesh.meshName.c_str())){
                 ImGui::Text("Mesh data...");
                 ImGui::Separator();
-                SceneGraphView::RenderMaterial(*mesh.material);
+                SceneGraphView::RenderMaterial(*mesh.material.parent);
                 ImGui::TreePop();
             }
         }

@@ -35,6 +35,13 @@ public:
     static MaterialInstance GetMaterialInstance(const std::string &path);
     static Shared<Texture> GetTexture(const std::string &path);
     static Shared<Shader> GetShader(const std::string &path);
+
+    static void PutMaterial(const std::string &path, Shared<Material> mat);
+
+    static bool HasMesh(const std::string &path);
+    static bool HasMaterial(const std::string &path);
+    static bool HasTexture(const std::string &path);
+    static bool HasShader(const std::string &path);
 };
 
 }

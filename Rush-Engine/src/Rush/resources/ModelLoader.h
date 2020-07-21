@@ -25,7 +25,7 @@ private:
 
     static void ProcessNode(RootMesh &root, const aiNode *node, const aiScene *scene);
     static SubMesh ProcessMesh(const aiMesh *mesh, const aiScene *scene);
-    static Material ProcessMaterial(const aiMaterial *material, const aiScene *scene);
+    static MaterialInstance ProcessMaterial(const aiMaterial *material, const aiScene *scene);
 public:
     ModelLoader() = delete;
     ~ModelLoader();

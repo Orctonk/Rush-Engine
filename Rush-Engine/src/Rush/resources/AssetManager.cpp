@@ -28,7 +28,14 @@ MeshInstance AssetManager::GetMeshInstance(const std::string &path) {
     return {s_Meshes[path]}; 
 }
 
-MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) { }
+MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) { 
+    auto cached = s_Materials.find(path);
+    if(cached == s_Materials.end())
+        RUSH_ASSERT(false); // Asset manager currently relies on models loading their mats
+        //s_Materials.emplace(path,CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
+
+    return {s_Materials[path]}; 
+}
 
 Shared<Texture> AssetManager::GetTexture(const std::string &path){
     auto cachedTex = s_Textures.find(path);
@@ -51,5 +58,26 @@ Shared<Shader> AssetManager::GetShader(const std::string &path){
         return shader;
     }
 }
+
+void AssetManager::PutMaterial(const std::string &path, Shared<Material> mat) {
+    s_Materials[path] = mat;
+}
+
+bool AssetManager::HasMesh(const std::string &path){
+    return s_Meshes.find(path) != s_Meshes.end();
+}
+
+bool AssetManager::HasMaterial(const std::string &path){
+    return s_Materials.find(path) != s_Materials.end();
+}
+
+bool AssetManager::HasTexture(const std::string &path){
+    return s_Textures.find(path) != s_Textures.end();
+}
+
+bool AssetManager::HasShader(const std::string &path){
+    return s_Shaders.find(path) != s_Shaders.end();
+}
+
 
 }

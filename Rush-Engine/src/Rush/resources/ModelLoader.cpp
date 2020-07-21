@@ -87,20 +87,28 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
 
     m.vertices->SetIndexBuffer(IndexBuffer::Create(indices.data(),indices.size()));
 
-    m.material = Rush::CreateShared<Material>(ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene));
+    m.material = ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene);
     return m;
 }
 
-Material ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
-    Material mat;
+MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
     aiString str;
+    material->Get(AI_MATKEY_NAME,str);
+    std::string matName = s_CurDirectory + str.C_Str();
+    if(AssetManager::HasMaterial(matName))
+        return AssetManager::GetMaterialInstance(matName);
+
+    Shared<Material> mat = CreateShared<Material>();
     material->GetTexture(aiTextureType_DIFFUSE,0,&str);
-    mat.diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    mat->diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     material->GetTexture(aiTextureType_SPECULAR,0,&str);
-    mat.specularTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    mat->specularTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     material->GetTexture(aiTextureType_NORMALS,0,&str);
-    mat.normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
-    return mat;
+    mat->normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+
+    AssetManager::PutMaterial(matName,mat);
+
+    return {mat};
 }
 
 }

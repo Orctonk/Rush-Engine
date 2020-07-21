@@ -109,9 +109,9 @@ void RenderViews::RenderGBuffer(Rush::Scene &scene, Rush::Camera &cam){
 
         m_MaterialShader->Bind();
         for(auto &m : mesh.mesh->submeshes){
-            m.material->diffuseTexture->Bind(0);
-            m.material->specularTexture->Bind(1);
-            m.material->normalTexture->Bind(2);
+            m.material.parent->diffuseTexture->Bind(0);
+            m.material.parent->specularTexture->Bind(1);
+            m.material.parent->normalTexture->Bind(2);
             Renderer::Submit(m_MaterialShader,m.vertices,model);
         }
     }
