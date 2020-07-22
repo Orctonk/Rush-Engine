@@ -33,15 +33,13 @@ Rush is currently pretty bare-bones and provides only the most basic features. T
 
 ## TODO
 While Rush is pretty bare-bones currently. Many more features are planned for the future:
-* Input polling.
 * More advanced material system.
 * More flexible model loading.
 * Particle system.
 * Camera manager.
-* Editor viewport docking.
-* Editor diagnostic views.
 * Scene saving and loading.
 * Instrumentation.
+* Custom platform agnostic file utilities.
 
 ## Dependencies
 Rush is built using [CMake](https://cmake.org/) and uses the following external libraries:
