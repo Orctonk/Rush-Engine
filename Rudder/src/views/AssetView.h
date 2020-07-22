@@ -2,6 +2,7 @@
 #define __ASSETVIEW_H__
 
 #include <string>
+#include <vector>
 
 class AssetView {
 private:
@@ -14,8 +15,10 @@ private:
     };
 
     bool m_AssetFilters[AssetFilter::Count];
+    std::vector<std::string> m_DisplayedAssets;
 
-    void RenderAsset(std::string parsed, std::string rest);
+    void RenderAsset(std::string &curDir, const std::string &asset, bool &disp);
+    void InvalidateDisplayedAssets();
 
 public:
     bool enabled;
