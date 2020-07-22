@@ -70,7 +70,7 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
 			RUSH_LOG_ERROR("Failed to initialize GLFW!");
 			return;
 		}
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_SAMPLES,4);
 #ifdef RUSH_DEBUG
