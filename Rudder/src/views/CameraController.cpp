@@ -58,7 +58,7 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
         case MouseDragMode::PAN:
             m_Camera.Translate(
                 m_Camera.GetRight() * (-dx / 200.0f) +
-                glm::vec3(0.0f, (dy / 200.0f), 0.0f) );
+                glm::cross(m_Camera.GetRight(),m_Camera.GetFront()) * (dy / 200.0f));
             break;
     }
     return false;
