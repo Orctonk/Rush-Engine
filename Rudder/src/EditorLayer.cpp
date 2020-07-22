@@ -79,6 +79,7 @@ void EditorLayer::OnImguiRender() {
             ImGui::EndMenu();
         }
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
+        ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
