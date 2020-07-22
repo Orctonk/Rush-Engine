@@ -9,7 +9,7 @@ namespace Rush {
 
 OGLVertexBuffer::OGLVertexBuffer(uint32_t size) 
     :   VertexBuffer(size) {
-    glCreateBuffers(1,&m_VBO);
+    glGenBuffers(1,&m_VBO);
     RUSH_ASSERT(m_VBO);
     glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
     glBufferData(GL_ARRAY_BUFFER,size,nullptr,GL_DYNAMIC_DRAW);
@@ -17,7 +17,7 @@ OGLVertexBuffer::OGLVertexBuffer(uint32_t size)
 
 OGLVertexBuffer::OGLVertexBuffer(const float *data, uint32_t size)
     :   VertexBuffer(data, size) {
-    glCreateBuffers(1,&m_VBO);
+    glGenBuffers(1,&m_VBO);
     RUSH_ASSERT(m_VBO);
     glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
     glBufferData(GL_ARRAY_BUFFER,size,data,GL_STATIC_DRAW);
