@@ -10,6 +10,7 @@ namespace Rush {
 class RUSH_API Time {
 private:
     static std::chrono::steady_clock::time_point s_LastUpdate;
+    static std::chrono::steady_clock::time_point s_Startup;
 
     static double s_DeltaTime;
     static double s_FixedDeltaTime;
@@ -24,6 +25,8 @@ public:
     static double Delta() { return s_DeltaTime; }
     static double FixedDelta() { return s_FixedDeltaTime; }
     static double TimeScale() { return s_TimeScale; }
+    static uint64_t ProgramTimeMillis();
+    static uint64_t ProgramTimeMicros();
     static void SetTimeScale(double timescale) { s_TimeScale = timescale; }
     static void SetFixedDelta(double fixeddelta) { s_FixedDeltaTime = fixeddelta; }
 
