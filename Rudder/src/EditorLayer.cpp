@@ -45,6 +45,7 @@ void EditorLayer::OnUpdate() {
 void EditorLayer::OnEvent(Rush::Event &e) {
     m_RenderViews.OnEvent(e);
     m_SceneGraph.OnEvent(e);
+    m_PRView.OnEvent(e);
 }
 void EditorLayer::OnImguiRender() {
 
@@ -80,6 +81,7 @@ void EditorLayer::OnImguiRender() {
         }
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
         ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
+        ImGui::MenuItem("Profiler inspector", "", &m_PRView);
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -104,4 +106,5 @@ void EditorLayer::OnImguiRender() {
     m_RenderViews.OnImguiRender();
     m_SceneGraph.OnImguiRender(m_Scene);
     m_AssetView.OnImguiRender();
+    m_PRView.OnImguiRender();
 }

@@ -5,6 +5,7 @@
 #include "views/RenderViews.h"
 #include "views/SceneGraphView.h"
 #include "views/AssetView.h"
+#include "views/ProfilerResultView.h"
 
 class EditorLayer : public Rush::Layer {
 private:
@@ -12,6 +13,7 @@ private:
     RenderViews m_RenderViews;
     SceneGraphView m_SceneGraph;
     AssetView m_AssetView;
+    ProfilerResultView m_PRView;
 public:
     EditorLayer();
     ~EditorLayer();
