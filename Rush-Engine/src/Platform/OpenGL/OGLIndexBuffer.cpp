@@ -8,6 +8,7 @@ namespace Rush {
 
 OGLIndexBuffer::OGLIndexBuffer(const uint32_t *indices, uint32_t count)
     : IndexBuffer(indices,count) {
+    RUSH_PROFILE_FUNCTION();
     glGenBuffers(1,&m_EBO);
     RUSH_ASSERT(m_EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_EBO);
@@ -15,14 +16,17 @@ OGLIndexBuffer::OGLIndexBuffer(const uint32_t *indices, uint32_t count)
 }
 
 OGLIndexBuffer::~OGLIndexBuffer() {
+    RUSH_PROFILE_FUNCTION();
     glDeleteBuffers(1,&m_EBO);
 }
 
 void OGLIndexBuffer::Bind() {
+    RUSH_PROFILE_FUNCTION();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_EBO);
 }
 
 void OGLIndexBuffer::Unbind() {
+    RUSH_PROFILE_FUNCTION();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 }
 

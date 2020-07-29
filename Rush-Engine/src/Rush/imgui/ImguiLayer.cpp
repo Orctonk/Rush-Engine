@@ -14,6 +14,7 @@ ImguiLayer::ImguiLayer() { }
 ImguiLayer::~ImguiLayer() { }
 
 void ImguiLayer::OnAttach() {
+    RUSH_PROFILE_FUNCTION();
     ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	
@@ -60,11 +61,13 @@ void ImguiLayer::OnAttach() {
 void ImguiLayer::OnDetach() { }
 
 void ImguiLayer::OnUpdate() { 
+    RUSH_PROFILE_FUNCTION();
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = Time::Delta();
 }
 
 void ImguiLayer::OnEvent(Event &e) { 
+    RUSH_PROFILE_FUNCTION();
     e.Dispatch<KeyboardPressEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyPressHandle));
     e.Dispatch<KeyboardReleaseEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyReleaseHandle));
     e.Dispatch<KeyboardTypeEvent>(RUSH_BIND_FN(ImguiLayer::ImguiKeyTypeHandle));
@@ -76,11 +79,13 @@ void ImguiLayer::OnEvent(Event &e) {
 }
 
 void ImguiLayer::Begin() {
+    RUSH_PROFILE_FUNCTION();
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
 }
 
 void ImguiLayer::End() {
+    RUSH_PROFILE_FUNCTION();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

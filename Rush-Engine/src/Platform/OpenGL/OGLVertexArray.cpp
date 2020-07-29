@@ -8,6 +8,7 @@
 namespace Rush {
 
 OGLVertexArray::OGLVertexArray() {
+    RUSH_PROFILE_FUNCTION();
     m_VertexBuffers = std::vector<Shared<VertexBuffer>>();
     m_VertexIndex = 0;
     glGenVertexArrays(1,&m_VAO);
@@ -15,18 +16,22 @@ OGLVertexArray::OGLVertexArray() {
 }
 
 OGLVertexArray::~OGLVertexArray(){
+    RUSH_PROFILE_FUNCTION();
     glDeleteVertexArrays(1,&m_VAO);
 }
 
 void OGLVertexArray::Bind(){
+    RUSH_PROFILE_FUNCTION();
     glBindVertexArray(m_VAO);
 }
 
 void OGLVertexArray::Unbind(){
+    RUSH_PROFILE_FUNCTION();
     glBindVertexArray(0);
 }
 
 void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
+    RUSH_PROFILE_FUNCTION();
     glBindVertexArray(m_VAO);
 
     vb->Bind();
@@ -49,6 +54,7 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
 }
 
 void OGLVertexArray::SetIndexBuffer(Shared<IndexBuffer> ib) {
+    RUSH_PROFILE_FUNCTION();
     glBindVertexArray(m_VAO);
     m_IndexBuffer = ib;
     ib->Bind();

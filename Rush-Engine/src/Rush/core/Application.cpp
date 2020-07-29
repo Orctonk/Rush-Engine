@@ -15,6 +15,7 @@ Application *Application::s_Instance;
 Application::Application(){ 
     s_Instance = this;
     Time::Init();
+    Profiler::Init();
     Logger::Init();
 	Logger::SetAlias("Initialization");
     WindowProperties props;
@@ -32,16 +33,19 @@ Application::~Application(){
     Renderer::Shutdown();
 	RUSH_LOG_INFO("Exit completed");
 	Logger::Destroy();
+    Profiler::Shutdown();
     Time::Shutdown();
 }
 
 void Application::Run(){
+    RUSH_PROFILE_FUNCTION();
     Init();
     m_ImguiLayer = new ImguiLayer();
     PushOverlay(m_ImguiLayer);
     PushOverlay(new DebugLayer());
     m_Running = true;
     while(m_Running){
+        RUSH_PROFILE_SCOPE("Main loop");
         Time::Update();
 
         PollEvents();
@@ -61,18 +65,22 @@ void Application::Run(){
 }
 
 void Application::PushLayer(Layer *layer){
+    RUSH_PROFILE_FUNCTION();
     m_LayerStack.PushLayer(layer);
     layer->OnAttach();
 }
 
 void Application::PushOverlay(Layer *layer){
+    RUSH_PROFILE_FUNCTION();
     m_LayerStack.PushOverlay(layer);
     layer->OnAttach();
 }
 
 void Application::PollEvents(){
+    RUSH_PROFILE_FUNCTION();
     Event *e;
     while((e = EventQueue::GetInstance().ConsumeEvent()) != nullptr){
+        RUSH_PROFILE_SCOPE("Event Polling");
         e->Dispatch<WindowCloseEvent>(RUSH_BIND_FN(Application::WindowCloseHandle));
         e->Dispatch<WindowResizeEvent>(RUSH_BIND_FN(Application::WindowResizeHandle));
         Input::Update(*e);
@@ -91,6 +99,7 @@ bool Application::WindowCloseHandle(WindowCloseEvent &e){
 }
 
 bool Application::WindowResizeHandle(WindowResizeEvent &e){
+    RUSH_PROFILE_FUNCTION();
     Renderer::OnResize(e.width,e.height);
     return false;
 }

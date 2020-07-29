@@ -13,6 +13,7 @@
 namespace Rush{
 
 static void glfwErrorCallback(int errorCode, const char * message){
+    RUSH_PROFILE_FUNCTION();
     RUSH_LOG_ERROR("(" + std::to_string(errorCode) + ") " + message);
 }
 
@@ -64,7 +65,9 @@ int GLFWWindow::s_WindowCount = 0;
 GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     AbstractWindow(properties)
 {
+    RUSH_PROFILE_FUNCTION();
     if(s_WindowCount == 0){
+        RUSH_PROFILE_SCOPE("GLFW Init");
         RUSH_LOG_INFO("Initializing GLFW...");
         if(!glfwInit()){
 			RUSH_LOG_ERROR("Failed to initialize GLFW!");
@@ -120,24 +123,28 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     EventQueue::GetInstance().PostEvent(new WindowOpenEvent());
 
     glfwSetWindowPosCallback(m_Window, [](GLFWwindow* win, int x, int y){
+        RUSH_PROFILE_FUNCTION();
         WindowProperties *props = (WindowProperties*)glfwGetWindowUserPointer(win);
         props->xPos = x;
         props->yPos = y;
         EventQueue::GetInstance().PostEvent(new WindowMoveEvent(x,y));
     });
     glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* win, int width, int height){
+        RUSH_PROFILE_FUNCTION();
         WindowProperties *props = (WindowProperties*)glfwGetWindowUserPointer(win);
         props->width = width;
         props->height = height;
         EventQueue::GetInstance().PostEvent(new WindowResizeEvent(width,height));
     });
     glfwSetWindowCloseCallback(m_Window, [](GLFWwindow *win){
+        RUSH_PROFILE_FUNCTION();
         EventQueue::GetInstance().PostEvent(new WindowCloseEvent());
     });
     glfwSetWindowFocusCallback(m_Window, [](GLFWwindow * win, int focus_gained){
         EventQueue::GetInstance().PostEvent(new WindowFocusEvent(focus_gained == GLFW_TRUE));
     });
     glfwSetKeyCallback(m_Window,[](GLFWwindow *win, int key, int scan, int action, int mods){
+        RUSH_PROFILE_FUNCTION();
         if(action == GLFW_PRESS){
             EventQueue::GetInstance().PostEvent(new KeyboardPressEvent(key));
         } else if (action == GLFW_REPEAT){
@@ -147,10 +154,12 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
         }
     });
     glfwSetCharCallback(m_Window, [](GLFWwindow *win, unsigned int character){
+        RUSH_PROFILE_FUNCTION();
         EventQueue::GetInstance().PostEvent(new KeyboardTypeEvent(character));
     });
 
     glfwSetMouseButtonCallback(m_Window,[](GLFWwindow *win, int button, int action, int mods){
+        RUSH_PROFILE_FUNCTION();
         if(action == GLFW_PRESS){
             EventQueue::GetInstance().PostEvent(new MousePressedEvent(button));
         } else if(action == GLFW_RELEASE){
@@ -158,14 +167,17 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
         }
     });
     glfwSetCursorPosCallback(m_Window,[](GLFWwindow *win, double x, double y){
+        RUSH_PROFILE_FUNCTION();
         EventQueue::GetInstance().PostEvent(new MouseMoveEvent(x,y));
     });
     glfwSetScrollCallback(m_Window, [](GLFWwindow *win, double x, double y){
+        RUSH_PROFILE_FUNCTION();
         EventQueue::GetInstance().PostEvent(new MouseScrollEvent(y));
     });
 }
 
 GLFWWindow::~GLFWWindow() {
+    RUSH_PROFILE_FUNCTION();
     glfwDestroyWindow(m_Window);
     s_WindowCount--;
     if(s_WindowCount == 0){
@@ -175,6 +187,7 @@ GLFWWindow::~GLFWWindow() {
 
 
 void GLFWWindow::Move(int xPos,int yPos) {
+    RUSH_PROFILE_FUNCTION();
     m_Properties.xPos = xPos;
     m_Properties.yPos = yPos;
     glfwSetWindowPos(m_Window,xPos,yPos);
@@ -182,6 +195,7 @@ void GLFWWindow::Move(int xPos,int yPos) {
 
 
 void GLFWWindow::Resize(int width, int height) {
+    RUSH_PROFILE_FUNCTION();
     m_Properties.width = width;
     m_Properties.height = height;
     glfwSetWindowSize(m_Window,width,height);
@@ -189,6 +203,7 @@ void GLFWWindow::Resize(int width, int height) {
 
 
 void GLFWWindow::SetWindowMode(WindowMode mode) {
+    RUSH_PROFILE_FUNCTION();
     m_Properties.windowMode = mode;   
     const GLFWvidmode *vmode = glfwGetVideoMode(glfwGetPrimaryMonitor()); 
     switch (mode){
@@ -206,11 +221,13 @@ void GLFWWindow::SetWindowMode(WindowMode mode) {
 }
 
 void GLFWWindow::Update() {
+    RUSH_PROFILE_FUNCTION();
     glfwPollEvents();
     m_Context->SwapBuffer();
 }
 
 void GLFWWindow::SetVSync(bool enable) {
+    RUSH_PROFILE_FUNCTION();
     glfwSwapInterval(enable ? 1 : 0);
 }
 }

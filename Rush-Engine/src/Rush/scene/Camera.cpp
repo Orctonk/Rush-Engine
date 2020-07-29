@@ -5,6 +5,7 @@
 namespace Rush {
 
 void Camera::recalcCamera(){
+    RUSH_PROFILE_FUNCTION();
     m_Front.x = glm::cos(glm::radians(m_Yaw)) * glm::cos(glm::radians(m_Pitch));
     m_Front.y = glm::sin(glm::radians(m_Pitch));
     m_Front.z = glm::sin(glm::radians(m_Yaw)) * glm::cos(glm::radians(m_Pitch));
@@ -19,6 +20,7 @@ void Camera::recalcCamera(){
 
 Camera::Camera(ProjectionMode mode, float aspect) 
 :   m_Yaw(0), m_Pitch(0), m_Roll(0), m_FOV(45), m_Position(glm::vec3(0,0,1)), m_Front(), m_Right() {
+    RUSH_PROFILE_FUNCTION();
     m_Projection = glm::mat4(1.0f);
     m_View = glm::mat4(1.0f);
     recalcCamera();
@@ -28,11 +30,13 @@ Camera::Camera(ProjectionMode mode, float aspect)
 Camera::~Camera() { }
 
 void Camera::SetPosition(glm::vec3 pos){
+    RUSH_PROFILE_FUNCTION();
     m_Position = pos;
     recalcCamera();
 }
 
 void Camera::SetRotation(float yaw, float pitch, float roll){
+    RUSH_PROFILE_FUNCTION();
     m_Yaw = yaw;
     m_Pitch = pitch;
     m_Roll = roll;
@@ -40,6 +44,7 @@ void Camera::SetRotation(float yaw, float pitch, float roll){
 }
 
 void Camera::SetProjection(ProjectionMode mode, float aspect) {
+    RUSH_PROFILE_FUNCTION();
     if(mode == ProjectionMode::PERSPECTIVE){
         m_Projection = glm::perspective(glm::radians(m_FOV),aspect,0.1f,100.0f);
     } else {
@@ -49,6 +54,7 @@ void Camera::SetProjection(ProjectionMode mode, float aspect) {
 }
 
 void Camera::Rotate(float yaw, float pitch, float roll) {
+    RUSH_PROFILE_FUNCTION();
     m_Yaw += yaw;
     m_Pitch += pitch;
     m_Roll += roll;    
@@ -56,6 +62,7 @@ void Camera::Rotate(float yaw, float pitch, float roll) {
 }
 
 void Camera::Translate(glm::vec3 offset){
+    RUSH_PROFILE_FUNCTION();
     m_Position += offset;
     recalcCamera();
 }

@@ -7,12 +7,14 @@ EventQueue::EventQueue(/* args */)
 { }
 
 void EventQueue::PostEvent(Event *event){
+    RUSH_PROFILE_FUNCTION();
     m_EventLock.lock();
     m_EventQueue.push(event);
     m_EventLock.unlock();
 }
 
 Event *EventQueue::ConsumeEvent(){
+    RUSH_PROFILE_FUNCTION();
     Event *e = nullptr;
     m_EventLock.lock();
     if(!m_EventQueue.empty()){

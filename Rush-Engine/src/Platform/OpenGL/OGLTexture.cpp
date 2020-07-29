@@ -9,6 +9,7 @@ namespace Rush {
 
 OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision)
 : Texture("Created texture") {
+    RUSH_PROFILE_FUNCTION();
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
     uint32_t format, type;
@@ -24,6 +25,7 @@ OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision)
 
 OGLTexture::OGLTexture(std::string filepath)
 : Texture(filepath) {
+    RUSH_PROFILE_FUNCTION();
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
 
@@ -44,10 +46,12 @@ OGLTexture::OGLTexture(std::string filepath)
 }
 
 OGLTexture::~OGLTexture(){
+    RUSH_PROFILE_FUNCTION();
     glDeleteTextures(1,&m_Texture);
 }
 
 void OGLTexture::Bind(uint8_t textureSlot){
+    RUSH_PROFILE_FUNCTION();
     glActiveTexture(GL_TEXTURE0 + textureSlot);
     glBindTexture(GL_TEXTURE_2D, m_Texture);
 }

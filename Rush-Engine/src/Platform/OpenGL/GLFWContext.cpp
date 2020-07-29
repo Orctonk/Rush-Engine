@@ -8,16 +8,19 @@ namespace Rush {
 
 GLFWContext::GLFWContext(GLFWwindow *windowContext)
     : m_Context(windowContext) {
+    RUSH_PROFILE_FUNCTION();
     
 }
 
 
 GLFWContext::~GLFWContext() {
+    RUSH_PROFILE_FUNCTION();
     
 }
 
 
 void GLFWContext::Init() {
+    RUSH_PROFILE_FUNCTION();
     RUSH_LOG_INFO("Initializing glad");
     MakeCurrent();
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -32,11 +35,13 @@ void GLFWContext::Init() {
 }
 
 void GLFWContext::MakeCurrent() {
+    RUSH_PROFILE_FUNCTION();
     glfwMakeContextCurrent(m_Context);
 }
 
 
 void GLFWContext::SwapBuffer() {
+    RUSH_PROFILE_FUNCTION();
     glfwSwapBuffers(m_Context);
 }    
 

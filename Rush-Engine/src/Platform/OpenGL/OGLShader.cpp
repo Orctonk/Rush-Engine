@@ -12,6 +12,7 @@ namespace Rush {
 #define SHADER_TYPE_COUNT 3
 
 uint32_t createShader(int8_t type, std::string source){
+    RUSH_PROFILE_FUNCTION();
     GLenum shaderType;
     switch(type){
         case VERTEX_SHADER:     shaderType = GL_VERTEX_SHADER;      break;
@@ -41,6 +42,7 @@ uint32_t createShader(int8_t type, std::string source){
 
 OGLShader::OGLShader(std::string shaderPath)
     :   Shader(shaderPath) {
+    RUSH_PROFILE_FUNCTION();
     m_Shader = glCreateProgram();
     std::ifstream fs;
     fs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -105,18 +107,22 @@ OGLShader::OGLShader(std::string shaderPath)
 }
 
 OGLShader::~OGLShader() {
+    RUSH_PROFILE_FUNCTION();
     glDeleteProgram(m_Shader);
 }
 
 void OGLShader::Bind() {
+    RUSH_PROFILE_FUNCTION();
     glUseProgram(m_Shader);
 }
 
 void OGLShader::Unbind() {
+    RUSH_PROFILE_FUNCTION();
     glUseProgram(0);
 }
 
 void OGLShader::SetUniform(std::string name, ShaderData type, const void *data) {
+    RUSH_PROFILE_FUNCTION();
     glUseProgram(m_Shader);
     auto loc = glGetUniformLocation(m_Shader,name.c_str());
     switch (type) {

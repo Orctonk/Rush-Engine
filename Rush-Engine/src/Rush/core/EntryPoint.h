@@ -5,6 +5,7 @@
 extern Rush::Application* Rush::CreateApplication();
 
 int main(int argc, char** argv){
+    RUSH_PROFILE_FUNCTION();
     auto app = Rush::CreateApplication();
     app->Run();
     delete app;

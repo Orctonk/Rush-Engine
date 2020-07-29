@@ -12,6 +12,7 @@ namespace Rush {
 std::string ModelLoader::s_CurDirectory;
 
 RootMesh ModelLoader::LoadModel(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     
@@ -30,6 +31,7 @@ RootMesh ModelLoader::LoadModel(const std::string &path){
 }
 
 void ModelLoader::ProcessNode(RootMesh &root, const aiNode *node, const aiScene *scene){
+    RUSH_PROFILE_FUNCTION();
     for(unsigned int i= 0; i < node->mNumMeshes; i++){
         root.submeshes.push_back(ProcessMesh(scene->mMeshes[node->mMeshes[i]],scene));
     }
@@ -39,6 +41,7 @@ void ModelLoader::ProcessNode(RootMesh &root, const aiNode *node, const aiScene 
 }
 
 SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
+    RUSH_PROFILE_FUNCTION();
     SubMesh m;
     m.meshName = std::string(mesh->mName.C_Str());
     m.vertices = VertexArray::Create();
@@ -92,6 +95,7 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
 }
 
 MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
+    RUSH_PROFILE_FUNCTION();
     aiString str;
     material->Get(AI_MATKEY_NAME,str);
     std::string matName = s_CurDirectory + str.C_Str();

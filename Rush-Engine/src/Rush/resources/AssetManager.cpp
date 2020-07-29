@@ -13,14 +13,17 @@ std::unordered_map<std::string,Shared<Texture>>     AssetManager::s_Textures;
 std::unordered_map<std::string,Shared<Shader>>      AssetManager::s_Shaders;
 
 void AssetManager::Init(){
+    RUSH_PROFILE_FUNCTION();
     stbi_set_flip_vertically_on_load(1);
 }
 
 void AssetManager::Shutdown(){
+    RUSH_PROFILE_FUNCTION();
     
 }
 
 MeshInstance AssetManager::GetMeshInstance(const std::string &path) {
+    RUSH_PROFILE_FUNCTION();
     auto cached = s_Meshes.find(path);
     if(cached == s_Meshes.end())
         s_Meshes.emplace(path,CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
@@ -29,6 +32,7 @@ MeshInstance AssetManager::GetMeshInstance(const std::string &path) {
 }
 
 MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) { 
+    RUSH_PROFILE_FUNCTION();
     auto cached = s_Materials.find(path);
     if(cached == s_Materials.end())
         RUSH_ASSERT(false); // Asset manager currently relies on models loading their mats
@@ -38,6 +42,7 @@ MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) {
 }
 
 Shared<Texture> AssetManager::GetTexture(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     auto cachedTex = s_Textures.find(path);
     if(cachedTex != s_Textures.end()){
         return cachedTex->second;
@@ -49,6 +54,7 @@ Shared<Texture> AssetManager::GetTexture(const std::string &path){
 }
 
 Shared<Shader> AssetManager::GetShader(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     auto cachedShader = s_Shaders.find(path);
     if(cachedShader != s_Shaders.end()){
         return cachedShader->second;
@@ -60,26 +66,32 @@ Shared<Shader> AssetManager::GetShader(const std::string &path){
 }
 
 void AssetManager::PutMaterial(const std::string &path, Shared<Material> mat) {
+    RUSH_PROFILE_FUNCTION();
     s_Materials[path] = mat;
 }
 
 bool AssetManager::HasMesh(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     return s_Meshes.find(path) != s_Meshes.end();
 }
 
 bool AssetManager::HasMaterial(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     return s_Materials.find(path) != s_Materials.end();
 }
 
 bool AssetManager::HasTexture(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     return s_Textures.find(path) != s_Textures.end();
 }
 
 bool AssetManager::HasShader(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
     return s_Shaders.find(path) != s_Shaders.end();
 }
 
 std::vector<std::string> AssetManager::GetMeshKeys(){
+    RUSH_PROFILE_FUNCTION();
     std::vector<std::string> keys;
     keys.reserve(s_Meshes.size());
     for(auto &val : s_Meshes)
@@ -88,6 +100,7 @@ std::vector<std::string> AssetManager::GetMeshKeys(){
 }
 
 std::vector<std::string> AssetManager::GetMaterialKeys(){
+    RUSH_PROFILE_FUNCTION();
     std::vector<std::string> keys;
     keys.reserve(s_Materials.size());
     for(auto &val : s_Materials)
@@ -96,6 +109,7 @@ std::vector<std::string> AssetManager::GetMaterialKeys(){
 }
 
 std::vector<std::string> AssetManager::GetTextureKeys(){
+    RUSH_PROFILE_FUNCTION();
     std::vector<std::string> keys;
     keys.reserve(s_Textures.size());
     for(auto &val : s_Textures)
@@ -104,6 +118,7 @@ std::vector<std::string> AssetManager::GetTextureKeys(){
 }
 
 std::vector<std::string> AssetManager::GetShaderKeys(){
+    RUSH_PROFILE_FUNCTION();
     std::vector<std::string> keys;
     keys.reserve(s_Shaders.size());
     for(auto &val : s_Shaders)

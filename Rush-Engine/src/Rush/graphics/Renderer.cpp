@@ -22,15 +22,18 @@ void Renderer::OnResize(uint32_t width, uint32_t height){
 }
 
 void Renderer::BeginScene(Camera &camera){
+    RUSH_PROFILE_FUNCTION();
     s_SceneVP = camera.GetVPMatrix();
     s_CameraPos = camera.GetPosition();
 }
 
 void Renderer::EndScene(){
+    RUSH_PROFILE_FUNCTION();
 
 }
 
 void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va,const glm::mat4 &model) {
+    RUSH_PROFILE_FUNCTION();
     shader->Bind();
     shader->SetUniform("u_ViewProjection", ShaderData::MAT4, glm::value_ptr(s_SceneVP));
     shader->SetUniform("u_Model", ShaderData::MAT4, glm::value_ptr(model));
@@ -39,6 +42,7 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
 }
 
 void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
+    RUSH_PROFILE_FUNCTION();
     static const Unique<VertexArray> boxVA = VertexArray::Create();
     static bool init = false;
     if(!init){
@@ -72,6 +76,7 @@ void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
 }
 
 void Renderer::RenderQuad(const Shared<Shader> &shader, const glm::vec2 &pos, const glm::vec2 &size){
+    RUSH_PROFILE_FUNCTION();
     static const Unique<VertexArray> quadVA = VertexArray::Create();
     static bool init = false;
     if(!init){
@@ -102,6 +107,7 @@ void Renderer::RenderQuad(const Shared<Shader> &shader, const glm::vec2 &pos, co
 }
 
 void Renderer::RenderTexturedQuad(const Shared<Shader> &shader, const glm::vec2 &pos, const glm::vec2 &size){
+    RUSH_PROFILE_FUNCTION();
     static const Unique<VertexArray> quadVA = VertexArray::Create();
     static bool init = false;
     if(!init){

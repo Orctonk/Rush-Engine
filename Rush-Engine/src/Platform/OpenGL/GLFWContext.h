@@ -14,9 +14,9 @@ public:
     GLFWContext(GLFWwindow *windowContext);
     ~GLFWContext();
 
-    virtual void Init() override;
-    virtual void MakeCurrent() override;
-    virtual void SwapBuffer() override;
+    void Init() override;
+    void MakeCurrent() override;
+    void SwapBuffer() override;
 };
 
 } // namespace Rush

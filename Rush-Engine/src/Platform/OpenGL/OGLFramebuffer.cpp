@@ -9,6 +9,7 @@ namespace Rush {
 
 OGLFramebuffer::OGLFramebuffer(FramebufferOptions options)
 :   Framebuffer(options) {
+    RUSH_PROFILE_FUNCTION();
     glGenFramebuffers(1,&m_FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
     std::vector<uint32_t> atts;
@@ -32,20 +33,24 @@ OGLFramebuffer::OGLFramebuffer(FramebufferOptions options)
 }
 
 OGLFramebuffer::~OGLFramebuffer(){
+    RUSH_PROFILE_FUNCTION();
     glDeleteRenderbuffers(1,&m_DRO);
     glDeleteFramebuffers(1,&m_FBO);
 }
 
 void OGLFramebuffer::Bind(){
+    RUSH_PROFILE_FUNCTION();
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
     glViewport(0,0,m_Options.width,m_Options.height);
 }
 
 void OGLFramebuffer::Unbind(){
+    RUSH_PROFILE_FUNCTION();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OGLFramebuffer::Resize(uint32_t width, uint32_t height){
+    RUSH_PROFILE_FUNCTION();
     m_Options.width = width;
     m_Options.height = height;
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
@@ -70,6 +75,7 @@ void OGLFramebuffer::Resize(uint32_t width, uint32_t height){
 }
 
 void OGLFramebuffer::Blit(Unique<Framebuffer> &other){
+    RUSH_PROFILE_FUNCTION();
     if(other != nullptr){
         glBindFramebuffer(GL_READ_FRAMEBUFFER, m_FBO);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, ((OGLFramebuffer*)other.get())->m_FBO);

@@ -12,6 +12,7 @@ Input::Input(){
 }
 
 void Input::Update(Event &e){
+    RUSH_PROFILE_FUNCTION();
     e.Dispatch<MousePressedEvent>(std::bind(&Input::MousePressHandle,s_Instance,std::placeholders::_1));
     e.Dispatch<MouseReleasedEvent>(std::bind(&Input::MouseReleaseHandle,s_Instance,std::placeholders::_1));
     e.Dispatch<MouseMoveEvent>(std::bind(&Input::MouseMoveHandle,s_Instance,std::placeholders::_1));

@@ -9,6 +9,7 @@ namespace Rush {
 
 OGLVertexBuffer::OGLVertexBuffer(uint32_t size) 
     :   VertexBuffer(size) {
+    RUSH_PROFILE_FUNCTION();
     glGenBuffers(1,&m_VBO);
     RUSH_ASSERT(m_VBO);
     glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
@@ -17,6 +18,7 @@ OGLVertexBuffer::OGLVertexBuffer(uint32_t size)
 
 OGLVertexBuffer::OGLVertexBuffer(const float *data, uint32_t size)
     :   VertexBuffer(data, size) {
+    RUSH_PROFILE_FUNCTION();
     glGenBuffers(1,&m_VBO);
     RUSH_ASSERT(m_VBO);
     glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
@@ -24,22 +26,27 @@ OGLVertexBuffer::OGLVertexBuffer(const float *data, uint32_t size)
 }
 
 OGLVertexBuffer::~OGLVertexBuffer() {
+    RUSH_PROFILE_FUNCTION();
     glDeleteBuffers(1,&m_VBO);
 }
 
 void OGLVertexBuffer::Bind() const {
+    RUSH_PROFILE_FUNCTION();
     glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
 }
 
 void OGLVertexBuffer::Unbind() const {
+    RUSH_PROFILE_FUNCTION();
     glBindBuffer(GL_ARRAY_BUFFER,0);
 }
 
 void OGLVertexBuffer::BufferData(const void *data, uint32_t size) {
+    RUSH_PROFILE_FUNCTION();
     glBufferSubData(m_VBO,0,size,data);
 }
 
 void OGLVertexBuffer::SetInterleavedLayout(std::vector<ShaderData> layout) {
+    RUSH_PROFILE_FUNCTION();
     m_Layout = std::vector<LayoutElement>();
     uint32_t stride = 0;
     for(auto d : layout)
@@ -59,6 +66,7 @@ void OGLVertexBuffer::SetInterleavedLayout(std::vector<ShaderData> layout) {
 }
 
 void OGLVertexBuffer::SetBatchedLayout(std::vector<ShaderData> layout) {
+    RUSH_PROFILE_FUNCTION();
     m_Layout = std::vector<LayoutElement>();
 
     uint32_t offset = 0;
