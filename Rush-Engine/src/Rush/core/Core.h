@@ -1,6 +1,7 @@
 #ifndef __CORE_H__
 #define __CORE_H__
 #include <memory>
+#include "Rush/profiling/Profiler.h"
 
 #ifdef _WIN32
 	#define RUSH_PLATFORM_WINDOWS
