@@ -1,6 +1,8 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
+#include "Entity.h"
+
 #include <entt/entity/registry.hpp>
 
 namespace Rush {
@@ -10,45 +12,14 @@ private:
     entt::registry m_SceneRegistry;
 
 public:
-    using EntityType = entt::entity;
-    
-    static constexpr EntityType nullEnt = entt::null;
-
     Scene();
     ~Scene();
+    Scene(Scene &) = delete;
+    Scene(const Scene &) = delete;
 
-    EntityType NewEntity();
-    void DeleteEntity(EntityType e);
 
-    template<typename Func>
-    void ForEach(Func func){
-        m_SceneRegistry.each(func);
-    }
-
-    template<typename Comp,typename ... Args>
-    Comp &Add(EntityType e, Args&& ... args){
-        return m_SceneRegistry.emplace<Comp>(e,std::forward<Args>(args) ...);
-    }
-
-    template<typename Comp>
-    Comp &Get(EntityType e){
-        return m_SceneRegistry.get<Comp>(e);
-    }
-
-    template<typename Comp>
-    void Remove(EntityType e){
-        m_SceneRegistry.remove<Comp>(e);
-    }
-
-    template<typename Comp>
-    bool Has(EntityType e){
-        return m_SceneRegistry.has<Comp>(e);
-    }
-
-    template<typename Comp>
-    auto View(){
-        return m_SceneRegistry.view<Comp>();
-    }
+    Entity NewEntity();
+    void DeleteEntity(Entity e);
 
     entt::registry *GetRegistry(){ return &m_SceneRegistry; }
 };

@@ -10,13 +10,13 @@ Scene::~Scene(){
     
 }
 
-Scene::EntityType Scene::NewEntity(){
-    return m_SceneRegistry.create();
+Entity Scene::NewEntity(){
+    return {&m_SceneRegistry, m_SceneRegistry.create()};
 }
 
-void Scene::DeleteEntity(EntityType e){
-    m_SceneRegistry.remove_all(e);
-    m_SceneRegistry.destroy(e);
+void Scene::DeleteEntity(Entity e){
+    m_SceneRegistry.remove_all(e.m_Entity);
+    m_SceneRegistry.destroy(e.m_Entity);
 }
 
 }
