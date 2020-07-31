@@ -124,7 +124,12 @@ void OGLShader::Unbind() {
 void OGLShader::SetUniform(std::string name, ShaderData type, const void *data) {
     RUSH_PROFILE_FUNCTION();
     glUseProgram(m_Shader);
-    auto loc = glGetUniformLocation(m_Shader,name.c_str());
+    if(m_UniformCache.find(name) == m_UniformCache.end()){
+        auto loc = glGetUniformLocation(m_Shader,name.c_str());
+        m_UniformCache[name] = loc;
+        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugPath + "'!");
+    }
+    auto loc = m_UniformCache[name];
     switch (type) {
     case ShaderData::FLOAT: glUniform1fv(loc,1,static_cast<const GLfloat *>(data)); break;
     case ShaderData::FLOAT2: glUniform2fv(loc,1,static_cast<const GLfloat *>(data)); break;

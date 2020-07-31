@@ -12,6 +12,7 @@ namespace Rush {
 class OGLShader : public Shader {
 private:
     uint32_t m_Shader;
+    std::unordered_map<std::string,int> m_UniformCache;
 public:
     OGLShader(std::string shaderPath);
     ~OGLShader();
