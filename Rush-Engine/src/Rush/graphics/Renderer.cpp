@@ -35,9 +35,9 @@ void Renderer::EndScene(){
 void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va,const glm::mat4 &model) {
     RUSH_PROFILE_FUNCTION();
     shader->Bind();
-    shader->SetUniform("u_ViewProjection", ShaderData::MAT4, glm::value_ptr(s_SceneVP));
-    shader->SetUniform("u_Model", ShaderData::MAT4, glm::value_ptr(model));
-    shader->SetUniform("u_CamPos", ShaderData::FLOAT3, glm::value_ptr(s_CameraPos));
+    shader->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_SceneVP));
+    shader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
+    shader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_CameraPos));
     s_API->DrawIndexed(va);
 }
 
