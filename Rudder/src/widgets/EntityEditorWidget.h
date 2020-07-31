@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-typedef void(*ComponentFunc)(Rush::Scene &, Rush::Scene::EntityType);
+typedef void(*ComponentFunc)(Rush::Entity &);
 
 struct ComponentData {
     std::string name;
@@ -28,14 +28,12 @@ public:
         ComponentData d;
         d.name = name;
         d.drawWidget = draw;
-        d.create = [](Rush::Scene &scene, Rush::Scene::EntityType e){scene.Add<Comp>(e);};
-        d.remove = [](Rush::Scene &scene, Rush::Scene::EntityType e){
-            scene.Remove<Comp>(e);
-            };
+        d.create = [](Rush::Entity &e){e.AddComponent<Comp>();};
+        d.remove = [](Rush::Entity &e){e.RemoveComponent<Comp>();};
         m_CompMap.emplace(entt::type_info<Comp>::id(), d );
     }    
 
-    void Render(Rush::Scene &scene, Rush::Scene::EntityType e, bool *shown);
+    void Render(Rush::Entity e, bool *shown);
 };
 
 #endif // __ENTITYEDITORWIDGET_H__

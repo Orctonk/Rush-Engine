@@ -7,15 +7,14 @@
 
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
-    m_SelectedEnt = Scene::nullEnt;
-    m_EE.Register<Transform>("Transform",[](Rush::Scene &scene, Rush::Scene::EntityType e){
-        auto& t = scene.Get<Transform>(e);
+    m_EE.Register<Transform>("Transform",[](Rush::Entity &e){
+        auto& t = e.GetComponent<Transform>();
         ImGui::DragFloat3("Position", &t.translation.x, 0.01f);
         ImGui::DragFloat3("Rotation", &t.rotation.x, 1.0f);
         ImGui::DragFloat3("Scale", &t.scale.x, 0.01f);
     });
-    m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Scene &scene, Rush::Scene::EntityType e){
-        for(auto &mesh : scene.Get<MeshInstance>(e).mesh->submeshes){
+    m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Entity &e){
+        for(auto &mesh : e.GetComponent<MeshInstance>().mesh->submeshes){
             if(ImGui::TreeNode(mesh.meshName.c_str())){
                 ImGui::Text("Mesh data...");
                 ImGui::Separator();
@@ -24,15 +23,15 @@ SceneGraphView::SceneGraphView(){
             }
         }
     });
-    m_EE.Register<DirectionalLight>("Directional light",[](Rush::Scene &scene, Rush::Scene::EntityType e){
-        auto& l = scene.Get<DirectionalLight>(e);
+    m_EE.Register<DirectionalLight>("Directional light",[](Rush::Entity &e){
+        auto& l = e.GetComponent<DirectionalLight>();
         ImGui::DragFloat3("Direction", &l.direction.x, 0.1f);
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
         ImGui::ColorEdit3("Specular", &l.specular.r);
     });
-    m_EE.Register<PointLight>("Point light",[](Rush::Scene &scene, Rush::Scene::EntityType e){
-        auto& l = scene.Get<PointLight>(e);
+    m_EE.Register<PointLight>("Point light",[](Rush::Entity &e){
+        auto& l = e.GetComponent<PointLight>();
         ImGui::DragFloat3("Position", &l.position.x, 0.1f);
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
@@ -51,7 +50,6 @@ void SceneGraphView::OnEvent(Rush::Event &e){
 
 void SceneGraphView::OnImguiRender(Rush::Scene &scene){
     using namespace Rush; 
-    m_SceneRenderAccess = &scene;
     if(!enabled)
         return;
     
@@ -60,28 +58,27 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
     ImGui::SameLine(width - 50.0f);
     if(ImGui::Button("+")) scene.NewEntity();
     ImGui::SameLine();
-    if(ImGui::Button("-") && m_SelectedEnt != scene.nullEnt) {
+    if(ImGui::Button("-") && m_SelectedEnt) {
         scene.DeleteEntity(m_SelectedEnt);
-        m_SelectedEnt = scene.nullEnt;
+        m_SelectedEnt = Entity(scene.GetRegistry(),entt::null);
     }
 
-    scene.ForEach([=](const entt::entity e){
-        RenderEntity(e);
+    scene.GetRegistry()->each([&](entt::entity e){
+        RenderEntity({scene.GetRegistry(), e});
     });
 
     ImGui::End();
     
-    if(m_SelectedEnt != scene.nullEnt && m_EEVisible)
-        m_EE.Render(scene,m_SelectedEnt,&m_EEVisible);
+    if(m_SelectedEnt && m_EEVisible)
+        m_EE.Render(m_SelectedEnt,&m_EEVisible);
 }
 
-void SceneGraphView::RenderEntity(const Rush::Scene::EntityType e){
+void SceneGraphView::RenderEntity(Rush::Entity e){
     const char *name = "";
-    Rush::Scene &scene = *m_SceneRenderAccess;
-    if(scene.Has<EntityName>(e))
-        name = scene.Get<EntityName>(e).name.c_str();
+    if(e.HasComponent<EntityName>())
+        name = e.GetComponent<EntityName>().name.c_str();
     if (strlen(name) == 0)
-        name = std::to_string(entt::to_integral(e)).c_str();
+        name = std::to_string(e.GetID()).c_str();
 
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
     if(e == m_SelectedEnt) {
@@ -100,7 +97,7 @@ void SceneGraphView::RenderEntity(const Rush::Scene::EntityType e){
         ImGui::TreeNodeEx(name,flags);
     }
     if(ImGui::IsItemClicked() || ImGui::IsItemClicked(1)){
-        if(e != m_SelectedEnt)
+        if(!(e == m_SelectedEnt))
             m_Renaming = false;
         m_EEVisible = true;
         m_SelectedEnt = e;
@@ -108,28 +105,11 @@ void SceneGraphView::RenderEntity(const Rush::Scene::EntityType e){
             m_Renaming = true;
         }
     }
-    
-    if(e == m_SelectedEnt){
-        if(ImGui::BeginPopupContextItem()){
-            if(ImGui::MenuItem("New Entity")){
-                scene.NewEntity();
-            }
-            if(ImGui::MenuItem("Delete")){
-                scene.DeleteEntity(e);
-                m_SelectedEnt = entt::null;
-            }
-            if(ImGui::MenuItem("Rename")){
-                m_Renaming = true;
-                m_SelectedEnt = e;
-            }
-            ImGui::EndPopup();
-        }
-    } 
     if(m_Renaming && e == m_SelectedEnt){
-        if(!scene.Has<EntityName>(e))
-            scene.Add<EntityName>(e);
+        if(!e.HasComponent<EntityName>())
+            e.AddComponent<EntityName>();
     
-        EntityName &name = scene.Get<EntityName>(e);
+        EntityName &name = e.GetComponent<EntityName>();
         ImGui::SameLine();
         ImGui::InputText("##rename_field",&name.name);
         ImGui::SetKeyboardFocusHere();

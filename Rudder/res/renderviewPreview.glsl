@@ -1,13 +1,34 @@
 #type vertex
 #version 330 core
-layout (location = 0) in vec2 aPos;   // the position variable has attribute position 0
-layout (location = 1) in vec2 aUV; // the color variable has attribute position 1
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec3 aTangent;
+layout (location = 3) in vec2 aTexCoord;
 
-out vec2 uv;
+struct SceneData {
+    mat4 model;
+    mat4 viewProjection;
+    vec3 camPos;
+};  
+
+out VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoord;
+    mat3 TBN;
+    vec3 camPos;
+} vs_out;
+
+uniform SceneData u_Scene;
 
 void main() {
-    uv = aUV;
-    gl_Position = vec4(aPos,0.99, 1.0);
+    vs_out.TexCoord = aTexCoord;
+    vec3 T = normalize(vec3(u_Scene.model * vec4(aTangent,0.0)));
+    vec3 N = normalize(vec3(u_Scene.model * vec4(aNormal,0.0)));
+    vec3 B = cross(N,T);
+    vs_out.TBN = mat3(T,B,N);
+    vs_out.FragPos = vec3(u_Scene.model * vec4(aPos,1.0));
+    vs_out.camPos = u_Scene.camPos;
+    gl_Position = u_Scene.viewProjection * u_Scene.model * vec4(aPos,1.0);
 }
 
 #type fragment
@@ -23,26 +44,36 @@ struct DirectionalLight {
     vec3 specular;
 };
 
-out vec4 FragColor;  
-in vec2 uv;
+struct Material {
+    sampler2D diffuse;
+    sampler2D specular;
+    sampler2D normal;
+    float shininess;
+};
 
-uniform sampler2D gPos;
-uniform sampler2D gNorm;
-uniform sampler2D gColor;
+in VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoord;
+    mat3 TBN;
+    vec3 camPos;
+} fs_in;
+
+out vec4 FragColor;  
 
 uniform DirectionalLight u_DLights[DLIGHT_COUNT];
-uniform vec3 u_CamPos;
+uniform Material u_Material;
 
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 
 void main() {   
+    vec3 normal = texture(u_Material.normal,fs_in.TexCoord).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+    normal = normalize(fs_in.TBN * normal);
     vec3 result = vec3(0.0);
-    vec3 norm = texture(gNorm,uv).rgb;
-    vec3 fragPos = texture(gPos,uv).rgb;
-    vec3 viewDir = normalize(u_CamPos - fragPos);
+    vec3 viewDir = normalize(fs_in.camPos - fs_in.FragPos);
 
     for(int i = 0; i < DLIGHT_COUNT; i++)
-        result += CalcDirLight(u_DLights[i],norm,viewDir);
+        result += CalcDirLight(u_DLights[i],normal,viewDir);
 
     FragColor = vec4(result,1.0);
 }
@@ -55,8 +86,8 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
     // combine results
-    vec3 ambient = light.ambient * vec3(texture(gColor, uv).rgb);
-    vec3 diffuse = light.diffuse * diff * vec3(texture(gColor, uv).rgb);
-    vec3 specular = light.specular * spec * vec3(texture(gColor, uv).a);
+    vec3 ambient = light.ambient * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
+    vec3 specular = light.specular * spec * vec3(texture(u_Material.specular, fs_in.TexCoord).r);
     return (ambient + diffuse + specular);
 }

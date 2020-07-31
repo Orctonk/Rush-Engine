@@ -20,22 +20,22 @@ void EditorLayer::OnAttach() {
     m_RenderViews.Init();
 
     auto globalLight = m_Scene.NewEntity();
-    m_Scene.Add<EntityName>(globalLight,"Global editor lighting");
-    auto &l = m_Scene.Add<DirectionalLight>(globalLight);
+    globalLight.AddComponent<EntityName>("Global editor lighting");
+    auto &l = globalLight.AddComponent<DirectionalLight>();
     l.ambient = {0.2f,0.2f,0.2f};
     l.diffuse = {0.0f,0.0f,0.0f};
     l.specular = {0.0f,0.0f,0.0f};
 
     auto testLight = m_Scene.NewEntity();
-    m_Scene.Add<EntityName>(testLight, "Test point Light");
-    auto &l2 = m_Scene.Add<PointLight>(testLight);
+    testLight.AddComponent<EntityName>("Test point Light");
+    auto &l2 = testLight.AddComponent<PointLight>();
     l2.position = {1.0f,1.0f,1.0f};
 
     auto model = m_Scene.NewEntity();
-    m_Scene.Add<MeshInstance>(model,AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
+    model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
 
-    m_Scene.Add<Transform>(model,glm::vec3(0.0f),glm::vec3(0.0f));
-    m_Scene.Add<EntityName>(model, "Model Test");
+    model.AddComponent<Transform>(glm::vec3(0.0f),glm::vec3(0.0f));
+    model.AddComponent<EntityName>("Model Test");
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {

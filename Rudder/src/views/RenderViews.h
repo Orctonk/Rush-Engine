@@ -25,7 +25,7 @@ private:
 
     void RenderGBuffer(Rush::Scene &scene, Rush::Camera &cam);
     void FillRenderView(Rush::Scene &scene, Rush::Camera &cam);
-    void PopulateView(RenderView type);
+    void PopulateView(Rush::Scene &scene, RenderView type);
     void RenderImguiView(const char *name, RenderView type, bool resized);
 
 public:
