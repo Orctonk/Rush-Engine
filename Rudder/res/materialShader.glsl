@@ -1,31 +1,48 @@
 #type vertex
 #version 330 core
-layout (location = 0) in vec3 aPos;   // the position variable has attribute position 0
-layout (location = 1) in vec3 aNormal; // the color variable has attribute position 1
-layout (location = 2) in vec3 aTangent; // the color variable has attribute position 1
-layout (location = 3) in vec2 uvPos;
-  
-uniform mat4 u_Model;
-uniform mat4 u_ViewProjection;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec3 aTangent;
+layout (location = 3) in vec2 aTexCoord;
 
-out vec3 FragPos; // output a color to the fragment shader
-out vec2 uv;
-out mat3 TBN;
+struct SceneData {
+    mat4 model;
+    mat4 viewProjection;
+    vec3 camPos;
+};  
 
-void main()
-{
-    FragPos = vec3(u_Model * vec4(aPos, 1.0)); 
-    uv = uvPos;
+out VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoord;
+    mat3 TBN;
+    vec3 camPos;
+} vs_out;
 
-    vec3 T = normalize(vec3(u_Model * vec4(aTangent,0.0)));
-    vec3 N = normalize(vec3(u_Model * vec4(aNormal,0.0)));
+uniform SceneData u_Scene;
+
+void main() {
+    vs_out.TexCoord = aTexCoord;
+    vec3 T = normalize(vec3(u_Scene.model * vec4(aTangent,0.0)));
+    vec3 N = normalize(vec3(u_Scene.model * vec4(aNormal,0.0)));
     vec3 B = cross(N,T);
-    TBN = mat3(T,B,N);
-    gl_Position = u_ViewProjection * u_Model * vec4(aPos, 1.0);
+    vs_out.TBN = mat3(T,B,N);
+    vs_out.FragPos = vec3(u_Scene.model * vec4(aPos,1.0));
+    vs_out.camPos = u_Scene.camPos;
+    gl_Position = u_Scene.viewProjection * u_Scene.model * vec4(aPos,1.0);
 }
 
 #type fragment
 #version 330 core
+
+#define DLIGHT_COUNT 5
+
+struct DirectionalLight {
+    vec3 direction;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
 struct Material {
     sampler2D diffuse;
@@ -34,23 +51,43 @@ struct Material {
     float shininess;
 };
 
-layout (location = 0) out vec4 gPosition;
-layout (location = 1) out vec4 gNormal;
-layout (location = 2) out vec4 gColor;
+in VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoord;
+    mat3 TBN;
+    vec3 camPos;
+} fs_in;
 
-in vec3 FragPos;
-in vec2 uv;
-in mat3 TBN;
+out vec4 FragColor;  
 
-uniform vec3 u_CamPos;
+uniform DirectionalLight u_DLights[DLIGHT_COUNT];
 uniform Material u_Material;
 
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
+
 void main() {   
-    gPosition = vec4(FragPos,1.0);
-
-    vec3 normal = texture(u_Material.normal,uv).rgb;
+    vec3 normal = texture(u_Material.normal,fs_in.TexCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0);
-    gNormal = vec4(normalize(TBN * normal), 1.0);
+    normal = normalize(fs_in.TBN * normal);
+    vec3 result = vec3(0.0);
+    vec3 viewDir = normalize(fs_in.camPos - fs_in.FragPos);
 
-    gColor = vec4(texture(u_Material.diffuse,uv).rgb,texture(u_Material.specular,uv).r);
+    for(int i = 0; i < DLIGHT_COUNT; i++)
+        result += CalcDirLight(u_DLights[i],normal,viewDir);
+
+    FragColor = vec4(result,1.0);
+}
+
+vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
+    vec3 lightDir = normalize(-light.direction);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+    // combine results
+    vec3 ambient = light.ambient * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
+    vec3 specular = light.specular * spec * vec3(texture(u_Material.specular, fs_in.TexCoord).r);
+    return (ambient + diffuse + specular);
 }
