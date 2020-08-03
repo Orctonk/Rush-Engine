@@ -7,11 +7,49 @@
 
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
-    m_EE.Register<Transform>("Transform",[](Rush::Entity &e){
-        auto& t = e.GetComponent<Transform>();
+    m_EE.Register<TransformComponent>("Transform",[](Rush::Entity &e){
+        auto& t = e.GetComponent<TransformComponent>();
         ImGui::DragFloat3("Position", &t.translation.x, 0.01f);
         ImGui::DragFloat3("Rotation", &t.rotation.x, 1.0f);
         ImGui::DragFloat3("Scale", &t.scale.x, 0.01f);
+    });
+    m_EE.Register<CameraComponent>("Camera",[](Rush::Entity &e){
+        auto& c = e.GetComponent<CameraComponent>();
+        bool modified = false;
+        float near = c.camera.GetNear();
+        float far = c.camera.GetFar();
+
+        ImGui::Checkbox("Main", &c.main);
+
+        int selProj = c.camera.IsPerspective() ? 0 : 1;
+        if(ImGui::Combo("Projection", &selProj,"Perspective\0Orthographic\0\0")){
+            if(selProj == c.camera.IsPerspective()){
+                if(selProj == 0)    c.camera.SetPerspective(1024.0f/720.0f,45.0f);
+                else                c.camera.SetOrthographic(0.0f,1.0f,1.0f,0.0f);
+            }
+        }
+
+        if(c.camera.IsPerspective()){
+            float fov = c.camera.GetFOV();
+            float aspect = c.camera.GetAspect();
+            if(ImGui::SliderFloat("FOV", &fov,10.0f,120.0f,"%.0f")) modified = true;
+            if(ImGui::DragFloat("Aspect", &aspect,0.1f)) modified = true;
+            if(ImGui::DragFloat("Near", &near,0.1f)) modified = true;
+            if(ImGui::DragFloat("Far", &far,0.1f)) modified = true;
+            if(modified) c.camera.SetPerspective(aspect,fov,near,far);
+        } else {
+            float left = c.camera.GetLeft();
+            float right = c.camera.GetRight();
+            float top = c.camera.GetTop();
+            float bottom = c.camera.GetBottom();
+            if(ImGui::DragFloat("Left", &left,0.1f)) modified = true;
+            if(ImGui::DragFloat("Right", &right,0.1f)) modified = true;
+            if(ImGui::DragFloat("Top", &top,0.1f)) modified = true;
+            if(ImGui::DragFloat("Bottom", &bottom,0.1f)) modified = true;
+            if(ImGui::DragFloat("Near", &near,0.1f)) modified = true;
+            if(ImGui::DragFloat("Far", &far,0.1f)) modified = true;
+            if(modified) c.camera.SetOrthographic(left,right,top,bottom,near,far);
+        }
     });
     m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Entity &e){
         for(auto &mesh : e.GetComponent<MeshInstance>().mesh->submeshes){
