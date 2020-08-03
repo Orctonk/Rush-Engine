@@ -14,35 +14,36 @@ enum class ProjectionMode{
 
 class RUSH_API Camera {
 private:
-    glm::mat4 m_VP;
-    glm::mat4 m_View;
     glm::mat4 m_Projection;
-    glm::vec3 m_Position;
-    glm::vec3 m_Front;
-    glm::vec3 m_Right;
+    float m_LeftOrAspect,m_RightOrFOV;
+    float m_Near,m_Far;
 
-    float m_Pitch;
-    float m_Yaw;
-    float m_Roll;
-    float m_FOV;
-
-    void recalcCamera();
+    // Orthographic properties
+    float m_Top,m_Bottom;
 public:
-    Camera(ProjectionMode mode, float aspect);
+    Camera(float aspect, float FOV, float near = 0.1f, float far = 100.0f);
+    Camera(float left, float right, float top, float bottom, float near= 0.1f, float far = 100.0f);
     ~Camera();
 
-    void SetPosition(glm::vec3 position);
-    void SetRotation(float yaw, float pitch, float roll);
-    void SetProjection(ProjectionMode mode, float aspect);
-    void Rotate(float yaw, float pitch, float roll);
-    void Translate(glm::vec3 offset);
+    void SetPerspective(float aspect, float FOV, float near = 0.1f, float far = 100.0f);
+    void SetOrthographic(float left, float right, float top, float bottom, float near = 0.1f, float far = 100.0f);
 
-    glm::mat4 GetVPMatrix() { return m_VP; }
+    float GetNear(){ return m_Near; }
+    float GetFar(){ return m_Far; }
+
+    // Orthographic camera specific
+    float GetLeft(){ return m_LeftOrAspect; }
+    float GetRight(){ return m_RightOrFOV; }
+    float GetTop(){ return m_Top; }
+    float GetBottom(){ return m_Bottom; }
+
+    // Perspective camera specific
+    float GetAspect(){ return m_LeftOrAspect; }
+    float GetFOV(){ return m_RightOrFOV; }
+
+    bool IsPerspective(){ return m_Top == m_Bottom; }
+
     glm::mat4 GetProjection() { return m_Projection; }
-    glm::mat4 GetView() { return m_View; }
-    glm::vec3 GetPosition() { return m_Position; }
-    glm::vec3 GetFront() { return m_Front; }
-    glm::vec3 GetRight() { return m_Right; }
 };
 
 }

@@ -20,7 +20,7 @@ public:
     static void Init();
     static void Shutdown();
     static void OnResize(uint32_t width, uint32_t height);
-    static void BeginScene(Camera &camera);
+    static void BeginScene(Camera &camera, glm::mat4 &view);
     static void EndScene();
 
     static void Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va, const glm::mat4 &model);

@@ -21,10 +21,10 @@ void Renderer::OnResize(uint32_t width, uint32_t height){
     s_API->SetViewport(0,0,width, height);
 }
 
-void Renderer::BeginScene(Camera &camera){
+void Renderer::BeginScene(Camera &camera, glm::mat4 &view){
     RUSH_PROFILE_FUNCTION();
-    s_SceneVP = camera.GetVPMatrix();
-    s_CameraPos = camera.GetPosition();
+    s_SceneVP = camera.GetProjection() * glm::inverse(view);
+    s_CameraPos = glm::vec3(view * glm::vec4(0.0f,0.0f,0.0f,1.0f));
 }
 
 void Renderer::EndScene(){

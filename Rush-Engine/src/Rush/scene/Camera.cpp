@@ -3,68 +3,37 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Rush {
-
-void Camera::recalcCamera(){
+    
+Camera::Camera(float aspect,float FOV, float near, float far) {
     RUSH_PROFILE_FUNCTION();
-    m_Front.x = glm::cos(glm::radians(m_Yaw)) * glm::cos(glm::radians(m_Pitch));
-    m_Front.y = glm::sin(glm::radians(m_Pitch));
-    m_Front.z = glm::sin(glm::radians(m_Yaw)) * glm::cos(glm::radians(m_Pitch));
-
-    m_Front = glm::normalize(m_Front);
-    m_Right = glm::normalize(glm::cross(m_Front, glm::vec3(0,1,0)));
-    glm::vec3 up = glm::normalize(glm::cross(m_Right,m_Front));
-
-    m_View = glm::lookAt(m_Position,m_Position + m_Front,glm::vec3(0,1,0));
-    m_VP = m_Projection * m_View;
+    SetPerspective(aspect,FOV);
 }
 
-Camera::Camera(ProjectionMode mode, float aspect) 
-:   m_Yaw(0), m_Pitch(0), m_Roll(0), m_FOV(45), m_Position(glm::vec3(0,0,1)), m_Front(), m_Right() {
+Camera::Camera(float left, float right, float top, float bottom, float near, float far){
     RUSH_PROFILE_FUNCTION();
-    m_Projection = glm::mat4(1.0f);
-    m_View = glm::mat4(1.0f);
-    recalcCamera();
-    SetProjection(mode,aspect);
+    SetOrthographic(left, right, top, bottom, near, far);
 }
 
 Camera::~Camera() { }
 
-void Camera::SetPosition(glm::vec3 pos){
+void Camera::SetPerspective(float aspect,float FOV, float near, float far) {
     RUSH_PROFILE_FUNCTION();
-    m_Position = pos;
-    recalcCamera();
+    m_LeftOrAspect = aspect;
+    m_RightOrFOV = FOV;
+    m_Near = near;
+    m_Far = far;
+    m_Bottom = m_Top = 0.0f;
+    m_Projection = glm::perspective(glm::radians(FOV),aspect,near,far);
 }
 
-void Camera::SetRotation(float yaw, float pitch, float roll){
+void Camera::SetOrthographic(float left, float right, float top, float bottom, float near, float far) {
     RUSH_PROFILE_FUNCTION();
-    m_Yaw = yaw;
-    m_Pitch = pitch;
-    m_Roll = roll;
-    recalcCamera();
+    m_LeftOrAspect = left;
+    m_RightOrFOV = right;
+    m_Top = top;
+    m_Bottom = bottom;
+    m_Near = near;
+    m_Far = far;
+    m_Projection = glm::ortho(left,right,bottom,top,near,far);
 }
-
-void Camera::SetProjection(ProjectionMode mode, float aspect) {
-    RUSH_PROFILE_FUNCTION();
-    if(mode == ProjectionMode::PERSPECTIVE){
-        m_Projection = glm::perspective(glm::radians(m_FOV),aspect,0.1f,100.0f);
-    } else {
-        m_Projection = glm::ortho(-1.0f,1.0f,-1/aspect,1/aspect,0.1f,100.0f);
-    }
-    m_VP = m_Projection * m_View;
-}
-
-void Camera::Rotate(float yaw, float pitch, float roll) {
-    RUSH_PROFILE_FUNCTION();
-    m_Yaw += yaw;
-    m_Pitch += pitch;
-    m_Roll += roll;    
-    recalcCamera();
-}
-
-void Camera::Translate(glm::vec3 offset){
-    RUSH_PROFILE_FUNCTION();
-    m_Position += offset;
-    recalcCamera();
-}
-
 }
