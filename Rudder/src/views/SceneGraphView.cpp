@@ -20,6 +20,7 @@ SceneGraphView::SceneGraphView(){
         float far = c.camera.GetFar();
 
         ImGui::Checkbox("Main", &c.main);
+        ImGui::ColorEdit4("Clear color",&c.clearColor.r);
 
         int selProj = c.camera.IsPerspective() ? 0 : 1;
         if(ImGui::Combo("Projection", &selProj,"Perspective\0Orthographic\0\0")){
@@ -61,20 +62,23 @@ SceneGraphView::SceneGraphView(){
             }
         }
     });
-    m_EE.Register<DirectionalLight>("Directional light",[](Rush::Entity &e){
-        auto& l = e.GetComponent<DirectionalLight>();
-        ImGui::DragFloat3("Direction", &l.direction.x, 0.1f);
+    m_EE.Register<LightComponent>("Light",[](Rush::Entity &e){
+        auto& l = e.GetComponent<LightComponent>();
+        int curType = (int)l.type;
+        if(ImGui::Combo("Light type",&curType,"Directional\0Point\0Spotlight\0\0")){
+            l.type = (LightType)curType;
+        }
         ImGui::ColorEdit3("Ambient", &l.ambient.r);
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
         ImGui::ColorEdit3("Specular", &l.specular.r);
-    });
-    m_EE.Register<PointLight>("Point light",[](Rush::Entity &e){
-        auto& l = e.GetComponent<PointLight>();
-        ImGui::DragFloat3("Position", &l.position.x, 0.1f);
-        ImGui::ColorEdit3("Ambient", &l.ambient.r);
-        ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
-        ImGui::ColorEdit3("Specular", &l.specular.r);
-        ImGui::DragFloat3("Coef.", &l.constant,0.01f,0.0f);
+        if(l.type != LightType::DIRECTIONAL){
+            ImGui::Text("Attenuation");
+            ImGui::DragFloat3("Coef.",&l.constant,0.01f,0.0f);
+        }
+        if(l.type == LightType::SPOTLIGHT){
+            ImGui::Text("Spotlight cutoff");
+            ImGui::DragFloat2("Cutoff",&l.cutOff);
+        }
     });
     m_Renaming = false;   
     enabled = true; // TODO: Make window open status persistent over application close

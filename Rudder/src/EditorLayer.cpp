@@ -20,15 +20,22 @@ void EditorLayer::OnAttach() {
 
     auto globalLight = m_Scene.NewEntity();
     globalLight.AddComponent<EntityName>("Global editor lighting");
-    auto &l = globalLight.AddComponent<DirectionalLight>();
+    auto &l = globalLight.AddComponent<LightComponent>();
+    auto &t = globalLight.AddComponent<TransformComponent>();
+    l.type = LightType::DIRECTIONAL;
     l.ambient = {0.2f,0.2f,0.2f};
     l.diffuse = {0.0f,0.0f,0.0f};
     l.specular = {0.0f,0.0f,0.0f};
 
     auto testLight = m_Scene.NewEntity();
     testLight.AddComponent<EntityName>("Test point Light");
-    auto &l2 = testLight.AddComponent<PointLight>();
-    l2.position = {1.0f,1.0f,1.0f};
+    auto &l2 = testLight.AddComponent<LightComponent>();
+    auto &t2 = testLight.AddComponent<TransformComponent>();
+    t2.translation = {1.0f,1.0f,1.0f};
+    l.type = LightType::POINT;
+    l.ambient = {0.2f,0.2f,0.2f};
+    l.diffuse = {0.0f,0.0f,0.0f};
+    l.specular = {0.0f,0.0f,0.0f};
 
     auto model = m_Scene.NewEntity();
     model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));

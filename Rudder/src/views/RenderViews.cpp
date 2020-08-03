@@ -123,9 +123,9 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         }
     }
     
-    for(auto e: reg->view<PointLight>()){
-        PointLight &l = reg->get<PointLight>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),l.position);
+    for(auto e: reg->view<LightComponent>()){
+        auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f),t.translation);
         model = glm::scale(model,glm::vec3(0.1f));
         glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
         m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
