@@ -68,7 +68,7 @@ private:
 	TransformComponent m_Trans;
 	Shared<Shader> m_Shader;
 	Shared<Texture> m_Texture;
-	PointLight m_Light;
+	LightComponent m_Light;
 
 	float a,b;
 
@@ -94,8 +94,6 @@ public:
 
 		m_Texture = Texture::Create("res/container.jpg");
 
-		m_Light.position = glm::vec3(1.0f,1.0f,1.0f);
-
 		m_Light.ambient = glm::vec3(0.1f);
 		m_Light.diffuse = glm::vec3(1.0f);
 		m_Light.specular = glm::vec3(1.0f);
@@ -106,7 +104,6 @@ public:
 
 		bool active = true;
 		m_Shader->SetUniform("u_PLights[0].activated",ShaderData::BOOL, &active);
-		m_Shader->SetUniform("u_PLights[0].position",ShaderData::FLOAT3, glm::value_ptr(m_Light.position));
 		m_Shader->SetUniform("u_PLights[0].constant",ShaderData::FLOAT, &m_Light.constant);
 		m_Shader->SetUniform("u_PLights[0].linear",ShaderData::FLOAT, &m_Light.linear);
 		m_Shader->SetUniform("u_PLights[0].quadratic",ShaderData::FLOAT, &m_Light.quadratic);
