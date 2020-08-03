@@ -55,7 +55,7 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
     glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
     switch(m_CurDragMode){
         case MouseDragMode::ROTATE:
-            m_YPR += glm::vec3(0,-dx / 2.0f,-dy / 2.0f);
+            m_YPR += glm::vec3(0.0f,-dx / 2.0f,-dy / 2.0f);
             t.rotation = m_YPR;
             t.translation += glm::vec3(
                 right * sinf(-dx/180.0f * 3.14) * 2.0f +
