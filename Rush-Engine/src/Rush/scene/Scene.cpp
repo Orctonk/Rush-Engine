@@ -94,14 +94,6 @@ void Scene::Render(){
         }
     }
     m_SceneShader->SetUniform("u_LightCount",ShaderData::INT,&lightCount);
-    
-    // for(int i = 0; i < 2; i++){
-    //     m_SceneShader->SetUniform("u_Lights[" + std::to_string(i) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(dlights[i]));
-    //     m_SceneShader->SetUniform("u_Lights[" + std::to_string(i) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(dlightcol * 0.1f));
-    //     m_SceneShader->SetUniform("u_Lights[" + std::to_string(i) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(dlightcol));
-    //     m_SceneShader->SetUniform("u_Lights[" + std::to_string(i) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(zero));
-    // }
-
     for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
         glm::mat4 model = glm::eulerAngleXYZ(glm::radians(transform.rotation.x),glm::radians(transform.rotation.y),glm::radians(transform.rotation.z));
