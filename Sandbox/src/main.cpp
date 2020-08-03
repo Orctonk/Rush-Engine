@@ -4,6 +4,7 @@
 #include <string>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 using namespace Rush;
 
@@ -64,6 +65,7 @@ class Sandbox : public Application{
 private: 
 	Unique<VertexArray> m_VA;
 	Camera m_Cam;
+	TransformComponent m_Trans;
 	Shared<Shader> m_Shader;
 	Shared<Texture> m_Texture;
 	PointLight m_Light;
@@ -71,7 +73,7 @@ private:
 	float a,b;
 
 public:
-	Sandbox() : m_Cam(ProjectionMode::PERSPECTIVE, 1024.f /768.0f) {}
+	Sandbox() : m_Cam(1024.f /768.0f, 90.0f) {}
 	~Sandbox(){}
 	void Init() override {
 		Logger::Info(	"Rush Version: " 
@@ -79,8 +81,7 @@ public:
 					+ 	"." 
 					+ 	std::to_string(RUSH_VERSION_MINOR));	
 
-		m_Cam.SetPosition(glm::vec3(0.0f,1.0f,3.0f));
-		m_Cam.SetRotation(90.0f,20.0f,0.0f);
+		m_Trans = {glm::vec3(0.0f,1.0f,3.0f) , glm::vec3(90.0f,20.0f,0.0f), glm::vec3(1.0f)};
 
 		m_Shader = Shader::Create("res/test.glsl");
 
@@ -122,9 +123,12 @@ public:
 
 	void Update() override{
 		a += 45.0f * Time::Delta();
-		m_Cam.SetRotation(a,20.0f,0);
-		m_Cam.SetPosition(glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a))));
-		Renderer::BeginScene(m_Cam);
+		m_Trans.rotation = glm::vec3(a,20.0f,0);
+		m_Trans.translation = glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a)));
+		glm::mat4 model = glm::eulerAngleXYZ(glm::radians(m_Trans.rotation.x),glm::radians(m_Trans.rotation.y),glm::radians(m_Trans.rotation.z));
+        model = glm::translate(glm::mat4(1.0f),m_Trans.translation) * model;
+        model = glm::scale(model,m_Trans.scale);
+		Renderer::BeginScene(m_Cam,model);
 		Renderer::Submit(m_Shader,m_VA,glm::mat4(1.0f));
 		Renderer::EndScene();
 		
