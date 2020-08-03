@@ -11,7 +11,7 @@ EntityEditor::~EntityEditor(){
 
 void EntityEditor::Render(Rush::Entity e, bool *shown){
     ImGui::Begin("Entity editor",shown);
-    if(e){
+    if(!e){
         ImGui::End();
         return;
     }
