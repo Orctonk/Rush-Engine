@@ -22,6 +22,7 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     m_CamController.SetControlledCamera(cameraEntity);
 
     m_LightBoxShader = AssetManager::GetShader("res/lightBoxShader.glsl");
+    m_CameraMesh = AssetManager::GetMeshInstance("res/camera.obj");
 
     m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/renderviewPreview.glsl");
     m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/renderviewNormals.glsl");
@@ -36,11 +37,6 @@ void RenderViews::Init(Rush::Entity cameraEntity){
         m_RenderViewShaders[i]->SetUniform("u_Material.normal",ShaderData::INT,&j);
     }
 
-    m_GBuffer = Framebuffer::Create({
-        Application::GetInstance().GetWindow()->GetWidth(),
-        Application::GetInstance().GetWindow()->GetHeight(),
-        {16,16,8}
-    });
     for(int i = 0; i < RENDERVIEW_COUNT; i++){
         m_RenderViews[i] = Framebuffer::Create({
             Application::GetInstance().GetWindow()->GetWidth(),
@@ -75,7 +71,6 @@ void RenderViews::OnImguiRender(){
         float renderAspect = glmWinSize.x / glmWinSize.y;
         if(glmWinSize != m_RenderViewportSize){
             m_CamController.GetCamera().GetComponent<CameraComponent>().camera.SetPerspective(renderAspect,90.0f);
-            m_GBuffer->Resize((uint32_t)glmWinSize.x,(uint32_t)glmWinSize.y);
             for(int i = 0; i < RENDERVIEW_COUNT; i++){
                 m_RenderViews[i]->Resize((uint32_t)glmWinSize.x,(uint32_t)glmWinSize.y);
             }
@@ -136,6 +131,19 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
         Renderer::RenderCube(m_LightBoxShader,model);
     }
+
+    for(auto e: reg->view<CameraComponent>()){
+        if(e == m_CamController.GetCamera()) continue;
+        auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
+        glm::mat4 model = glm::eulerAngleZYX(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
+        model = glm::translate(glm::mat4(1.0f),t.translation) * model;
+        for(int i = 0; i < m_CameraMesh.mesh->submeshes.size(); i++){
+            m_CameraMesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
+            m_CameraMesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
+            m_CameraMesh.mesh->submeshes[i].material.parent->normalTexture->Bind(2);
+            Renderer::Submit(m_RenderViewShaders[RENDERVIEW_RENDER],m_CameraMesh.mesh->submeshes[i].vertices,model);
+        }
+    }
     Renderer::EndScene();
     m_RenderViews[RENDERVIEW_RENDER]->Unbind();
 }
@@ -167,21 +175,6 @@ void RenderViews::PopulateView(Rush::Scene &scene, RenderView type){
     }
     Renderer::EndScene();
     m_RenderViews[type]->Unbind();
-    // m_RenderViewShaders[type]->Bind();
-    // const char *uniforms[] = {
-    //     "gPos",
-    //     "gNorm",
-    //     "gColor"
-    // };
-    // std::vector<Shared<Texture>> &gBufTextures = m_GBuffer->GetTextures();
-    // for(int i = 0; i < gBufTextures.size(); i++){
-    //     gBufTextures.at(i)->Bind(i);
-    //     m_RenderViewShaders[type]->SetUniform(uniforms[i],ShaderData::INT,&i);
-    // }
-
-    // m_RenderViews[type]->Bind();
-    // Renderer::GetAPI()->Clear();
-    // Renderer::RenderTexturedQuad(m_RenderViewShaders[type],{0.0f,0.0f},{1.0f,1.0f});
 }
 
 void RenderViews::RenderImguiView(const char *name, RenderView type, bool resized){

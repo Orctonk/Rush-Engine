@@ -15,10 +15,10 @@ enum RenderView{
 
 class RenderViews {
 private:
+    MeshInstance m_CameraMesh;
     Rush::Shared<Rush::Shader> m_MaterialShader;
     Rush::Shared<Rush::Shader> m_LightBoxShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
-    Rush::Unique<Rush::Framebuffer> m_GBuffer;
     Rush::Unique<Rush::Framebuffer> m_RenderViews[RenderView::RENDERVIEW_COUNT];
     CameraController m_CamController;
     glm::vec2 m_RenderViewportSize;
