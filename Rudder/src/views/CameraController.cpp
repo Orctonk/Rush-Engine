@@ -1,7 +1,9 @@
 #include "CameraController.h"
 
-CameraController::CameraController(Rush::Camera camera)
-:   m_Camera(camera), m_CurDragMode(MouseDragMode::NONE) { }
+#include <glm/gtx/euler_angles.hpp>
+
+CameraController::CameraController()
+:   m_CurDragMode(MouseDragMode::NONE) { }
 
 CameraController::~CameraController() { }
 
@@ -45,31 +47,42 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
     int dy = e.y - m_DragLastY;
     m_DragLastX = e.x;
     m_DragLastY = e.y;
+
+    auto &t = m_Camera.GetComponent<TransformComponent>();
+    glm::mat4 rotation = glm::eulerAngleZYX(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
+
+    glm::vec3 right = rotation * glm::vec4(1.0f,0.0f,0.0f,0.0f);
+    glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
     switch(m_CurDragMode){
         case MouseDragMode::ROTATE:
-            m_Camera.Rotate(dx / 2.0f, -dy / 2.0f, 0);
-            m_Camera.Translate(
-                m_Camera.GetRight() * sinf(-dx/180.0f * 3.14) * 2.0f +
-                m_Camera.GetFront() * (1-cosf(-dx/180.0f * 3.14)) * 2.0f +
+            m_YPR += glm::vec3(0,-dx / 2.0f,-dy / 2.0f);
+            t.rotation = m_YPR;
+            t.translation += glm::vec3(
+                right * sinf(-dx/180.0f * 3.14) * 2.0f +
+                front * (1-cosf(-dx/180.0f * 3.14)) * 2.0f +
                 glm::vec3(0.0f,1.0f,0.0f) * sinf(dy/180.0f * 3.14) * 2.0f +
-                m_Camera.GetFront() * (1-cosf(dy/180.0f * 3.14)) * 2.0f
+                front * (1-cosf(-dy/180.0f * 3.14)) * 2.0f
             );
             break;
         case MouseDragMode::PAN:
-            m_Camera.Translate(
-                m_Camera.GetRight() * (-dx / 200.0f) +
-                glm::cross(m_Camera.GetRight(),m_Camera.GetFront()) * (dy / 200.0f));
+            t.translation += glm::vec3(
+                right * (-dx / 200.0f) +
+                glm::cross(right,front) * (dy / 200.0f));
             break;
     }
     return false;
 }
 
 bool CameraController::MouseScrollHandle(Rush::MouseScrollEvent &e){
-    m_Camera.Translate(m_Camera.GetFront() * (e.delta /10.0f));
+    auto &t = m_Camera.GetComponent<TransformComponent>();
+    glm::mat4 rotation = glm::eulerAngleZYX(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
+    glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
+    t.translation += glm::vec3(front * (e.delta /10.0f));
     return false;
 }
 
 bool CameraController::WindowResizeHandle(Rush::WindowResizeEvent &e){
-    m_Camera.SetProjection(Rush::ProjectionMode::PERSPECTIVE, ((float)e.width)/e.height);
+    auto &c = m_Camera.GetComponent<CameraComponent>();
+    c.camera.SetPerspective(((float)e.width)/e.height,45.0f);
     return false;
 }

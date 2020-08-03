@@ -23,8 +23,7 @@ private:
     CameraController m_CamController;
     glm::vec2 m_RenderViewportSize;
 
-    void RenderGBuffer(Rush::Scene &scene, Rush::Camera &cam);
-    void FillRenderView(Rush::Scene &scene, Rush::Camera &cam);
+    void FillRenderView(Rush::Scene &scene);
     void PopulateView(Rush::Scene &scene, RenderView type);
     void RenderImguiView(const char *name, RenderView type, bool resized);
 
@@ -34,7 +33,7 @@ public:
     RenderViews();
     ~RenderViews();
 
-    void Init();
+    void Init(Rush::Entity cameraEntity);
     void OnUpdate(Rush::Scene &scene);
     void OnEvent(Rush::Event &e);
     void OnImguiRender();

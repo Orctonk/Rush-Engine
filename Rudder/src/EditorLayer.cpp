@@ -17,7 +17,6 @@ EditorLayer::~EditorLayer() {}
 
 void EditorLayer::OnAttach() {
     using namespace Rush;
-    m_RenderViews.Init();
 
     auto globalLight = m_Scene.NewEntity();
     globalLight.AddComponent<EntityName>("Global editor lighting");
@@ -34,8 +33,15 @@ void EditorLayer::OnAttach() {
     auto model = m_Scene.NewEntity();
     model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
 
-    model.AddComponent<Transform>(glm::vec3(0.0f),glm::vec3(0.0f));
+    model.AddComponent<TransformComponent>(glm::vec3(0.0f),glm::vec3(0.0f));
     model.AddComponent<EntityName>("Model Test");
+
+    auto camera = m_Scene.NewEntity();
+    camera.AddComponent<EntityName>("Editor camera");
+    camera.AddComponent<TransformComponent>(glm::vec3(0.0f,0.0f,3.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(1.0f));
+    camera.AddComponent<CameraComponent>(false,Rush::Camera(1024.0f/720.0f,45.0f));
+
+    m_RenderViews.Init(camera);
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {

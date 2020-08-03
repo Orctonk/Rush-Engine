@@ -7,7 +7,7 @@
 #include <imgui.h>
 
 RenderViews::RenderViews()
-:   m_CamController(Rush::Camera(Rush::ProjectionMode::PERSPECTIVE, 1024.0f/720.0f)) {
+:   m_CamController() {
     for(int i = 0; i < RENDERVIEW_COUNT; i++)
         enabledViews[i] = true;     // TODO: Make window open status persistent over application close
 }
@@ -16,11 +16,10 @@ RenderViews::~RenderViews(){
 
 }
 
-void RenderViews::Init(){
+void RenderViews::Init(Rush::Entity cameraEntity){
     using namespace Rush;
 
-    m_CamController.GetCamera().SetPosition(glm::vec3(0.0f,0.0f,3.0f));
-	m_CamController.GetCamera().SetRotation(-90.0f,0.0f,0.0f);
+    m_CamController.SetControlledCamera(cameraEntity);
 
     m_LightBoxShader = AssetManager::GetShader("res/lightBoxShader.glsl");
 
@@ -55,7 +54,7 @@ void RenderViews::OnUpdate(Rush::Scene &scene){
     using namespace Rush;
 
     auto &cam = m_CamController.GetCamera();
-    FillRenderView(scene, cam);
+    FillRenderView(scene);
     for(int i = 1; i < RENDERVIEW_COUNT; i++)
         PopulateView(scene,(RenderView)i);
     
@@ -75,7 +74,7 @@ void RenderViews::OnImguiRender(){
         glm::vec2 glmWinSize(windowSize.x,windowSize.y);
         float renderAspect = glmWinSize.x / glmWinSize.y;
         if(glmWinSize != m_RenderViewportSize){
-            m_CamController.GetCamera().SetProjection(Rush::ProjectionMode::PERSPECTIVE,renderAspect);
+            m_CamController.GetCamera().GetComponent<CameraComponent>().camera.SetPerspective(renderAspect,90.0f);
             m_GBuffer->Resize((uint32_t)glmWinSize.x,(uint32_t)glmWinSize.y);
             for(int i = 0; i < RENDERVIEW_COUNT; i++){
                 m_RenderViews[i]->Resize((uint32_t)glmWinSize.x,(uint32_t)glmWinSize.y);
@@ -93,11 +92,16 @@ void RenderViews::OnImguiRender(){
     ImGui::PopStyleVar();
 }
 
-void RenderViews::FillRenderView(Rush::Scene &scene, Rush::Camera &cam){
+void RenderViews::FillRenderView(Rush::Scene &scene){
     using namespace Rush;
     m_RenderViews[RENDERVIEW_RENDER]->Bind();
     Renderer::GetAPI()->Clear();
-    Renderer::BeginScene(cam);
+    auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
+    auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
+    glm::mat4 view = glm::eulerAngleZYX(glm::radians(camTrans.rotation.x),glm::radians(camTrans.rotation.y),glm::radians(camTrans.rotation.z));
+    view = glm::translate(glm::mat4(1.0f),camTrans.translation) * view;
+
+    Renderer::BeginScene(cam.camera,view);
 
     glm::vec3 dlightcol(1.0f);
     glm::vec3 dlights[2];
@@ -111,8 +115,8 @@ void RenderViews::FillRenderView(Rush::Scene &scene, Rush::Camera &cam){
         m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].specular",ShaderData::FLOAT3,glm::value_ptr(zero));
     }
     auto reg = scene.GetRegistry();
-    for(auto &e : reg->group<Transform>(entt::get_t<MeshInstance>())){
-        auto [transform, mesh] = reg->get<Transform,MeshInstance>(e);
+    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
+        auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
         glm::mat4 model = glm::eulerAngleXYZ(glm::radians(transform.rotation.x),glm::radians(transform.rotation.y),glm::radians(transform.rotation.z));
         model = glm::translate(glm::mat4(1.0f),transform.translation) * model;
         model = glm::scale(model,transform.scale);
@@ -141,11 +145,16 @@ void RenderViews::PopulateView(Rush::Scene &scene, RenderView type){
 
     m_RenderViews[type]->Bind();
     Renderer::GetAPI()->Clear();
-    Renderer::BeginScene(m_CamController.GetCamera());
+    auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
+    auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
+    glm::mat4 view = glm::eulerAngleZYX(glm::radians(camTrans.rotation.x),glm::radians(camTrans.rotation.y),glm::radians(camTrans.rotation.z));
+    view = glm::translate(glm::mat4(1.0f),camTrans.translation) * view;
+
+    Renderer::BeginScene(cam.camera,view);
 
     auto reg = scene.GetRegistry();
-    for(auto &e : reg->group<Transform>(entt::get_t<MeshInstance>())){
-        auto [transform, mesh] = reg->get<Transform,MeshInstance>(e);
+    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
+        auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
         glm::mat4 model = glm::eulerAngleXYZ(glm::radians(transform.rotation.x),glm::radians(transform.rotation.y),glm::radians(transform.rotation.z));
         model = glm::translate(glm::mat4(1.0f),transform.translation) * model;
         model = glm::scale(model,transform.scale);

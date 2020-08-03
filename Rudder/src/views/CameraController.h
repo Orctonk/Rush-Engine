@@ -12,8 +12,9 @@ enum class MouseDragMode{
 
 class CameraController{
 private:
-    Rush::Camera m_Camera;
+    Rush::Entity m_Camera;
     int m_DragLastX, m_DragLastY;
+    glm::vec3 m_YPR;
     MouseDragMode m_CurDragMode;
 
     bool MousePressHandle(Rush::MousePressedEvent &e);
@@ -22,12 +23,14 @@ private:
     bool MouseScrollHandle(Rush::MouseScrollEvent &e);
     bool WindowResizeHandle(Rush::WindowResizeEvent &e);
 public:
-    CameraController(Rush::Camera camera);
+    CameraController();
     ~CameraController();
+
+    void SetControlledCamera(Rush::Entity camera){ m_Camera = camera; }
 
     void OnUpdate();
     void OnEvent(Rush::Event &e);
-    Rush::Camera &GetCamera() { return m_Camera; }
+    Rush::Entity &GetCamera() { return m_Camera; }
 };
 
 #endif // __EDITORCAMERACONTROLLER_H__
