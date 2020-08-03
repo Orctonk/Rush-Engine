@@ -22,6 +22,8 @@ struct Vertex {
 class RUSH_API ModelLoader{
 private:
     static std::string s_CurDirectory;
+    static Shared<Texture> s_DefaultColorTexture;
+    static Shared<Texture> s_DefaultNormalTexture;
 
     static void ProcessNode(RootMesh &root, const aiNode *node, const aiScene *scene);
     static SubMesh ProcessMesh(const aiMesh *mesh, const aiScene *scene);
