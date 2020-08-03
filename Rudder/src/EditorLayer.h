@@ -4,6 +4,7 @@
 #include <Rush.h>
 #include "views/RenderViews.h"
 #include "views/SceneGraphView.h"
+#include "views/SceneView.h"
 #include "views/AssetView.h"
 #include "views/ProfilerResultView.h"
 
@@ -12,6 +13,7 @@ private:
     Rush::Scene m_Scene;
     RenderViews m_RenderViews;
     SceneGraphView m_SceneGraph;
+    SceneView m_SceneView;
     AssetView m_AssetView;
     ProfilerResultView m_PRView;
 public:

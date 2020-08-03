@@ -42,10 +42,12 @@ void EditorLayer::OnAttach() {
     camera.AddComponent<CameraComponent>(false,Rush::Camera(1024.0f/720.0f,45.0f));
 
     m_RenderViews.Init(camera);
+    m_SceneView.Init();
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
     m_RenderViews.OnUpdate(m_Scene);
+    m_SceneView.OnUpdate(m_Scene);
 }
 
 void EditorLayer::OnEvent(Rush::Event &e) {
@@ -113,4 +115,5 @@ void EditorLayer::OnImguiRender() {
     m_SceneGraph.OnImguiRender(m_Scene);
     m_AssetView.OnImguiRender();
     m_PRView.OnImguiRender();
+    m_SceneView.OnImguiRender();
 }

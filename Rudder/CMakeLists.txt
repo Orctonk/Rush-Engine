@@ -13,6 +13,7 @@ set(RUDDER_SOURCES
         ${RUDDER_SOURCE_DIR}/views/RenderViews.cpp
         ${RUDDER_SOURCE_DIR}/views/CameraController.cpp
         ${RUDDER_SOURCE_DIR}/views/SceneGraphView.cpp
+        ${RUDDER_SOURCE_DIR}/views/SceneView.cpp
         ${RUDDER_SOURCE_DIR}/views/AssetView.cpp
         ${RUDDER_SOURCE_DIR}/views/ProfilerResultView.cpp
     )
