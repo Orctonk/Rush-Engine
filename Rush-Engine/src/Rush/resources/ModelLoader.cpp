@@ -14,7 +14,7 @@ std::string ModelLoader::s_CurDirectory;
 RootMesh ModelLoader::LoadModel(const std::string &path){
     RUSH_PROFILE_FUNCTION();
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph | aiProcess_OptimizeMeshes);
     
     RootMesh rm;
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
@@ -44,6 +44,7 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
     RUSH_PROFILE_FUNCTION();
     SubMesh m;
     m.meshName = std::string(mesh->mName.C_Str());
+    if(m.meshName.empty()) m.meshName = "Merged mesh";
     m.vertices = VertexArray::Create();
     std::vector<Vertex> vertices;
 
