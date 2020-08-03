@@ -16,7 +16,6 @@
 
 #include "Rush/scene/Components.h"
 #include "Rush/scene/Camera.h"
-#include "Rush/scene/Light.h"
 #include "Rush/scene/Scene.h"
 #include "Rush/scene/Entity.h"
 
