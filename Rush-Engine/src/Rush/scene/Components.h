@@ -3,6 +3,8 @@
 
 #include "Camera.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 enum class RUSH_API LightType {
     DIRECTIONAL,
@@ -14,6 +16,13 @@ struct TransformComponent {
     glm::vec3 translation   {0.0f,0.0f,0.0f};
     glm::vec3 rotation      {0.0f,0.0f,0.0f};
     glm::vec3 scale         {1.0f,1.0f,1.0f};
+
+    glm::mat4 GetModelMatrix(){
+        glm::mat4 model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
+        model = glm::translate(glm::mat4(1.0f),translation) * model;
+        model = glm::scale(model,scale);
+        return model;
+    }
 };
 
 struct CameraComponent {

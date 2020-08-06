@@ -49,13 +49,13 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
     m_DragLastY = e.y;
 
     auto &t = m_Camera.GetComponent<TransformComponent>();
-    glm::mat4 rotation = glm::eulerAngleZYX(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
+    glm::mat4 rotation = glm::yawPitchRoll(glm::radians(t.rotation.y),glm::radians(t.rotation.x),glm::radians(t.rotation.z));
 
     glm::vec3 right = rotation * glm::vec4(1.0f,0.0f,0.0f,0.0f);
     glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
     switch(m_CurDragMode){
         case MouseDragMode::ROTATE:
-            m_YPR += glm::vec3(0.0f,-dx / 2.0f,-dy / 2.0f);
+            m_YPR += glm::vec3(-dy / 2.0f,-dx / 2.0f,0.0f);
             t.rotation = m_YPR;
             t.translation += glm::vec3(
                 right * sinf(-dx/180.0f * 3.14) * 2.0f +
@@ -75,7 +75,7 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
 
 bool CameraController::MouseScrollHandle(Rush::MouseScrollEvent &e){
     auto &t = m_Camera.GetComponent<TransformComponent>();
-    glm::mat4 rotation = glm::eulerAngleZYX(glm::radians(t.rotation.x),glm::radians(t.rotation.y),glm::radians(t.rotation.z));
+    glm::mat4 rotation = glm::yawPitchRoll(glm::radians(t.rotation.y),glm::radians(t.rotation.x),glm::radians(t.rotation.z));
     glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
     t.translation += glm::vec3(front * (e.delta /10.0f));
     return false;
