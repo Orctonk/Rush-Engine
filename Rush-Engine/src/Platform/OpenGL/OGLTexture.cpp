@@ -12,13 +12,17 @@ OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision)
     RUSH_PROFILE_FUNCTION();
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
+    m_Props.width = width;
+    m_Props.height = height;
+    m_Props.channels = 4;
+    m_Props.bpp = precision;
     uint32_t format, type;
     switch(precision){
         case 8: format = GL_RGBA; type = GL_UNSIGNED_BYTE; break;
         case 16: format = GL_RGBA16F; type = GL_FLOAT; break;
         default: RUSH_ASSERT(false);
     }
-    glTexImage2D(GL_TEXTURE_2D,0,format,width,height,0,GL_RGBA,type,NULL);
+    glTexImage2D(GL_TEXTURE_2D,0,format,m_Props.width,m_Props.height,0,GL_RGBA,type,NULL);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
@@ -29,13 +33,12 @@ OGLTexture::OGLTexture(std::string filepath)
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
 
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load(filepath.c_str(),&width,&height,&nrChannels,0);
+    unsigned char *data = stbi_load(filepath.c_str(),&m_Props.width,&m_Props.height,&m_Props.channels,0);
     if(data){
-        if(nrChannels == 3)
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-        else if(nrChannels == 4)
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+        if(m_Props.channels == 3)
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,m_Props.width,m_Props.height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+        else if(m_Props.channels == 4)
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,m_Props.width,m_Props.height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -54,6 +57,25 @@ void OGLTexture::Bind(uint8_t textureSlot){
     RUSH_PROFILE_FUNCTION();
     glActiveTexture(GL_TEXTURE0 + textureSlot);
     glBindTexture(GL_TEXTURE_2D, m_Texture);
+}
+
+void OGLTexture::GetTextureData(unsigned char *buffer, unsigned int bufsize) {
+    RUSH_PROFILE_FUNCTION();
+    GLenum format, type;
+    if(m_Props.bpp == 8){
+        type = GL_UNSIGNED_BYTE;
+        if(m_Props.channels == 3) format = GL_RGB;
+        else if(m_Props.channels == 4) format = GL_RGBA;
+        else RUSH_ASSERT(false);
+    } else if (m_Props.bpp == 16){
+        type = GL_FLOAT;
+        if(m_Props.channels == 4) format = GL_RGBA16F;
+        else RUSH_ASSERT(false);
+    }
+    else RUSH_ASSERT(false);
+
+    glBindTexture(GL_TEXTURE_2D,m_Texture);
+    glGetTexImage(GL_TEXTURE_2D,0,format,type,buffer);
 }
 
 }
