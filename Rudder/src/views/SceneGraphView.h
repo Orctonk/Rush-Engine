@@ -6,11 +6,9 @@
 
 class SceneGraphView {
 private:
-    Rush::Entity m_SelectedEnt;
     EntityEditor m_EE;
     bool m_Renaming;
     bool m_EEVisible;
-
 
     void RenderEntity(const Rush::Entity e);
     bool KeyPressHandle(Rush::KeyboardPressEvent &e);

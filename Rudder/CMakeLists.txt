@@ -8,6 +8,7 @@ set(RUDDER_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Libraries")
 set(RUDDER_SOURCES 
         ${RUDDER_SOURCE_DIR}/EditorApplication.cpp
         ${RUDDER_SOURCE_DIR}/EditorLayer.cpp
+    ${RUDDER_SOURCE_DIR}/GlobalEntitySelection.cpp
         ${RUDDER_SOURCE_DIR}/widgets/EntityEditorWidget.cpp
         ${RUDDER_SOURCE_DIR}/widgets/FileBrowser.cpp
         ${RUDDER_SOURCE_DIR}/views/RenderViews.cpp

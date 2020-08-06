@@ -1,3 +1,4 @@
+#include "GlobalEntitySelection.h"
 #include "SceneGraphView.h"
 #include "EditorComponents.h"
 #include "widgets/FileBrowser.h"
@@ -100,9 +101,9 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
     ImGui::SameLine(width - 50.0f);
     if(ImGui::Button("+")) scene.NewEntity();
     ImGui::SameLine();
-    if(ImGui::Button("-") && m_SelectedEnt) {
-        scene.DeleteEntity(m_SelectedEnt);
-        m_SelectedEnt = Entity(scene.GetRegistry(),entt::null);
+    if(ImGui::Button("-") && GlobalEntitySelection::GetSelection()) {
+        scene.DeleteEntity(GlobalEntitySelection::GetSelection());
+        GlobalEntitySelection::ClearSelection();
     }
 
     scene.GetRegistry()->each([&](entt::entity e){
@@ -111,8 +112,8 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
 
     ImGui::End();
     
-    if(m_SelectedEnt && m_EEVisible)
-        m_EE.Render(m_SelectedEnt,&m_EEVisible);
+    if(GlobalEntitySelection::GetSelection() && m_EEVisible)
+        m_EE.Render(GlobalEntitySelection::GetSelection(),&m_EEVisible);
 }
 
 void SceneGraphView::RenderEntity(Rush::Entity e){
@@ -123,7 +124,7 @@ void SceneGraphView::RenderEntity(Rush::Entity e){
         name = std::to_string(e.GetID()).c_str();
 
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-    if(e == m_SelectedEnt) {
+    if(GlobalEntitySelection::IsSelection(e)) {
         flags |= ImGuiTreeNodeFlags_Selected;
         if(m_Renaming){
             name = "##renaming";
@@ -139,15 +140,15 @@ void SceneGraphView::RenderEntity(Rush::Entity e){
         ImGui::TreeNodeEx(name,flags);
     }
     if(ImGui::IsItemClicked() || ImGui::IsItemClicked(1)){
-        if(!(e == m_SelectedEnt))
+        if(!(GlobalEntitySelection::IsSelection(e)))
             m_Renaming = false;
         m_EEVisible = true;
-        m_SelectedEnt = e;
+        GlobalEntitySelection::SetSelection(e);
         if(ImGui::IsMouseDoubleClicked(0)){
             m_Renaming = true;
         }
     }
-    if(m_Renaming && e == m_SelectedEnt){
+    if(m_Renaming && GlobalEntitySelection::IsSelection(e)){
         if(!e.HasComponent<EntityName>())
             e.AddComponent<EntityName>();
     
