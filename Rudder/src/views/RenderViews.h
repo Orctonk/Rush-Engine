@@ -16,16 +16,21 @@ enum RenderView{
 class RenderViews {
 private:
     MeshInstance m_CameraMesh;
-    Rush::Shared<Rush::Shader> m_MaterialShader;
     Rush::Shared<Rush::Shader> m_LightBoxShader;
+    Rush::Shared<Rush::Shader> m_SelectionShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
     Rush::Unique<Rush::Framebuffer> m_RenderViews[RenderView::RENDERVIEW_COUNT];
+    Rush::Unique<Rush::Framebuffer> m_SelectionBuffer;
     CameraController m_CamController;
+    glm::vec2 m_RenderViewportPos;
     glm::vec2 m_RenderViewportSize;
+    bool m_ObjectPick;
 
     void FillRenderView(Rush::Scene &scene);
     void PopulateView(Rush::Scene &scene, RenderView type);
     void RenderImguiView(const char *name, RenderView type, bool resized);
+    void DoObjectPick(Rush::Scene &scene);
+    bool MouseClickHandle(Rush::MousePressedEvent &e);
 
 public:
     bool enabledViews[RenderView::RENDERVIEW_COUNT];
