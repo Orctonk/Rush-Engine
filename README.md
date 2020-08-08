@@ -1,7 +1,7 @@
 # Rush-Engine
 Rush is a graphics engine in the early development stages. Though it is currently only tested on Linux the end goal is platform independence.
 
-[![License](https://img.shields.io/github/license/orctonk/Rush-Engine)](https://www.gnu.org/licenses/gpl-3.0)
+[![License](https://img.shields.io/github/license/Orctonk/Rush-Engine)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Building Rush
 
