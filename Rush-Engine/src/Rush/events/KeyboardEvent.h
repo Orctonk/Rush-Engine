@@ -7,9 +7,10 @@ namespace Rush{
 class KeyboardPressEvent : public Event{
 public:
     int keycode;
+    int modifiers;
 
-    KeyboardPressEvent(int keycode)
-    : keycode(keycode){}
+    KeyboardPressEvent(int keycode, int modifiers)
+    : keycode(keycode), modifiers(modifiers){}
     EVENT_BODY(KeyboardPress);
     virtual std::string GetString() const override { return "KeyboardPressEvent(" + std::to_string(keycode) + ")"; }
 };
@@ -17,9 +18,10 @@ public:
 class KeyboardRepeatEvent : public Event{
 public:
     int keycode;
+    int modifiers;
 
-    KeyboardRepeatEvent(int keycode)
-    : keycode(keycode){}
+    KeyboardRepeatEvent(int keycode, int modifiers)
+    : keycode(keycode), modifiers(modifiers){}
     EVENT_BODY(KeyboardRepeat);
     virtual std::string GetString() const override { return "KeyboardRepeatEvent(" + std::to_string(keycode) + ")"; }
 };
@@ -27,9 +29,10 @@ public:
 class KeyboardReleaseEvent : public Event{
 public:
     int keycode;
+    int modifiers;
 
-    KeyboardReleaseEvent(int keycode)
-    : keycode(keycode){}
+    KeyboardReleaseEvent(int keycode, int modifiers)
+    : keycode(keycode), modifiers(modifiers){}
     EVENT_BODY(KeyboardRelease);
     virtual std::string GetString() const override { return "KeyboardReleaseEvent(" + std::to_string(keycode) + ")"; }
 };

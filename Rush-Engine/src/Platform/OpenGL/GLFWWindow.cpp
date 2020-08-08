@@ -146,11 +146,11 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     glfwSetKeyCallback(m_Window,[](GLFWwindow *win, int key, int scan, int action, int mods){
         RUSH_PROFILE_FUNCTION();
         if(action == GLFW_PRESS){
-            EventQueue::GetInstance().PostEvent(new KeyboardPressEvent(key));
+            EventQueue::GetInstance().PostEvent(new KeyboardPressEvent(key, mods));
         } else if (action == GLFW_REPEAT){
-            EventQueue::GetInstance().PostEvent(new KeyboardRepeatEvent(key));
+            EventQueue::GetInstance().PostEvent(new KeyboardRepeatEvent(key, mods));
         } else if (action == GLFW_RELEASE){
-            EventQueue::GetInstance().PostEvent(new KeyboardReleaseEvent(key));
+            EventQueue::GetInstance().PostEvent(new KeyboardReleaseEvent(key, mods));
         }
     });
     glfwSetCharCallback(m_Window, [](GLFWwindow *win, unsigned int character){
