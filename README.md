@@ -54,7 +54,7 @@ Additionally, Rush currently only support OpenGL. As such both [GLFW](https://ww
 All these dependencies are included as submodules to this repository and can be built from source. However, due to the size of Assimp, this library can be located on the local machine if installed to reduce overall compile times. This is done by setting the `RUSH_BUILD_ASSIMP` option in CMake, which is on by default.
 
 ## License
-[![License](https://img.shields.io/github/license/orctonk/Rush-Engine)](https://www.gnu.org/licenses/gpl-3.0)
+[![License](https://img.shields.io/github/license/Orctonk/Rush-Engine)](https://www.gnu.org/licenses/gpl-3.0)
 
 * Copyright 2020 © Filip Henningsson
 * Licensed under [GPLv3](https://www.gnu.org/licenses/gpl-3.0). Licence file found [here](./LICENSE)
