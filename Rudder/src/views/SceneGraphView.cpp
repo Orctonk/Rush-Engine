@@ -9,10 +9,13 @@
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
     m_EE.Register<TransformComponent>("Transform",[](Rush::Entity &e){
+        bool needReComp = false;
         auto& t = e.GetComponent<TransformComponent>();
-        ImGui::DragFloat3("Position", &t.translation.x, 0.01f);
-        ImGui::DragFloat3("Rotation", &t.rotation.x, 1.0f);
-        ImGui::DragFloat3("Scale", &t.scale.x, 0.01f);
+        glm::vec3 trans,rot,scale;
+        needReComp |= ImGui::DragFloat3("Position", &trans.x, 0.01f);
+        needReComp |= ImGui::DragFloat3("Rotation", &rot.x, 1.0f);
+        needReComp |= ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+        if(needReComp) t.Recompose(trans,rot,scale);
     });
     m_EE.Register<CameraComponent>("Camera",[](Rush::Entity &e){
         auto& c = e.GetComponent<CameraComponent>();

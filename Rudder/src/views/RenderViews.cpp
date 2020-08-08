@@ -6,11 +6,10 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <imgui.h>
-
 RenderViews::RenderViews()
 :   m_CamController() {
     m_ObjectPick = false;
+    m_GizmoOp = ImGuizmo::TRANSLATE;
     for(int i = 0; i < RENDERVIEW_COUNT; i++)
         enabledViews[i] = true;     // TODO: Make window open status persistent over application close
 }
@@ -50,10 +49,10 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     }
 
     m_SelectionBuffer = Framebuffer::Create({
-            Application::GetInstance().GetWindow()->GetWidth(),
-            Application::GetInstance().GetWindow()->GetHeight(),
-            {8}
-        });
+        Application::GetInstance().GetWindow()->GetWidth(),
+        Application::GetInstance().GetWindow()->GetHeight(),
+        {8}
+    });
 }
 
 void RenderViews::OnUpdate(Rush::Scene &scene){
@@ -70,11 +69,14 @@ void RenderViews::OnUpdate(Rush::Scene &scene){
 
 void RenderViews::OnEvent(Rush::Event &e){
     m_CamController.OnEvent(e);
-    e.Dispatch<Rush::MousePressedEvent>(RUSH_BIND_FN(RenderViews::MouseClickHandle));
+    e.Dispatch<Rush::MouseReleasedEvent>(RUSH_BIND_FN(RenderViews::MouseClickHandle));
+    e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(RenderViews::KeyPressHandle));
+    e.Dispatch<Rush::KeyboardReleaseEvent>(RUSH_BIND_FN(RenderViews::KeyReleaseHandle));
 }
 
 void RenderViews::OnImguiRender(){
     bool resize = false;
+    ImGuizmo::BeginFrame();
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f,0.0f));
     if(enabledViews[RENDERVIEW_RENDER]){
         ImGui::Begin("Render",&enabledViews[RENDERVIEW_RENDER]);
@@ -106,11 +108,11 @@ void RenderViews::OnImguiRender(){
 void RenderViews::FillRenderView(Rush::Scene &scene){
     using namespace Rush;
     m_RenderViews[RENDERVIEW_RENDER]->Bind();
-    Renderer::GetAPI()->Clear();
     auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
     auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
-    glm::mat4 view = glm::yawPitchRoll(glm::radians(camTrans.rotation.y),glm::radians(camTrans.rotation.x),glm::radians(camTrans.rotation.z));
-    view = glm::translate(glm::mat4(1.0f),camTrans.translation) * view;
+    Renderer::GetAPI()->SetClearColor(cam.clearColor);
+    Renderer::GetAPI()->Clear();
+    glm::mat4 view = camTrans.model;
 
     Renderer::BeginScene(cam.camera,view);
 
@@ -128,9 +130,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     auto reg = scene.GetRegistry();
     for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
-        glm::mat4 model = glm::yawPitchRoll(glm::radians(transform.rotation.y),glm::radians(transform.rotation.x),glm::radians(transform.rotation.z));
-        model = glm::translate(glm::mat4(1.0f),transform.translation) * model;
-        model = glm::scale(model,transform.scale);
+        glm::mat4 model = transform.GetModelMatrix();
         for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
             mesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
             mesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
@@ -141,7 +141,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     
     for(auto e: reg->view<LightComponent>()){
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),t.translation);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.model * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
         model = glm::scale(model,glm::vec3(0.1f));
         glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
         m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
@@ -151,8 +151,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     for(auto e: reg->view<CameraComponent>()){
         if(e == m_CamController.GetCamera()) continue;
         auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
-        glm::mat4 model = glm::yawPitchRoll(glm::radians(t.rotation.y),glm::radians(t.rotation.x),glm::radians(t.rotation.z));
-        model = glm::translate(glm::mat4(1.0f),t.translation) * model;
+        glm::mat4 model = t.model;
         for(int i = 0; i < m_CameraMesh.mesh->submeshes.size(); i++){
             m_CameraMesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
             m_CameraMesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
@@ -168,20 +167,19 @@ void RenderViews::PopulateView(Rush::Scene &scene, RenderView type){
     using namespace Rush;
 
     m_RenderViews[type]->Bind();
-    Renderer::GetAPI()->Clear();
     auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
     auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
-    glm::mat4 view = glm::yawPitchRoll(glm::radians(camTrans.rotation.y),glm::radians(camTrans.rotation.x),glm::radians(camTrans.rotation.z));
-    view = glm::translate(glm::mat4(1.0f),camTrans.translation) * view;
+
+    Renderer::GetAPI()->SetClearColor(cam.clearColor);
+    Renderer::GetAPI()->Clear();
+    glm::mat4 view = camTrans.model;
 
     Renderer::BeginScene(cam.camera,view);
 
     auto reg = scene.GetRegistry();
     for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
-        glm::mat4 model = glm::yawPitchRoll(glm::radians(transform.rotation.y),glm::radians(transform.rotation.x),glm::radians(transform.rotation.z));
-        model = glm::translate(glm::mat4(1.0f),transform.translation) * model;
-        model = glm::scale(model,transform.scale);
+        glm::mat4 model = transform.GetModelMatrix();
         for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
             mesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
             mesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
@@ -219,11 +217,24 @@ void RenderViews::RenderImguiView(const char *name, RenderView type, bool resize
             ImVec2(1,0)
         );
     }
+    if(type == RenderView::RENDERVIEW_RENDER){
+        auto e = GlobalEntitySelection::GetSelection();
+        if(e && e.HasComponent<TransformComponent>()){
+            
+            auto &c = m_CamController.GetCamera().GetComponent<CameraComponent>();
+            auto &ct = m_CamController.GetCamera().GetComponent<TransformComponent>();
+            auto &t = e.GetComponent<TransformComponent>();
+            ImGuizmo::SetRect(m_RenderViewportPos.x,m_RenderViewportPos.y,m_RenderViewportSize.x,m_RenderViewportSize.y);
+            ImGuizmo::SetDrawlist();
+            ImGuizmo::Manipulate(&glm::inverse(ct.GetModelMatrix())[0].x, &c.camera.GetProjection()[0].x, m_GizmoOp, ImGuizmo::WORLD, &t.model[0].x, NULL, NULL);
+            m_UsingGizmo = ImGuizmo::IsOver();
+        };
+    }
     ImGui::End();
 }
 
-bool RenderViews::MouseClickHandle(Rush::MousePressedEvent &e){
-    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT) return false;
+bool RenderViews::MouseClickHandle(Rush::MouseReleasedEvent &e){
+    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT || m_UsingGizmo) return false;
     
     m_ObjectPick = true;
     return true;
@@ -250,8 +261,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     Renderer::GetAPI()->Clear();
     auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
     auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
-    glm::mat4 view = glm::yawPitchRoll(glm::radians(camTrans.rotation.y),glm::radians(camTrans.rotation.x),glm::radians(camTrans.rotation.z));
-    view = glm::translate(glm::mat4(1.0f),camTrans.translation) * view;
+    glm::mat4 view = camTrans.model;
 
     Renderer::BeginScene(cam.camera,view);
 
@@ -276,7 +286,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
         m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),t.translation);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.model * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
         model = glm::scale(model,glm::vec3(0.1f));
         Renderer::RenderCube(m_SelectionShader,model);
     }
@@ -312,4 +322,26 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     entt::entity picked = (entt::entity)id;
 
     GlobalEntitySelection::SetSelection({reg, picked});
+}
+
+bool RenderViews::KeyPressHandle(Rush::KeyboardPressEvent &e){
+    return false;
+}
+
+bool RenderViews::KeyReleaseHandle(Rush::KeyboardReleaseEvent &e){
+    if(e.modifiers != RUSH_MOD_CONTROL) return false;
+
+    switch(e.keycode){
+        case RUSH_KEY_T:
+            m_GizmoOp = ImGuizmo::TRANSLATE;
+            return true;
+        case RUSH_KEY_R:
+            m_GizmoOp = ImGuizmo::ROTATE;
+            return true;
+        case RUSH_KEY_S:
+            m_GizmoOp = ImGuizmo::SCALE;
+            return true;
+        default:
+            return false;
+    }
 }

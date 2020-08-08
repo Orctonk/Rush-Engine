@@ -3,6 +3,8 @@
 
 #include <Rush.h>
 #include <glm/glm.hpp>
+#include <imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 #include "CameraController.h"
 
 enum RenderView{
@@ -25,12 +27,16 @@ private:
     glm::vec2 m_RenderViewportPos;
     glm::vec2 m_RenderViewportSize;
     bool m_ObjectPick;
+    bool m_UsingGizmo;
+    ImGuizmo::OPERATION m_GizmoOp;
 
     void FillRenderView(Rush::Scene &scene);
     void PopulateView(Rush::Scene &scene, RenderView type);
     void RenderImguiView(const char *name, RenderView type, bool resized);
     void DoObjectPick(Rush::Scene &scene);
-    bool MouseClickHandle(Rush::MousePressedEvent &e);
+    bool MouseClickHandle(Rush::MouseReleasedEvent &e);
+    bool KeyPressHandle(Rush::KeyboardPressEvent &e);
+    bool KeyReleaseHandle(Rush::KeyboardReleaseEvent &e);
 
 public:
     bool enabledViews[RenderView::RENDERVIEW_COUNT];
