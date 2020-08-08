@@ -4,7 +4,9 @@
 #include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 enum class RUSH_API LightType {
     DIRECTIONAL,
@@ -13,15 +15,44 @@ enum class RUSH_API LightType {
 };
 
 struct TransformComponent {
-    glm::vec3 translation   {0.0f,0.0f,0.0f};
-    glm::vec3 rotation      {0.0f,0.0f,0.0f};
-    glm::vec3 scale         {1.0f,1.0f,1.0f};
+    glm::mat4 model;
 
-    glm::mat4 GetModelMatrix(){
-        glm::mat4 model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
+    TransformComponent(){
+        model = glm::mat4(1.0f);
+    }
+
+    TransformComponent(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale){
+        model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
         model = glm::translate(glm::mat4(1.0f),translation) * model;
         model = glm::scale(model,scale);
+    }
+
+    glm::mat4 GetModelMatrix(){ 
         return model;
+    }
+
+    void Decompose(glm::vec3 &translation, glm::vec3 &rotation, glm::vec3 &scale){
+        glm::quat orientation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(model,scale,orientation,translation,skew,perspective);
+        rotation.x = glm::pitch(orientation);
+        rotation.y = glm::yaw(orientation);
+        rotation.z = glm::roll(orientation);
+    }
+
+    void Recompose(const glm::vec3 &translation, const glm::vec3 &rotation, const glm::vec3 &scale){
+        model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
+        model = glm::scale(model, scale);
+        model = glm::translate(glm::mat4(1.0f),translation) * model;
+    }
+
+    void Translate(const glm::vec3 &translation){
+        model = glm::translate(glm::mat4(1.0f),translation) * model;
+    }
+
+    void Scale(const glm::vec3 &scale){
+        model = glm::scale(model,scale);
     }
 };
 
