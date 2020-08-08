@@ -120,12 +120,12 @@ public:
 
 	void Update() override{
 		a += 45.0f * Time::Delta();
-		m_Trans.rotation = glm::vec3(a,20.0f,0);
-		m_Trans.translation = glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a)));
-		glm::mat4 model = glm::eulerAngleXYZ(glm::radians(m_Trans.rotation.x),glm::radians(m_Trans.rotation.y),glm::radians(m_Trans.rotation.z));
-        model = glm::translate(glm::mat4(1.0f),m_Trans.translation) * model;
-        model = glm::scale(model,m_Trans.scale);
-		Renderer::BeginScene(m_Cam,model);
+		glm::vec3 trans,rot,scale;
+		m_Trans.Decompose(trans,rot,scale);
+		rot = glm::vec3(a,20.0f,0);
+		trans = glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a)));
+		m_Trans.Recompose(trans,rot,scale);
+		Renderer::BeginScene(m_Cam,m_Trans.model);
 		Renderer::Submit(m_Shader,m_VA,glm::mat4(1.0f));
 		Renderer::EndScene();
 		
