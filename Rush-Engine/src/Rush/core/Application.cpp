@@ -29,6 +29,10 @@ Application::Application(){
 Application::~Application(){
     Logger::SetAlias("Exit");
 	RUSH_LOG_INFO("Exiting Rush");
+    RUSH_LOG_INFO("Removing layers");
+    for(auto l : m_LayerStack){
+        l->OnDetach();
+    }
     AssetManager::Shutdown();
     Renderer::Shutdown();
 	RUSH_LOG_INFO("Exit completed");
@@ -90,6 +94,7 @@ void Application::PollEvents(){
             if(e->IsHandled())
                 break;
         }
+        delete e;
     }
 }
 
