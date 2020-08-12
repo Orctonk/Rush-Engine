@@ -29,13 +29,9 @@ void EditorLayer::OnAttach() {
 
     auto testLight = m_Scene.NewEntity();
     testLight.AddComponent<EntityName>("Test point Light");
-    auto &l2 = testLight.AddComponent<LightComponent>();
+    testLight.AddComponent<LightComponent>();
     auto &t2 = testLight.AddComponent<TransformComponent>();
     t2.Translate({1.0f,1.0f,1.0f});
-    l.type = LightType::POINT;
-    l.ambient = {0.2f,0.2f,0.2f};
-    l.diffuse = {0.0f,0.0f,0.0f};
-    l.specular = {0.0f,0.0f,0.0f};
 
     auto model = m_Scene.NewEntity();
     model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
