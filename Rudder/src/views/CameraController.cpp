@@ -49,30 +49,25 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
     m_DragLastY = e.y;
 
     auto &t = m_Camera.GetComponent<TransformComponent>();
-    glm::vec3 trans,rot,scale;
-    t.Decompose(trans,rot,scale);
+    glm::quat rot = t.GetRotation();
 
-    glm::mat4 rotation = glm::yawPitchRoll(glm::radians(rot.y),glm::radians(rot.x),glm::radians(rot.z));
-
-    glm::vec3 right = rotation * glm::vec4(1.0f,0.0f,0.0f,0.0f);
-    glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
+    glm::vec3 right = glm::rotate(rot, glm::vec4(1.0f,0.0f,0.0f,0.0f));
+    glm::vec3 front = glm::rotate(rot, glm::vec4(0.0f,0.0f,-1.0f,0.0f));
     switch(m_CurDragMode){
         case MouseDragMode::ROTATE:
             m_YPR += glm::vec3(-dy / 2.0f,-dx / 2.0f,0.0f);
-            rot = m_YPR;
-            trans += glm::vec3(
+            t.SetRotation(glm::radians(m_YPR));
+            t.Translate(glm::vec3(
                 right * sinf(-dx/180.0f * 3.14) * 2.0f +
                 front * (1-cosf(-dx/180.0f * 3.14)) * 2.0f +
                 glm::vec3(0.0f,1.0f,0.0f) * sinf(dy/180.0f * 3.14) * 2.0f +
                 front * (1-cosf(-dy/180.0f * 3.14)) * 2.0f
-            );
-            t.Recompose(trans,rot,scale);
+            ));
             break;
         case MouseDragMode::PAN:
-            trans += glm::vec3(
+            t.Translate(glm::vec3(
                 right * (-dx / 200.0f) +
-                glm::cross(right,front) * (dy / 200.0f));
-            t.Recompose(trans,rot,scale);
+                glm::cross(right,front) * (dy / 200.0f)));
             break;
     }
     
@@ -81,11 +76,8 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
 
 bool CameraController::MouseScrollHandle(Rush::MouseScrollEvent &e){
     auto &t = m_Camera.GetComponent<TransformComponent>();
-    glm::vec3 trans,rot,scale;
-    t.Decompose(trans,rot,scale);
-
-    glm::mat4 rotation = glm::yawPitchRoll(glm::radians(rot.y),glm::radians(rot.x),glm::radians(rot.z));
-    glm::vec3 front = rotation * glm::vec4(0.0f,0.0f,-1.0f,0.0f);
+    glm::quat rot = t.GetRotation();
+    glm::vec3 front = glm::rotate(rot, glm::vec4(0.0f,0.0f,-1.0f,0.0f));
     t.Translate(glm::vec3(front * (e.delta /10.0f)));
     return false;
 }

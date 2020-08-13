@@ -3,6 +3,7 @@
 #include "GlobalEntitySelection.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -10,6 +11,7 @@ RenderViews::RenderViews()
 :   m_CamController() {
     m_ObjectPick = false;
     m_GizmoOp = ImGuizmo::TRANSLATE;
+    m_GizmoMode = ImGuizmo::WORLD;
     for(int i = 0; i < RENDERVIEW_COUNT; i++)
         enabledViews[i] = true;     // TODO: Make window open status persistent over application close
 }
@@ -112,7 +114,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
     Renderer::GetAPI()->SetClearColor(cam.clearColor);
     Renderer::GetAPI()->Clear();
-    glm::mat4 view = camTrans.model;
+    glm::mat4 view = camTrans.GetModelMatrix();
 
     Renderer::BeginScene(cam.camera,view);
 
@@ -141,7 +143,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     
     for(auto e: reg->view<LightComponent>()){
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.model * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
+        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.GetModelMatrix() * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
         model = glm::scale(model,glm::vec3(0.1f));
         glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
         m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
@@ -151,7 +153,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     for(auto e: reg->view<CameraComponent>()){
         if(e == m_CamController.GetCamera()) continue;
         auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
-        glm::mat4 model = t.model;
+        glm::mat4 model = t.GetModelMatrix();
         for(int i = 0; i < m_CameraMesh.mesh->submeshes.size(); i++){
             m_CameraMesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
             m_CameraMesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
@@ -172,7 +174,7 @@ void RenderViews::PopulateView(Rush::Scene &scene, RenderView type){
 
     Renderer::GetAPI()->SetClearColor(cam.clearColor);
     Renderer::GetAPI()->Clear();
-    glm::mat4 view = camTrans.model;
+    glm::mat4 view = camTrans.GetModelMatrix();
 
     Renderer::BeginScene(cam.camera,view);
 
@@ -226,8 +228,27 @@ void RenderViews::RenderImguiView(const char *name, RenderView type, bool resize
             auto &t = e.GetComponent<TransformComponent>();
             ImGuizmo::SetRect(m_RenderViewportPos.x,m_RenderViewportPos.y,m_RenderViewportSize.x,m_RenderViewportSize.y);
             ImGuizmo::SetDrawlist();
-            ImGuizmo::Manipulate(&glm::inverse(ct.GetModelMatrix())[0].x, &c.camera.GetProjection()[0].x, m_GizmoOp, ImGuizmo::WORLD, &t.model[0].x, NULL, NULL);
+            glm::mat4 model = t.GetModelMatrix();
+            glm::mat4 delta;
+            ImGuizmo::Manipulate(&glm::inverse(ct.GetModelMatrix())[0].x, &c.camera.GetProjection()[0].x, m_GizmoOp, m_GizmoMode, &model[0].x, &delta[0].x);
             m_UsingGizmo = ImGuizmo::IsOver();
+            if(ImGuizmo::IsUsing()){
+                glm::quat orient;
+                glm::vec3 trans,rot,scale,skew;
+                glm::vec4 persp;
+                glm::decompose(model,scale,orient,trans,skew,persp);
+                switch(m_GizmoOp){
+                    case ImGuizmo::ROTATE:
+                        t.SetRotation(orient);    
+                        break;
+                    case ImGuizmo::TRANSLATE:
+                        t.SetTranslation(trans); 
+                        break;
+                    case ImGuizmo::SCALE:
+                        t.SetScale(scale);
+                        break;
+                }
+            }
         };
     }
     ImGui::End();
@@ -261,7 +282,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     Renderer::GetAPI()->Clear();
     auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();
     auto &camTrans = m_CamController.GetCamera().GetComponent<TransformComponent>();
-    glm::mat4 view = camTrans.model;
+    glm::mat4 view = camTrans.GetModelMatrix();
 
     Renderer::BeginScene(cam.camera,view);
 
@@ -286,7 +307,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
         m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.model * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
+        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.GetModelMatrix() * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
         model = glm::scale(model,glm::vec3(0.1f));
         Renderer::RenderCube(m_SelectionShader,model);
     }
@@ -325,10 +346,6 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
 }
 
 bool RenderViews::KeyPressHandle(Rush::KeyboardPressEvent &e){
-    return false;
-}
-
-bool RenderViews::KeyReleaseHandle(Rush::KeyboardReleaseEvent &e){
     if(e.modifiers != RUSH_MOD_CONTROL) return false;
 
     switch(e.keycode){
@@ -341,7 +358,14 @@ bool RenderViews::KeyReleaseHandle(Rush::KeyboardReleaseEvent &e){
         case RUSH_KEY_S:
             m_GizmoOp = ImGuizmo::SCALE;
             return true;
+        case RUSH_KEY_L:
+            m_GizmoMode = m_GizmoMode == ImGuizmo::WORLD ? ImGuizmo::LOCAL : ImGuizmo::WORLD;
+            return true;
         default:
             return false;
     }
+}
+
+bool RenderViews::KeyReleaseHandle(Rush::KeyboardReleaseEvent &e){
+    return false;
 }

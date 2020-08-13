@@ -29,6 +29,7 @@ private:
     bool m_ObjectPick;
     bool m_UsingGizmo;
     ImGuizmo::OPERATION m_GizmoOp;
+    ImGuizmo::MODE m_GizmoMode;
 
     void FillRenderView(Rush::Scene &scene);
     void PopulateView(Rush::Scene &scene, RenderView type);

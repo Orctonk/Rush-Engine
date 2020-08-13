@@ -9,13 +9,20 @@
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
     m_EE.Register<TransformComponent>("Transform",[](Rush::Entity &e){
-        bool needReComp = false;
         auto& t = e.GetComponent<TransformComponent>();
-        glm::vec3 trans,rot,scale;
-        needReComp |= ImGui::DragFloat3("Position", &trans.x, 0.01f);
-        needReComp |= ImGui::DragFloat3("Rotation", &rot.x, 1.0f);
-        needReComp |= ImGui::DragFloat3("Scale", &scale.x, 0.01f);
-        if(needReComp) t.Recompose(trans,rot,scale);
+        glm::quat qrot = t.GetRotation();
+        glm::vec3 trans = t.GetTranslation();
+        glm::vec3 rot;
+        rot.x = glm::degrees(glm::pitch(qrot));
+        rot.y = glm::degrees(glm::yaw(qrot));
+        rot.z = glm::degrees(glm::roll(qrot));
+        glm::vec3 scale = t.GetScale();
+        if(ImGui::DragFloat3("Position", &trans.x, 0.01f))
+            t.SetTranslation(trans);
+        if(ImGui::DragFloat3("Rotation", &rot.x, 1.0f))
+            t.SetRotation(glm::radians(rot));
+        if(ImGui::DragFloat3("Scale", &scale.x, 0.01f))
+            t.SetScale(scale);
     });
     m_EE.Register<CameraComponent>("Camera",[](Rush::Entity &e){
         auto& c = e.GetComponent<CameraComponent>();
