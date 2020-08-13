@@ -99,6 +99,10 @@ void Renderer2D::Flush(){
     s_Data.textureShader->SetUniform("u_ViewProj",ShaderData::MAT4, glm::value_ptr(s_SceneVP));
     for(int i = 0; i < s_Data.nextTexture; i++)
         s_Data.textures[i]->Bind(i);
+    s_API->SetOption(BlendMode::Add);
+    s_API->SetOption(PolygonMode::Fill);
+    s_API->SetOption(CullFace::None);
+    s_API->SetOption(DepthTest::None);
     s_API->DrawIndexed(s_Data.rendererVA, s_Data.quadCount * 6);
 
     s_Stats.drawCallCount++;

@@ -37,8 +37,6 @@ public:
     static void Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va, const glm::mat4 &model);
 
     static void RenderCube(const Shared<Shader> &shader, const glm::mat4 &model);
-    static void RenderQuad(const Shared<Shader> &shader, const glm::vec2 &pos, const glm::vec2 &size);
-    static void RenderTexturedQuad(const Shared<Shader> &shader, const glm::vec2 &pos, const glm::vec2 &size);
 
     static Unique<RenderingAPI> &GetAPI() { return s_API; }
 };
