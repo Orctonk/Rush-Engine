@@ -35,4 +35,10 @@ void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va){
     glDrawElements(GL_TRIANGLES,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
 }
 
+void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, uint32_t count){
+    RUSH_PROFILE_FUNCTION();
+    va->Bind();
+    glDrawElements(GL_TRIANGLES,count,GL_UNSIGNED_INT,0);
+}
+
 }

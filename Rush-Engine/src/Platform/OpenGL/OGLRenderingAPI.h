@@ -15,6 +15,7 @@ public:
     void Clear() override;
 
     void DrawIndexed(const Unique<VertexArray> &va) override;
+    void DrawIndexed(const Unique<VertexArray> &va, uint32_t count) override;
 };
 
 }

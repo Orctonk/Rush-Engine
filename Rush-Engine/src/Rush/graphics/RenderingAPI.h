@@ -20,6 +20,7 @@ public:
     virtual void Clear() = 0;
 
     virtual void DrawIndexed(const Unique<VertexArray> &va) = 0;
+    virtual void DrawIndexed(const Unique<VertexArray> &va, uint32_t count) = 0;
 
     static Unique<RenderingAPI> Create();
 };
