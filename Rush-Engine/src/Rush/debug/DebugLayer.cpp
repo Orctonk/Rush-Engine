@@ -1,6 +1,7 @@
 #include "DebugLayer.h"
 
 #include "Rush/core/Time.h"
+#include "Rush/graphics/Renderer.h"
 
 #include <imgui.h>
 
@@ -28,6 +29,15 @@ void DebugLayer::OnImguiRender(){
     float avg = tot/DEBUG_FPS_SAMPLES;
     ImGui::Text("Average frame time: %.2f ms/frame (%.1f FPS)", (1000*avg),(1/avg));
     ImGui::PlotLines("Frame times",m_FrameTimes,DEBUG_FPS_SAMPLES,m_FrameTimeOffset);
+
+    ImGui::Separator();
+    auto rs = Renderer::GetRenderStats();
+    ImGui::Text("3D Renderer statistics");
+    ImGui::Text("Draw calls: %d", rs.drawCallCount);
+    ImGui::Text("Primitives: %d", rs.primitivesCount);
+    ImGui::Text("Programs:   %d", rs.programCount);
+    ImGui::Text("Vertices:   %d", rs.vertexCount);
+    Renderer::ResetRenderStats();
 
     ImGui::End();
 }

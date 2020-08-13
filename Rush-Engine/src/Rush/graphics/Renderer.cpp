@@ -7,6 +7,7 @@ namespace Rush{
 Unique<RenderingAPI> Renderer::s_API = RenderingAPI::Create();
 glm::mat4 Renderer::s_SceneVP = glm::mat4();
 glm::vec3 Renderer::s_CameraPos = glm::vec3();
+RenderStats Renderer::s_Stats = RenderStats();
 
 void Renderer::Init(){
     s_API = RenderingAPI::Create();
@@ -32,6 +33,10 @@ void Renderer::EndScene(){
 
 }
 
+void Renderer::ResetRenderStats(){
+    s_Stats = RenderStats();
+}
+
 void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va,const glm::mat4 &model) {
     RUSH_PROFILE_FUNCTION();
     shader->Bind();
@@ -39,6 +44,12 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
     shader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
     shader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_CameraPos));
     s_API->DrawIndexed(va);
+
+    s_Stats.drawCallCount++;
+    uint32_t ic = va->GetIndexBuffer()->GetIndexCount();
+    s_Stats.primitivesCount += ic / 3;
+    s_Stats.vertexCount += ic;
+    s_Stats.programCount++;
 }
 
 void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
