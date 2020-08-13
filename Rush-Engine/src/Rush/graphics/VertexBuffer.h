@@ -35,7 +35,8 @@ public:
     void SetCustomLayout(std::vector<LayoutElement> layout) { m_Layout = layout; }
     std::vector<LayoutElement> GetLayout() { return m_Layout; }
 
-    static Shared<VertexBuffer> Create(const float *indices, uint32_t size);
+    static Shared<VertexBuffer> Create(const float *data, uint32_t size);
+    static Shared<VertexBuffer> Create(uint32_t size);
 };
 
 }

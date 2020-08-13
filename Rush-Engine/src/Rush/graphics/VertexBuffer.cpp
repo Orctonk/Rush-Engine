@@ -13,8 +13,12 @@ VertexBuffer::VertexBuffer(const float *data, uint32_t size) {}
 
 VertexBuffer::~VertexBuffer() { }
 
-Shared<VertexBuffer> VertexBuffer::Create(const float *indices, uint32_t size) {
-    return CreateShared<OGLVertexBuffer>(indices,size);
+Shared<VertexBuffer> VertexBuffer::Create(const float *data, uint32_t size) {
+    return CreateShared<OGLVertexBuffer>(data,size);
+}
+
+Shared<VertexBuffer> VertexBuffer::Create(uint32_t size) {
+    return CreateShared<OGLVertexBuffer>(size);
 }
 
 }
