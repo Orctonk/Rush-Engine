@@ -21,7 +21,6 @@ void EditorLayer::OnAttach() {
     auto globalLight = m_Scene.NewEntity();
     globalLight.AddComponent<EntityName>("Global editor lighting");
     auto &l = globalLight.AddComponent<LightComponent>();
-    auto &t = globalLight.AddComponent<TransformComponent>();
     l.type = LightType::DIRECTIONAL;
     l.ambient = {0.2f,0.2f,0.2f};
     l.diffuse = {0.0f,0.0f,0.0f};
@@ -30,18 +29,15 @@ void EditorLayer::OnAttach() {
     auto testLight = m_Scene.NewEntity();
     testLight.AddComponent<EntityName>("Test point Light");
     testLight.AddComponent<LightComponent>();
-    auto &t2 = testLight.AddComponent<TransformComponent>();
-    t2.Translate({1.0f,1.0f,1.0f});
+    testLight.GetComponent<TransformComponent>().Translate({1.0f,1.0f,1.0f});
 
     auto model = m_Scene.NewEntity();
     model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
-
-    model.AddComponent<TransformComponent>();
     model.AddComponent<EntityName>("Model Test");
 
     auto camera = m_Scene.NewEntity();
     camera.AddComponent<EntityName>("Editor camera");
-    camera.AddComponent<TransformComponent>(glm::vec3(0.0f,0.0f,3.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(1.0f));
+    camera.GetComponent<TransformComponent>().Translate({0.0f,0.0f,3.0f});
     camera.AddComponent<CameraComponent>(false,Rush::Camera(1024.0f/720.0f,45.0f));
 
     m_RenderViews.Init(camera);

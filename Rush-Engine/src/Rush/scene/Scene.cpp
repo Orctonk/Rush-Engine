@@ -20,7 +20,9 @@ Scene::~Scene(){
 }
 
 Entity Scene::NewEntity(){
-    return {&m_SceneRegistry, m_SceneRegistry.create()};
+    Entity e = {&m_SceneRegistry, m_SceneRegistry.create()};
+    e.AddComponent<TransformComponent>();
+    return e;
 }
 
 void Scene::DeleteEntity(Entity e){
