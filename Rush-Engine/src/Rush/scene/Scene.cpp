@@ -39,7 +39,7 @@ void Scene::Render(){
         auto &c = m_SceneRegistry.get<CameraComponent>(e);
         if(c.main){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
-            view = t.model;
+            view = t.GetModelMatrix();
 
             mainCamera = &c;
         }
@@ -55,11 +55,11 @@ void Scene::Render(){
         auto &l = m_SceneRegistry.get<LightComponent>(e);
         if(l.type == LightType::DIRECTIONAL){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
-            glm::vec3 trans,rot,scale;
-            t.Decompose(trans,rot,scale);
+            glm::vec3 trans = t.GetTranslation();
+            glm::quat rot = t.GetRotation();
             plv = glm::vec4(trans,l.cutOff);
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::yawPitchRoll(glm::radians(rot.y),glm::radians(rot.x),glm::radians(rot.z)) * glm::vec4(1.0f,0.0f,0.0f,0.0f);
+            plv = glm::rotate(rot,glm::vec4(1.0f,0.0f,0.0f,0.0f));
             plv.w = l.outerCutOff;
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.ambient,l.constant);
@@ -76,14 +76,14 @@ void Scene::Render(){
         auto &l = m_SceneRegistry.get<LightComponent>(e);
         if(l.type != LightType::DIRECTIONAL){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
-            glm::vec3 trans,rot,scale;
-            t.Decompose(trans,rot,scale);
+            glm::vec3 trans = t.GetTranslation();
+            glm::quat rot = t.GetRotation();
             plv = glm::vec4(trans,glm::cos(glm::radians(l.cutOff)));
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
             if(l.type == LightType::POINT)
                 plv = glm::vec4(0.0f,0.0f,0.0f,glm::cos(glm::radians(l.outerCutOff)));
             else {
-                plv = glm::yawPitchRoll(glm::radians(rot.y),glm::radians(rot.x),glm::radians(rot.z)) * glm::vec4(1.0f,0.0f,0.0f,0.0f);
+                plv = glm::rotate(rot, glm::vec4(1.0f,0.0f,0.0f,0.0f));
                 plv.w = glm::cos(glm::radians(l.outerCutOff));
             }
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
@@ -99,7 +99,7 @@ void Scene::Render(){
     m_SceneShader->SetUniform("u_LightCount",ShaderData::INT,&lightCount);
     for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
-        glm::mat4 model = transform.model;
+        glm::mat4 model = transform.GetModelMatrix();
         int j = 0;
         m_SceneShader->SetUniform("u_Material.diffuse",ShaderData::INT,&j);
         j = 1;

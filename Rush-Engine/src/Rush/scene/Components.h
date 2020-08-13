@@ -15,44 +15,64 @@ enum class RUSH_API LightType {
 };
 
 struct TransformComponent {
-    glm::mat4 model;
+private:
+    glm::vec3 m_Translation;
+    glm::quat m_Rotation;
+    glm::vec3 m_Scale;
+    glm::mat4 m_Model;
+    bool m_Dirty;
 
-    TransformComponent(){
-        model = glm::mat4(1.0f);
+    void RecalcTransform(){
+        m_Model = glm::toMat4(m_Rotation);
+        m_Model = glm::translate(glm::mat4(1.0f),m_Translation) * m_Model;
+        m_Model = glm::scale(m_Model,m_Scale);
+        m_Dirty = false;
     }
 
-    TransformComponent(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale){
-        model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
-        model = glm::translate(glm::mat4(1.0f),translation) * model;
-        model = glm::scale(model,scale);
+public:
+    TransformComponent()
+    : m_Translation(0.0f), m_Rotation(), m_Scale(1.0f), m_Model(1.0f), m_Dirty(false) {}
+
+    TransformComponent(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale)
+    : m_Translation(translation),m_Rotation(rotation),m_Scale(scale),m_Dirty(false) {
+        RecalcTransform();
     }
 
     glm::mat4 GetModelMatrix(){ 
-        return model;
+        if(m_Dirty) RecalcTransform();
+        return m_Model;
     }
 
-    void Decompose(glm::vec3 &translation, glm::vec3 &rotation, glm::vec3 &scale){
-        glm::quat orientation;
-        glm::vec3 skew;
-        glm::vec4 perspective;
-        glm::decompose(model,scale,orientation,translation,skew,perspective);
-        rotation.x = glm::pitch(orientation);
-        rotation.y = glm::yaw(orientation);
-        rotation.z = glm::roll(orientation);
-    }
+    glm::vec3 GetTranslation() { return m_Translation; }
+    glm::quat GetRotation() { return m_Rotation; }
+    glm::vec3 GetScale() { return m_Scale; }
 
-    void Recompose(const glm::vec3 &translation, const glm::vec3 &rotation, const glm::vec3 &scale){
-        model = glm::yawPitchRoll(glm::radians(rotation.y),glm::radians(rotation.x),glm::radians(rotation.z));
-        model = glm::scale(model, scale);
-        model = glm::translate(glm::mat4(1.0f),translation) * model;
+    void SetTranslation(const glm::vec3 &translation) { 
+        m_Dirty = true; 
+        m_Translation = translation; 
+    }
+    void SetRotation(const glm::quat &rotation) { 
+        m_Dirty = true; 
+        m_Rotation = rotation; 
+    }
+    void SetScale(const glm::vec3 &scale) { 
+        m_Dirty = true; 
+        m_Scale = scale; 
     }
 
     void Translate(const glm::vec3 &translation){
-        model = glm::translate(glm::mat4(1.0f),translation) * model;
+        m_Dirty = true;
+        m_Translation += translation;
     }
 
     void Scale(const glm::vec3 &scale){
-        model = glm::scale(model,scale);
+        m_Dirty = true;
+        m_Scale *= scale;
+    }
+
+    void Rotate(const glm::quat &rotation){
+        m_Dirty = true;
+        m_Rotation = rotation * m_Rotation;
     }
 };
 
