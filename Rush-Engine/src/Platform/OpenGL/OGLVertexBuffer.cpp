@@ -42,7 +42,8 @@ void OGLVertexBuffer::Unbind() const {
 
 void OGLVertexBuffer::BufferData(const void *data, uint32_t size) {
     RUSH_PROFILE_FUNCTION();
-    glBufferSubData(m_VBO,0,size,data);
+    glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
+    glBufferSubData(GL_ARRAY_BUFFER,0,size,data);
 }
 
 void OGLVertexBuffer::SetInterleavedLayout(std::vector<ShaderData> layout) {
