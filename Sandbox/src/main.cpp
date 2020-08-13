@@ -119,13 +119,8 @@ public:
 	}
 
 	void Update() override{
-		a += 45.0f * Time::Delta();
-		glm::vec3 trans,rot,scale;
-		m_Trans.Decompose(trans,rot,scale);
-		rot = glm::vec3(a,20.0f,0);
-		trans = glm::vec3(3*glm::cos(glm::radians(a)),1.0f,3*glm::sin(glm::radians(a)));
-		m_Trans.Recompose(trans,rot,scale);
-		Renderer::BeginScene(m_Cam,m_Trans.model);
+		glm::mat4 model = m_Trans.GetModelMatrix();
+		Renderer::BeginScene(m_Cam,model);
 		Renderer::Submit(m_Shader,m_VA,glm::mat4(1.0f));
 		Renderer::EndScene();
 		
