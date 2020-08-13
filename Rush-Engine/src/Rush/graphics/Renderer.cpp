@@ -47,7 +47,7 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
 
     s_Stats.drawCallCount++;
     uint32_t ic = va->GetIndexBuffer()->GetIndexCount();
-    s_Stats.primitivesCount += ic / 3;
+    s_Stats.primitiveCount += ic / 3;
     s_Stats.vertexCount += ic;
     s_Stats.programCount++;
 }

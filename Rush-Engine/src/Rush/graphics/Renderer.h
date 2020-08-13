@@ -14,7 +14,7 @@ namespace Rush {
 struct RUSH_API RenderStats {
     int drawCallCount = 0;
     int vertexCount = 0;
-    int primitivesCount = 0;
+    int primitiveCount = 0;
     int programCount = 0;
 };
 
