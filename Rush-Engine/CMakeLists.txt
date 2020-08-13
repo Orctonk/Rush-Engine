@@ -30,6 +30,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer2D.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Framebuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
