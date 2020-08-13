@@ -14,6 +14,12 @@ public:
     void SetClearColor(glm::vec4 color) override;
     void Clear() override;
 
+    void SetOption(CullFace culling) override;
+    void SetOption(PolygonMode polygonMode) override;
+    void SetOption(BlendMode blendMode) override;
+    void SetOption(Multisampling multisampling) override;
+    void SetOption(DepthTest depthTest) override;
+
     void DrawIndexed(const Unique<VertexArray> &va) override;
     void DrawIndexed(const Unique<VertexArray> &va, uint32_t count) override;
 };

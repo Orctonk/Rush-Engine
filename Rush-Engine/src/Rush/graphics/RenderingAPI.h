@@ -10,10 +10,49 @@
 
 namespace Rush {
 
+enum class CullFace{
+    None,
+    Clockwise,
+    CounterClockwise,
+    Both
+};
+
+enum class PolygonMode{
+    Fill,
+    Wireframe
+};
+
+enum class BlendMode{
+    None,
+    Add,
+    Subtract
+};
+
+enum class Multisampling{
+    On,
+    Off
+};
+
+enum class DepthTest{
+    None,
+    Always,
+    Never,
+    Less,
+    LessOrEqual,
+    Greater,
+    GreaterOrEqual
+};
+
 class RUSH_API RenderingAPI {
 public:
     virtual void Init() = 0;
     virtual void Shutdown() = 0;
+
+    virtual void SetOption(CullFace culling) = 0;
+    virtual void SetOption(PolygonMode polygonMode) = 0;
+    virtual void SetOption(BlendMode blendMode) = 0;
+    virtual void SetOption(Multisampling multisampling) = 0;
+    virtual void SetOption(DepthTest depthTest) = 0;
 
     virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
     virtual void SetClearColor(glm::vec4 color) = 0;
