@@ -20,8 +20,11 @@ public:
     void SetOption(Multisampling multisampling) override;
     void SetOption(DepthTest depthTest) override;
 
-    void DrawIndexed(const Unique<VertexArray> &va) override;
-    void DrawIndexed(const Unique<VertexArray> &va, uint32_t count) override;
+    void SetPointSize(float size) override;
+    void SetLineWidth(float width) override;
+
+    void DrawIndexed(const Unique<VertexArray> &va, Primitive type = Primitive::Triangle) override;
+    void DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) override;
 };
 
 }

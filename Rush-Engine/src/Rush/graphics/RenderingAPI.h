@@ -43,6 +43,12 @@ enum class DepthTest{
     GreaterOrEqual
 };
 
+enum class Primitive{
+    Point,
+    Line,
+    Triangle
+};
+
 class RUSH_API RenderingAPI {
 public:
     virtual void Init() = 0;
@@ -54,12 +60,15 @@ public:
     virtual void SetOption(Multisampling multisampling) = 0;
     virtual void SetOption(DepthTest depthTest) = 0;
 
+    virtual void SetPointSize(float size) = 0;
+    virtual void SetLineWidth(float width) = 0;
+
     virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
     virtual void SetClearColor(glm::vec4 color) = 0;
     virtual void Clear() = 0;
 
-    virtual void DrawIndexed(const Unique<VertexArray> &va) = 0;
-    virtual void DrawIndexed(const Unique<VertexArray> &va, uint32_t count) = 0;
+    virtual void DrawIndexed(const Unique<VertexArray> &va, Primitive type = Primitive::Triangle) = 0;
+    virtual void DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) = 0;
 
     static Unique<RenderingAPI> Create();
 };

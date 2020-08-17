@@ -6,12 +6,10 @@ namespace Rush {
 
 void OGLRenderingAPI::Init(){
     RUSH_PROFILE_FUNCTION();
-    glEnable(GL_DEPTH_TEST);
 }
 
 void OGLRenderingAPI::Shutdown(){
     RUSH_PROFILE_FUNCTION();
-
 }
 
 void OGLRenderingAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height){
@@ -121,17 +119,49 @@ void OGLRenderingAPI::SetOption(DepthTest depthTest){
     }
 }
 
-
-void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va){
-    RUSH_PROFILE_FUNCTION();
-    va->Bind();
-    glDrawElements(GL_TRIANGLES,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
+void OGLRenderingAPI::SetPointSize(float size){
+    glPointSize(size);
 }
 
-void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, uint32_t count){
+void OGLRenderingAPI::SetLineWidth(float width){
+    glLineWidth(width);
+}
+
+
+void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, Primitive type){
     RUSH_PROFILE_FUNCTION();
+    GLenum primType;
+    switch(type){
+        case Primitive::Point:
+            primType = GL_POINTS;
+            break;
+        case Primitive::Line:
+            primType = GL_LINES;
+            break;
+        case Primitive::Triangle:
+            primType = GL_TRIANGLES;
+            break;
+    }
     va->Bind();
-    glDrawElements(GL_TRIANGLES,count,GL_UNSIGNED_INT,0);
+    glDrawElements(primType,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
+}
+
+void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type){
+    RUSH_PROFILE_FUNCTION();
+    GLenum primType;
+    switch(type){
+        case Primitive::Point:
+            primType = GL_POINTS;
+            break;
+        case Primitive::Line:
+            primType = GL_LINES;
+            break;
+        case Primitive::Triangle:
+            primType = GL_TRIANGLES;
+            break;
+    }
+    va->Bind();
+    glDrawElements(primType,count,GL_UNSIGNED_INT,0);
 }
 
 }
