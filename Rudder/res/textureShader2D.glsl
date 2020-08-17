@@ -34,5 +34,5 @@ uniform sampler2D u_Textures[32];
 out vec4 FragColor;  
 
 void main() {
-    FragColor = fs_in.Color * texture(u_Textures[int(fs_in.TexIndex)],fs_in.TexCoord);
+    FragColor = fs_in.Color * texture(u_Textures[int(fs_in.TexIndex+0.01)],fs_in.TexCoord);
 }
