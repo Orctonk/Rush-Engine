@@ -46,6 +46,7 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
     s_API->SetOption(PolygonMode::Fill);
     s_API->SetOption(CullFace::Clockwise);
     s_API->SetOption(DepthTest::Less);
+    s_API->SetOption(BlendMode::None);
     s_API->DrawIndexed(va);
 
     s_Stats.drawCallCount++;
