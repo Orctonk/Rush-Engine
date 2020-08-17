@@ -18,7 +18,7 @@ RenderViews::RenderViews()
 }
 
 RenderViews::~RenderViews(){
-
+    
 }
 
 void RenderViews::Init(Rush::Entity cameraEntity){
@@ -346,8 +346,8 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
         glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.GetModelMatrix() * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
-        model = glm::scale(model,glm::vec3(0.1f));
-        Renderer::RenderCube(m_SelectionShader,model);
+        model = glm::scale(model,glm::vec3(0.2f));
+        Renderer::RenderCube(m_SelectionShader,model);  // Fake until model specific render state is supported
     }
 
     for(auto e: reg->view<CameraComponent>()){
