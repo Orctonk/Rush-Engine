@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Rush/resources/AssetManager.h"
 #include "Rush/graphics/Renderer.h"
+#include "Rush/graphics/LineRenderer.h"
 #include "Rush/graphics/Renderer2D.h"
 #include "Rush/events/EventQueue.h"
 #include "Rush/debug/DebugLayer.h"
@@ -22,6 +23,7 @@ Application::Application(){
     WindowProperties props;
 	m_Window = AbstractWindow::CreateWindow(props);
     Renderer::Init();
+    LineRenderer::Init();
     Renderer2D::Init();
     AssetManager::Init();
 	RUSH_LOG_INFO("Initialization completed");
@@ -36,6 +38,8 @@ Application::~Application(){
         l->OnDetach();
     }
     AssetManager::Shutdown();
+    Renderer2D::Shutdown();
+    LineRenderer::Shutdown();
     Renderer::Shutdown();
 	RUSH_LOG_INFO("Exit completed");
 	Logger::Destroy();
