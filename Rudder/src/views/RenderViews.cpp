@@ -116,6 +116,13 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     Renderer::GetAPI()->Clear();
     glm::mat4 view = camTrans.GetModelMatrix();
 
+    LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+    for(float f = -10.0f; f < 10.5f; f++){
+        LineRenderer::DrawLine({f,0.0f,-11.0f},{f,0.0f,11.0f},glm::vec4(.6f));
+        LineRenderer::DrawLine({-11.0f,0.0f,f},{11.0f,0.0f,f},glm::vec4(.6f));
+    }
+    LineRenderer::EndScene();
+
     Renderer::BeginScene(cam.camera,view);
 
     glm::vec3 dlightcol(1.0f);
@@ -140,15 +147,6 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
             Renderer::Submit(m_RenderViewShaders[RENDERVIEW_RENDER],mesh.mesh->submeshes[i].vertices,model);
         }
     }
-    
-    for(auto e: reg->view<LightComponent>()){
-        auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.GetModelMatrix() * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
-        model = glm::scale(model,glm::vec3(0.1f));
-        glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
-        m_LightBoxShader->SetUniform("u_LightCol",ShaderData::FLOAT3,glm::value_ptr(avgColor));
-        Renderer::RenderCube(m_LightBoxShader,model);
-    }
 
     for(auto e: reg->view<CameraComponent>()){
         if(e == m_CamController.GetCamera()) continue;
@@ -161,7 +159,16 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
             Renderer::Submit(m_RenderViewShaders[RENDERVIEW_RENDER],m_CameraMesh.mesh->submeshes[i].vertices,model);
         }
     }
+
     Renderer::EndScene();
+
+    Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+    for(auto e: reg->view<LightComponent>()){
+        auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
+        glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
+        Renderer2D::DrawBillboard(t.GetTranslation(),{.1f,.1f},glm::vec4(avgColor,1.0f));
+    }
+    Renderer2D::EndScene();
     m_RenderViews[RENDERVIEW_RENDER]->Unbind();
 }
 
