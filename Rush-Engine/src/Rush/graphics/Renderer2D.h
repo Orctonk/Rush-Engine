@@ -20,6 +20,8 @@ private:
     static Unique<RenderingAPI> s_API;
     static RenderStats2D s_Stats;
     static glm::mat4 s_SceneVP;
+    static glm::vec3 s_CameraUp;
+    static glm::vec3 s_CameraRight;
 
 public:
     static void Init();
@@ -39,6 +41,9 @@ public:
     static void DrawQuad(glm::vec3 pos, glm::vec2 size, Shared<Texture> texture, glm::vec4 color);
     static void DrawQuad(glm::vec2 pos, glm::vec2 size, float rotation, Shared<Texture> texture, glm::vec4 color);
     static void DrawQuad(glm::vec3 pos, glm::vec2 size, float rotation, Shared<Texture> texture, glm::vec4 color);
+
+    static void DrawBillboard(glm::vec3 pos, glm::vec2 size, glm::vec4 color);
+    static void DrawBillboard(glm::vec3 pos, glm::vec2 size, Shared<Texture> texture, glm::vec4 color);
 
     static void ResetRenderStats();
     static RenderStats2D GetRenderStats() { return s_Stats; }

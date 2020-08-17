@@ -40,6 +40,8 @@ static RendererData s_Data;
 RenderStats2D Renderer2D::s_Stats = RenderStats2D();
 Unique<RenderingAPI> Renderer2D::s_API;
 glm::mat4 Renderer2D::s_SceneVP;
+glm::vec3 Renderer2D::s_CameraUp;
+glm::vec3 Renderer2D::s_CameraRight;
 
 void Renderer2D::Init(){
     RUSH_PROFILE_FUNCTION();
@@ -86,6 +88,9 @@ void Renderer2D::Shutdown(){
 
 void Renderer2D::BeginScene(glm::mat4 projection, glm::mat4 view){
     s_SceneVP = projection * view;
+    glm::mat4 camTrans = glm::inverse(view);
+    s_CameraUp = glm::vec3(camTrans * glm::vec4(0.0f,1.0f,0.0f,0.0f));
+    s_CameraRight = glm::vec3(camTrans * glm::vec4(1.0f,0.0f,0.0f,0.0f));
 }
 
 void Renderer2D::EndScene(){
@@ -93,6 +98,8 @@ void Renderer2D::EndScene(){
 }
 
 void Renderer2D::Flush(){
+    if(s_Data.quadCount == 0)
+        return;
     s_Data.rendererVB->BufferData(&s_Data.vertices,s_Data.quadCount * 4 * sizeof(Vertex));
     s_Data.rendererVA->Bind();
     s_Data.textureShader->Bind();
@@ -102,7 +109,7 @@ void Renderer2D::Flush(){
     s_API->SetOption(BlendMode::Add);
     s_API->SetOption(PolygonMode::Fill);
     s_API->SetOption(CullFace::None);
-    s_API->SetOption(DepthTest::None);
+    s_API->SetOption(DepthTest::Less);
     s_API->DrawIndexed(s_Data.rendererVA, s_Data.quadCount * 6);
 
     s_Stats.drawCallCount++;
@@ -154,7 +161,7 @@ void Renderer2D::DrawQuad(glm::vec2 pos, glm::vec2 size, glm::vec4 color){
 }
 
 void Renderer2D::DrawQuad(glm::vec3 pos, glm::vec2 size, glm::vec4 color){
-    glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f),pos),{size.x,size.y,0.0f});
+    glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f),pos),{size.x,size.y,1.0f});
     DrawQuad(transform,color);
 }
 
@@ -170,7 +177,7 @@ void Renderer2D::DrawQuad(glm::vec3 pos, glm::vec2 size, float rotation, glm::ve
                 glm::radians(rotation),
                 glm::vec3(0.0f,0.0f,1.0f)
             ),
-        {size.x,size.y,0.0f}
+        {size.x,size.y,1.0f}
     );
     DrawQuad(transform,color);
 }
@@ -180,7 +187,7 @@ void Renderer2D::DrawQuad(glm::vec2 pos, glm::vec2 size, Shared<Texture> texture
 }
 
 void Renderer2D::DrawQuad(glm::vec3 pos, glm::vec2 size, Shared<Texture> texture, glm::vec4 color){
-    glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f),pos),{size.x,size.y,0.0f});
+    glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f),pos),{size.x,size.y,1.0f});
     DrawQuad(transform,texture,color);
 }
 
@@ -196,9 +203,44 @@ void Renderer2D::DrawQuad(glm::vec3 pos, glm::vec2 size, float rotation, Shared<
                 glm::radians(rotation),
                 glm::vec3(0.0f,0.0f,1.0f)
             ),
-        {size.x,size.y,0.0f}
+        {size.x,size.y,1.0f}
     );
     DrawQuad(transform,texture,color);
+}
+
+void Renderer2D::DrawBillboard(glm::vec3 pos, glm::vec2 size, glm::vec4 color){
+    DrawBillboard(pos,size,s_Data.whiteTexture,color);
+}
+void Renderer2D::DrawBillboard(glm::vec3 pos, glm::vec2 size, Shared<Texture> texture, glm::vec4 color){
+    glm::vec4 quadVertexPos[4] { 
+        {-(s_CameraRight*size.x) - (s_CameraUp * size.y) + pos, 1.0f},
+        { (s_CameraRight*size.x) - (s_CameraUp * size.y) + pos, 1.0f},
+        { (s_CameraRight*size.x) + (s_CameraUp * size.y) + pos, 1.0f},
+        {-(s_CameraRight*size.x) + (s_CameraUp * size.y) + pos, 1.0f}
+    };
+    constexpr glm::vec2 quadTexCoords[4] { {0.0f,0.0f}, {1.0f,0.0f}, {1.0f,1.0f}, {0.0f,1.0f} };
+
+    if(s_Data.quadCount >= s_Data.BATCH_SIZE)
+        Flush();
+
+    float texIndex = -1.0f;
+    for(int i = 0; i < s_Data.nextTexture; i++)
+        if(texture == s_Data.textures[i])
+            texIndex = i;
+    if(texIndex == -1.0f){
+        if(s_Data.nextTexture >= s_Data.MAX_TEXTURES)
+            Flush();
+        texIndex = s_Data.nextTexture;
+        s_Data.textures[s_Data.nextTexture++] = texture;
+    }
+
+    for(int i = 0; i < 4; i++){
+        s_Data.vertices[s_Data.quadCount*4 + i].position = quadVertexPos[i];
+        s_Data.vertices[s_Data.quadCount*4 + i].color = color;
+        s_Data.vertices[s_Data.quadCount*4 + i].texCoord = quadTexCoords[i];
+        s_Data.vertices[s_Data.quadCount*4 + i].texIndex = texIndex;
+    }
+    s_Data.quadCount++;
 }
 
 void Renderer2D::ResetRenderStats() {
