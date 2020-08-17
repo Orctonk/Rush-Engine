@@ -10,6 +10,7 @@ namespace Rush {
 std::unordered_map<std::string,Shared<RootMesh>>    AssetManager::s_Meshes;
 std::unordered_map<std::string,Shared<Material>>    AssetManager::s_Materials;
 std::unordered_map<std::string,Shared<Texture>>     AssetManager::s_Textures;
+std::unordered_map<std::string,Shared<Cubemap>>     AssetManager::s_Cubemaps;
 std::unordered_map<std::string,Shared<Shader>>      AssetManager::s_Shaders;
 
 void AssetManager::Init(){
@@ -53,6 +54,18 @@ Shared<Texture> AssetManager::GetTexture(const std::string &path){
     }
 }
 
+Shared<Cubemap> AssetManager::GetCubemap(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
+    auto cachedCM = s_Cubemaps.find(path);
+    if(cachedCM != s_Cubemaps.end()){
+        return cachedCM->second;
+    } else {
+        Shared<Cubemap> cubemap = Cubemap::Create(path);
+        s_Cubemaps.emplace(path,cubemap);
+        return cubemap;
+    }
+}
+
 Shared<Shader> AssetManager::GetShader(const std::string &path){
     RUSH_PROFILE_FUNCTION();
     auto cachedShader = s_Shaders.find(path);
@@ -83,6 +96,11 @@ bool AssetManager::HasMaterial(const std::string &path){
 bool AssetManager::HasTexture(const std::string &path){
     RUSH_PROFILE_FUNCTION();
     return s_Textures.find(path) != s_Textures.end();
+}
+
+bool AssetManager::HasCubemap(const std::string &path){
+    RUSH_PROFILE_FUNCTION();
+    return s_Cubemaps.find(path) != s_Cubemaps.end();
 }
 
 bool AssetManager::HasShader(const std::string &path){
@@ -117,6 +135,15 @@ std::vector<std::string> AssetManager::GetTextureKeys(){
     return keys;
 }
 
+std::vector<std::string> AssetManager::GetCubemapKeys(){
+    RUSH_PROFILE_FUNCTION();
+    std::vector<std::string> keys;
+    keys.reserve(s_Cubemaps.size());
+    for(auto &val : s_Cubemaps)
+        keys.push_back(val.first);
+    return keys;
+}
+
 std::vector<std::string> AssetManager::GetShaderKeys(){
     RUSH_PROFILE_FUNCTION();
     std::vector<std::string> keys;
@@ -125,6 +152,5 @@ std::vector<std::string> AssetManager::GetShaderKeys(){
         keys.push_back(val.first);
     return keys;
 }
-
 
 }

@@ -8,6 +8,7 @@
 #include "Rush/graphics/VertexArray.h"
 #include "Rush/graphics/Shader.h"
 #include "Rush/graphics/Texture.h"
+#include "Rush/graphics/Cubemap.h"
 
 #include "MeshInstance.h"
 #include "MaterialInstance.h"
@@ -21,6 +22,7 @@ private:
     static std::unordered_map<std::string,Shared<RootMesh>> s_Meshes;
     static std::unordered_map<std::string,Shared<Material>> s_Materials;
     static std::unordered_map<std::string,Shared<Texture>> s_Textures;
+    static std::unordered_map<std::string,Shared<Cubemap>> s_Cubemaps;
     static std::unordered_map<std::string,Shared<Shader>> s_Shaders;
 
 public:
@@ -34,6 +36,7 @@ public:
     static MeshInstance GetMeshInstance(const std::string &path);
     static MaterialInstance GetMaterialInstance(const std::string &path);
     static Shared<Texture> GetTexture(const std::string &path);
+    static Shared<Cubemap> GetCubemap(const std::string &path);
     static Shared<Shader> GetShader(const std::string &path);
 
     static void PutMaterial(const std::string &path, Shared<Material> mat);
@@ -41,11 +44,13 @@ public:
     static bool HasMesh(const std::string &path);
     static bool HasMaterial(const std::string &path);
     static bool HasTexture(const std::string &path);
+    static bool HasCubemap(const std::string &path);
     static bool HasShader(const std::string &path);
 
     static std::vector<std::string> GetMeshKeys();
     static std::vector<std::string> GetMaterialKeys();
     static std::vector<std::string> GetTextureKeys();
+    static std::vector<std::string> GetCubemapKeys();
     static std::vector<std::string> GetShaderKeys();
 };
 
