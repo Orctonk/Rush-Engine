@@ -33,6 +33,8 @@ void Scene::DeleteEntity(Entity e){
 void Scene::Render(){
     if(!m_SceneShader)
         m_SceneShader = AssetManager::GetShader("res/materialShader.glsl");
+    if(!m_SkyboxShader)
+        m_SkyboxShader = AssetManager::GetShader("res/skyboxShader.glsl");
     
     CameraComponent *mainCamera = nullptr;
     glm::mat4 view;
@@ -46,7 +48,11 @@ void Scene::Render(){
             mainCamera = &c;
         }
     }
-    if(!mainCamera) return;
+    if(!mainCamera){
+        Renderer::GetAPI()->SetClearColor(glm::vec4(0.0f,0.0f,0.0f,1.0f));
+        Renderer::GetAPI()->Clear();
+        return;
+    }
     Renderer::GetAPI()->SetClearColor(mainCamera->clearColor);
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(mainCamera->camera,view);
@@ -115,6 +121,11 @@ void Scene::Render(){
             mesh.mesh->submeshes[i].material.parent->normalTexture->Bind(2);
             Renderer::Submit(m_SceneShader,mesh.mesh->submeshes[i].vertices,model);
         }
+    }
+
+    if(mainCamera->skybox != nullptr){
+        mainCamera->skybox->Bind(0);
+        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
     }
     Renderer::EndScene();
 }

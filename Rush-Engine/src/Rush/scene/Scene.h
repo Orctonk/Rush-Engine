@@ -13,6 +13,7 @@ class Scene{
 private:
     entt::registry m_SceneRegistry;
     Shared<Shader> m_SceneShader;
+    Shared<Shader> m_SkyboxShader;
 
 public:
     Scene();
