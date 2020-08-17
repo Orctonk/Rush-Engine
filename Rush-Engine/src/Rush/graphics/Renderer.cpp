@@ -44,8 +44,8 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
     shader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
     shader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_CameraPos));
     s_API->SetOption(PolygonMode::Fill);
-    s_API->SetOption(CullFace::Clockwise);
-    s_API->SetOption(DepthTest::Less);
+    s_API->SetOption(CullFace::None);
+    s_API->SetOption(DepthTest::LessOrEqual);
     s_API->SetOption(BlendMode::None);
     s_API->DrawIndexed(va);
 
