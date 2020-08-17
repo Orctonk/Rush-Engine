@@ -18,8 +18,10 @@ enum RenderView{
 class RenderViews {
 private:
     MeshInstance m_CameraMesh;
-    Rush::Shared<Rush::Shader> m_LightBoxShader;
+    Rush::Shared<Rush::Texture> m_SpotlightTexture;
+    Rush::Shared<Rush::Texture> m_DirlightTexture;
     Rush::Shared<Rush::Shader> m_SelectionShader;
+    Rush::Shared<Rush::Shader> m_SkyboxShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
     Rush::Unique<Rush::Framebuffer> m_RenderViews[RenderView::RENDERVIEW_COUNT];
     Rush::Unique<Rush::Framebuffer> m_SelectionBuffer;

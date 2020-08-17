@@ -12,6 +12,7 @@ RenderViews::RenderViews()
     m_ObjectPick = false;
     m_GizmoOp = ImGuizmo::TRANSLATE;
     m_GizmoMode = ImGuizmo::WORLD;
+    m_UsingGizmo = false;
     for(int i = 0; i < RENDERVIEW_COUNT; i++)
         enabledViews[i] = true;     // TODO: Make window open status persistent over application close
 }
@@ -25,8 +26,14 @@ void RenderViews::Init(Rush::Entity cameraEntity){
 
     m_CamController.SetControlledCamera(cameraEntity);
 
-    m_LightBoxShader = AssetManager::GetShader("res/lightBoxShader.glsl");
+    cameraEntity.GetComponent<CameraComponent>().skybox = AssetManager::GetCubemap("res/skybox");
+
+    m_SpotlightTexture = AssetManager::GetTexture("res/lightbulb.png");
+    m_DirlightTexture = AssetManager::GetTexture("res/directional.png");
     m_SelectionShader = AssetManager::GetShader("res/selectionShader.glsl");
+    m_SkyboxShader = AssetManager::GetShader("res/skyboxShader.glsl");
+    int j = 0;
+    m_SkyboxShader->SetUniform("u_Skybox",Rush::ShaderData::INT,&j);
     m_CameraMesh = AssetManager::GetMeshInstance("res/camera.obj");
 
     m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/renderviewPreview.glsl");
@@ -34,7 +41,7 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/renderviewAlbedo.glsl");
     m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/renderviewSpecular.glsl");
     for(int i = 0; i < RENDERVIEW_COUNT; i++){
-        int j = 0;
+        j = 0;
         m_RenderViewShaders[i]->SetUniform("u_Material.diffuse",ShaderData::INT,&j);
         j = 1;
         m_RenderViewShaders[i]->SetUniform("u_Material.specular",ShaderData::INT,&j);
@@ -117,6 +124,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     glm::mat4 view = camTrans.GetModelMatrix();
 
     LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+    LineRenderer::GetAPI()->SetLineWidth(1.0f);
     for(float f = -10.0f; f < 10.5f; f++){
         LineRenderer::DrawLine({f,0.0f,-11.0f},{f,0.0f,11.0f},glm::vec4(.6f));
         LineRenderer::DrawLine({-11.0f,0.0f,f},{11.0f,0.0f,f},glm::vec4(.6f));
@@ -160,14 +168,37 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         }
     }
 
+    if(cam.skybox != nullptr){
+        cam.skybox->Bind(0);
+        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
+    }
+
     Renderer::EndScene();
 
     Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+    LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+    LineRenderer::GetAPI()->SetLineWidth(3.0f);
     for(auto e: reg->view<LightComponent>()){
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
         glm::vec3 avgColor = (l.ambient + l.diffuse + l.specular)/3.0f;
-        Renderer2D::DrawBillboard(t.GetTranslation(),{.1f,.1f},glm::vec4(avgColor,1.0f));
+        if(l.type == LightType::POINT)
+            Renderer2D::DrawBillboard(t.GetTranslation(),{.2f,.2f},m_SpotlightTexture,glm::vec4(avgColor,1.0f));
+        else if(l.type == LightType::DIRECTIONAL){
+            Renderer2D::DrawBillboard(t.GetTranslation(),{.2f,.2f},m_DirlightTexture,glm::vec4(avgColor,1.0f));
+            glm::vec3 direction = glm::vec3(t.GetRotation() * glm::vec4(0.0f,0.0f,0.5f,0.0f));
+            glm::vec3 up = glm::vec3(t.GetRotation() * glm::vec4(0.0f,1.0f,0.0f,0.0f));
+            glm::vec3 right = glm::vec3(t.GetRotation() * glm::vec4(1.0f,0.0f,0.0f,0.0f));
+            glm::vec3 pos = t.GetTranslation() + 0.1f * up;
+            LineRenderer::DrawLine(pos,pos + direction,glm::vec4(avgColor,1.0f));
+            pos -= 0.2f * up;
+            LineRenderer::DrawLine(pos,pos + direction,glm::vec4(avgColor,1.0f));
+            pos += 0.1f * up + 0.1f * right;
+            LineRenderer::DrawLine(pos,pos + direction,glm::vec4(avgColor,1.0f));
+            pos -= 0.2f * right;
+            LineRenderer::DrawLine(pos,pos + direction,glm::vec4(avgColor,1.0f));
+        }
     }
+    LineRenderer::EndScene();
     Renderer2D::EndScene();
     m_RenderViews[RENDERVIEW_RENDER]->Unbind();
 }
