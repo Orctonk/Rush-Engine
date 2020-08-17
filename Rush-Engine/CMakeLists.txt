@@ -25,6 +25,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Texture.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/Cubemap.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/VertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/IndexBuffer.cpp
@@ -51,6 +52,7 @@ if(RUSH_OPENGL)
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/ShaderDataUtil.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLShader.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLTexture.cpp
+                    ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLCubemap.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexArray.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLVertexBuffer.cpp
                     ${RUSH_SOURCE_DIR}/Platform/OpenGL/OGLIndexBuffer.cpp
