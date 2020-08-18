@@ -79,16 +79,11 @@ void EditorLayer::OnImguiRender() {
         ImGui::EndMenu();
     }
     if(ImGui::BeginMenu("View")){
-        if(ImGui::BeginMenu("Render views")){
-            ImGui::MenuItem("Render preview", "", &m_RenderViews.enabledViews[RENDERVIEW_RENDER]);
-            ImGui::MenuItem("Normals", "", &m_RenderViews.enabledViews[RENDERVIEW_NORMALS]);
-            ImGui::MenuItem("Albedo", "", &m_RenderViews.enabledViews[RENDERVIEW_ALBEDO]);
-            ImGui::MenuItem("Specular", "", &m_RenderViews.enabledViews[RENDERVIEW_SPECULAR]);
-            ImGui::EndMenu();
-        }
+        ImGui::BeginMenu("Render preview", &m_RenderViews.enabled);
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
         ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
-        ImGui::MenuItem("Profiler inspector", "", &m_PRView);
+        ImGui::MenuItem("Profiler inspector", "", &m_PRView.enabled);
+        ImGui::MenuItem("Debug Info", "", &Rush::DebugLayer::ShowWindow);
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();

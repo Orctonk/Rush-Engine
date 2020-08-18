@@ -23,7 +23,7 @@ private:
     Rush::Shared<Rush::Shader> m_SelectionShader;
     Rush::Shared<Rush::Shader> m_SkyboxShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
-    Rush::Unique<Rush::Framebuffer> m_RenderViews[RenderView::RENDERVIEW_COUNT];
+    Rush::Unique<Rush::Framebuffer> m_RenderView;
     Rush::Unique<Rush::Framebuffer> m_SelectionBuffer;
     CameraController m_CamController;
     glm::vec2 m_RenderViewportPos;
@@ -32,17 +32,18 @@ private:
     bool m_UsingGizmo;
     ImGuizmo::OPERATION m_GizmoOp;
     ImGuizmo::MODE m_GizmoMode;
+    RenderView m_CurrentView;
 
     void FillRenderView(Rush::Scene &scene);
     void PopulateView(Rush::Scene &scene, RenderView type);
-    void RenderImguiView(const char *name, RenderView type, bool resized);
+    void RenderImguiView(bool resized);
     void DoObjectPick(Rush::Scene &scene);
     bool MouseClickHandle(Rush::MouseReleasedEvent &e);
     bool KeyPressHandle(Rush::KeyboardPressEvent &e);
     bool KeyReleaseHandle(Rush::KeyboardReleaseEvent &e);
 
 public:
-    bool enabledViews[RenderView::RENDERVIEW_COUNT];
+    bool enabled;
 
     RenderViews();
     ~RenderViews();
