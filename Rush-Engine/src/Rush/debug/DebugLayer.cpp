@@ -9,7 +9,11 @@
 
 namespace Rush {
 
-DebugLayer::DebugLayer(){}
+bool DebugLayer::ShowWindow;
+
+DebugLayer::DebugLayer(){
+    ShowWindow = true;
+}
 DebugLayer::~DebugLayer(){}
 void DebugLayer::OnAttach(){
     for(int i = 0; i < DEBUG_FPS_SAMPLES; i++)
@@ -23,43 +27,44 @@ void DebugLayer::OnUpdate(){
 }
 void DebugLayer::OnEvent(Event &e){}
 void DebugLayer::OnImguiRender(){
-    ImGui::Begin("Debug info");
-    
-    float tot = 0.0f;
-    for(int i = 0; i < DEBUG_FPS_SAMPLES; i++)
-        tot += m_FrameTimes[i];
-    float avg = tot/DEBUG_FPS_SAMPLES;
-    ImGui::Text("Average frame time: %.2f ms/frame (%.1f FPS)", (1000*avg),(1/avg));
-    ImGui::PlotLines("Frame times",m_FrameTimes,DEBUG_FPS_SAMPLES,m_FrameTimeOffset);
+    if(!ShowWindow) return;
+    if(ImGui::Begin("Debug info",&ShowWindow)){
+        float tot = 0.0f;
+        for(int i = 0; i < DEBUG_FPS_SAMPLES; i++)
+            tot += m_FrameTimes[i];
+        float avg = tot/DEBUG_FPS_SAMPLES;
+        ImGui::Text("Average frame time: %.2f ms/frame (%.1f FPS)", (1000*avg),(1/avg));
+        ImGui::PlotLines("Frame times",m_FrameTimes,DEBUG_FPS_SAMPLES,m_FrameTimeOffset);
 
-    ImGui::Separator();
-    ImGui::BeginChild("3DRenderStats",ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, 0),true);
-    auto rs = Renderer::GetRenderStats();
-    ImGui::Text("3D Renderer statistics");
-    ImGui::Text("Draw calls: %d", rs.drawCallCount);
-    ImGui::Text("Primitives: %d", rs.primitiveCount);
-    ImGui::Text("Programs:   %d", rs.programCount);
-    ImGui::Text("Vertices:   %d", rs.vertexCount);
-    Renderer::ResetRenderStats();
-    ImGui::EndChild();
-    ImGui::SameLine();
-    ImGui::BeginChild("2DRenderStats",ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, 0),true);
-    auto rs2d = Renderer2D::GetRenderStats();
-    ImGui::Text("2D Renderer statistics");
-    ImGui::Text("Draw calls: %d", rs2d.drawCallCount);
-    ImGui::Text("Primitives: %d", rs2d.primitiveCount);
-    ImGui::Text("Vertices:   %d", rs2d.vertexCount);
-    Renderer2D::ResetRenderStats();
-    ImGui::EndChild();
-    ImGui::SameLine();
-    ImGui::BeginChild("LineRenderStats",ImVec2(0, 0),true);
-    auto liners = LineRenderer::GetRenderStats();
-    ImGui::Text("Line Renderer statistics");
-    ImGui::Text("Draw calls: %d", liners.drawCallCount);
-    ImGui::Text("Lines: %d", liners.lineCount);
-    ImGui::Text("Vertices:   %d", liners.vertexCount);
-    LineRenderer::ResetRenderStats();
-    ImGui::EndChild();
+        ImGui::Separator();
+        ImGui::BeginChild("3DRenderStats",ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, 0),true);
+        auto rs = Renderer::GetRenderStats();
+        ImGui::Text("3D Renderer statistics");
+        ImGui::Text("Draw calls: %d", rs.drawCallCount);
+        ImGui::Text("Primitives: %d", rs.primitiveCount);
+        ImGui::Text("Programs:   %d", rs.programCount);
+        ImGui::Text("Vertices:   %d", rs.vertexCount);
+        Renderer::ResetRenderStats();
+        ImGui::EndChild();
+        ImGui::SameLine();
+        ImGui::BeginChild("2DRenderStats",ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, 0),true);
+        auto rs2d = Renderer2D::GetRenderStats();
+        ImGui::Text("2D Renderer statistics");
+        ImGui::Text("Draw calls: %d", rs2d.drawCallCount);
+        ImGui::Text("Primitives: %d", rs2d.primitiveCount);
+        ImGui::Text("Vertices:   %d", rs2d.vertexCount);
+        Renderer2D::ResetRenderStats();
+        ImGui::EndChild();
+        ImGui::SameLine();
+        ImGui::BeginChild("LineRenderStats",ImVec2(0, 0),true);
+        auto liners = LineRenderer::GetRenderStats();
+        ImGui::Text("Line Renderer statistics");
+        ImGui::Text("Draw calls: %d", liners.drawCallCount);
+        ImGui::Text("Lines: %d", liners.lineCount);
+        ImGui::Text("Vertices:   %d", liners.vertexCount);
+        LineRenderer::ResetRenderStats();
+        ImGui::EndChild();
+    }
 
     ImGui::End();
 }

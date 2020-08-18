@@ -10,6 +10,8 @@ class DebugLayer : public Layer {
     float m_FrameTimes[DEBUG_FPS_SAMPLES];
     int m_FrameTimeOffset;
 public:
+    static bool ShowWindow;
+
     DebugLayer();
     ~DebugLayer();
 
