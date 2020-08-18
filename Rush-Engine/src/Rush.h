@@ -30,6 +30,8 @@
 
 #include "Rush/imgui/ImguiLayer.h"
 
+#include "Rush/debug/DebugLayer.h"
+
 #include "Rush/events/EventQueue.h"
 #include "Rush/events/Event.h"
 #include "Rush/events/WindowEvent.h"
