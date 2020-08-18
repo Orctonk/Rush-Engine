@@ -52,7 +52,9 @@ void Application::Run(){
     Init();
     m_ImguiLayer = new ImguiLayer();
     PushOverlay(m_ImguiLayer);
+#ifdef RUSH_DEBUG
     PushOverlay(new DebugLayer());
+#endif
     m_Running = true;
     while(m_Running){
         RUSH_PROFILE_SCOPE("Main loop");
