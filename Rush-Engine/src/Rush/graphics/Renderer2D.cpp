@@ -7,6 +7,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace Rush {
 
@@ -15,6 +16,10 @@ struct Vertex{
     glm::vec4 color;
     glm::vec2 texCoord;
     float texIndex;
+};
+
+struct Quad {
+    Vertex vertices[4];
 };
 
 struct RendererData{
@@ -29,7 +34,7 @@ struct RendererData{
     Shared<Shader> textureShader;
 
     std::array<Shared<Texture>,MAX_TEXTURES> textures;
-    std::array<Vertex,BATCH_VERTEX_COUNT> vertices;
+    std::array<Quad,BATCH_SIZE> vertices;
 
     uint32_t quadCount;
     uint8_t nextTexture;
@@ -100,7 +105,13 @@ void Renderer2D::EndScene(){
 void Renderer2D::Flush(){
     if(s_Data.quadCount == 0)
         return;
-    s_Data.rendererVB->BufferData(&s_Data.vertices,s_Data.quadCount * 4 * sizeof(Vertex));
+    glm::vec3 camPos = glm::vec3(glm::inverse(s_SceneVP) * glm::vec4(0.0f,0.0f,0.0f,1.0f));
+    std::sort(s_Data.vertices.begin(),s_Data.vertices.begin()+s_Data.quadCount,[camPos](const Quad &q1,const Quad &q2){
+        glm::vec3 q1Pos = (q1.vertices[0].position + q1.vertices[1].position + q1.vertices[2].position + q1.vertices[3].position) / 4.0f;
+        glm::vec3 q2Pos = (q2.vertices[0].position + q2.vertices[1].position + q2.vertices[2].position + q2.vertices[3].position) / 4.0f;
+        return glm::distance2(q1Pos,camPos) > glm::distance2(q2Pos,camPos);
+    });
+    s_Data.rendererVB->BufferData(&s_Data.vertices,s_Data.quadCount * sizeof(Quad));
     s_Data.rendererVA->Bind();
     s_Data.textureShader->Bind();
     s_Data.textureShader->SetUniform("u_ViewProj",ShaderData::MAT4, glm::value_ptr(s_SceneVP));
@@ -144,10 +155,10 @@ void Renderer2D::DrawQuad(glm::mat4 transform, Shared<Texture> texture, glm::vec
     }
 
     for(int i = 0; i < 4; i++){
-        s_Data.vertices[s_Data.quadCount*4 + i].position = transform * quadVertexPos[i];
-        s_Data.vertices[s_Data.quadCount*4 + i].color = color;
-        s_Data.vertices[s_Data.quadCount*4 + i].texCoord = quadTexCoords[i];
-        s_Data.vertices[s_Data.quadCount*4 + i].texIndex = texIndex;
+        s_Data.vertices[s_Data.quadCount].vertices[i].position = transform * quadVertexPos[i];
+        s_Data.vertices[s_Data.quadCount].vertices[i].color = color;
+        s_Data.vertices[s_Data.quadCount].vertices[i].texCoord = quadTexCoords[i];
+        s_Data.vertices[s_Data.quadCount].vertices[i].texIndex = texIndex;
     }
     s_Data.quadCount++;
 }
@@ -235,10 +246,10 @@ void Renderer2D::DrawBillboard(glm::vec3 pos, glm::vec2 size, Shared<Texture> te
     }
 
     for(int i = 0; i < 4; i++){
-        s_Data.vertices[s_Data.quadCount*4 + i].position = quadVertexPos[i];
-        s_Data.vertices[s_Data.quadCount*4 + i].color = color;
-        s_Data.vertices[s_Data.quadCount*4 + i].texCoord = quadTexCoords[i];
-        s_Data.vertices[s_Data.quadCount*4 + i].texIndex = texIndex;
+        s_Data.vertices[s_Data.quadCount].vertices[i].position = quadVertexPos[i];
+        s_Data.vertices[s_Data.quadCount].vertices[i].color = color;
+        s_Data.vertices[s_Data.quadCount].vertices[i].texCoord = quadTexCoords[i];
+        s_Data.vertices[s_Data.quadCount].vertices[i].texIndex = texIndex;
     }
     s_Data.quadCount++;
 }
