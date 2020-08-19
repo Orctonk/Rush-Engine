@@ -79,7 +79,7 @@ void EditorLayer::OnImguiRender() {
         ImGui::EndMenu();
     }
     if(ImGui::BeginMenu("View")){
-        ImGui::BeginMenu("Render preview", &m_RenderViews.enabled);
+        ImGui::MenuItem("Render preview", "", &m_RenderViews.enabled);
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
         ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
         ImGui::MenuItem("Profiler inspector", "", &m_PRView.enabled);
