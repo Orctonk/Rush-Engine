@@ -83,8 +83,16 @@ SceneGraphView::SceneGraphView(){
         ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
         ImGui::ColorEdit3("Specular", &l.specular.r);
         if(l.type != LightType::DIRECTIONAL){
-            ImGui::Text("Attenuation");
-            ImGui::DragFloat3("Coef.",&l.constant,0.01f,0.0f);
+            ImGui::Checkbox("Manual Attenuation",&l.manualAtten);
+            if(ImGui::DragFloat("Range",&l.range,1.0f,0.0000001f,10000.0f) && !l.manualAtten){
+                l.constant = 1.0f;
+                l.linear = 4.5f / l.range;
+                l.quadratic = 75.0f / (l.range * l.range);
+            } 
+            if(l.manualAtten) {
+                ImGui::Text("Attenuation");
+                ImGui::DragFloat3("Coef.",&l.constant,0.01f,0.0f);
+            }
         }
         if(l.type == LightType::SPOTLIGHT){
             ImGui::Text("Spotlight cutoff");

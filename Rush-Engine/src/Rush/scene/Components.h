@@ -92,6 +92,8 @@ struct CameraComponent {
 
 struct RUSH_API LightComponent {
     LightType type      {LightType::POINT};
+    bool manualAtten    {false};
+    float range         {7.0f};
     float constant      {1.0f};
     float linear        {0.7f};
     float quadratic     {1.8f};
