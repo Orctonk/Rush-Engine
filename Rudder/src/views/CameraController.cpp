@@ -3,7 +3,7 @@
 #include <glm/gtx/euler_angles.hpp>
 
 CameraController::CameraController()
-:   m_CurDragMode(MouseDragMode::NONE) { }
+:   m_CurDragMode(MouseDragMode::NONE), m_YPR(0.0f,0.0f,0.0f) { }
 
 CameraController::~CameraController() { }
 
