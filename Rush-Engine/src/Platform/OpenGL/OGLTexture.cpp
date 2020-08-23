@@ -35,7 +35,18 @@ OGLTexture::OGLTexture(std::string filepath)
 
     unsigned char *data = stbi_load(filepath.c_str(),&m_Props.width,&m_Props.height,&m_Props.channels,0);
     if(data){
-        if(m_Props.channels == 3)
+        if(m_Props.channels == 1){
+            GLint swizzleMask[] = {GL_RED,GL_RED,GL_RED,GL_ONE};
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RED,m_Props.width,m_Props.height,0,GL_RED,GL_UNSIGNED_BYTE,data);
+            glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_SWIZZLE_RGBA,swizzleMask);
+        }
+        else if(m_Props.channels == 2){
+
+            GLint swizzleMask[] = {GL_RED,GL_RED,GL_RED,GL_GREEN};
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RG,m_Props.width,m_Props.height,0,GL_RG,GL_UNSIGNED_BYTE,data);
+            glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_SWIZZLE_RGBA,swizzleMask);
+        }
+        else if(m_Props.channels == 3)
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,m_Props.width,m_Props.height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
         else if(m_Props.channels == 4)
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,m_Props.width,m_Props.height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
