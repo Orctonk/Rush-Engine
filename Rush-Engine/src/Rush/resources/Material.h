@@ -4,15 +4,36 @@
 #include "Rush/core/Core.h"
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Shader.h"
+#include "Path.h"
+
+#include <glm/glm.hpp>
 
 namespace Rush{
 
-struct Material {
-    Shared<Texture> diffuseTexture {nullptr};
-    Shared<Texture> specularTexture {nullptr};
-    Shared<Texture> normalTexture {nullptr};
+enum class RenderingMode{
+    Opaque,
+    Transparent,
+    Cutoff
+};
+
+class Material {
+private:
+    std::string m_Name;
+public:
+    Shared<Shader> materialShader;
+    RenderingMode mode              {RenderingMode::Opaque};
     
-    float shininess {1.0f};
+    glm::vec4 color                 {1.0f,1.0f,1.0f,1.0f};
+    Shared<Texture> diffuseTexture  {nullptr};
+    Shared<Texture> specularTexture {nullptr};
+    Shared<Texture> normalTexture   {nullptr};
+    
+    float shininess                 {1.0f};
+
+    std::string GetName(){ return m_Name; }
+
+    static void Write(Shared<Material> mat, Path matPath);
+    static Shared<Material> Load(Path matPath);
 };
 
 }

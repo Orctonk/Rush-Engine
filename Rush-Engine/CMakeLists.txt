@@ -41,6 +41,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/Path.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/File.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/resources/Material.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiImpl.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
@@ -92,8 +93,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 # Add platform dependent libraries
 if(WINDOWS)
     message(WARNING "Windows has not yet been tested!")
+    add_definitions(-DRUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
-    target_link_libraries(Rush pthread)
+    target_link_libraries(Rush PRIVATE pthread)
+    add_definitions(-DRUSH_LINUX)
 else()
     message(FATAL_ERROR "OSX is not yet supported")
 endif()
@@ -102,32 +105,37 @@ endif()
 set(glm_DIR "${RUSH_DEPS_DIR}/glm/cmake/glm")
 find_package(glm REQUIRED)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
-target_link_libraries(Rush glm::glm)
+target_link_libraries(Rush PUBLIC glm::glm)
 target_include_directories(Rush PRIVATE ${GLM_INCLUDE_DIRS})
 
 # Add stb_image as dependency
 target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 
 # Add ImGui as dependency
-
 target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/imgui)
+
+# Add nlohmann/json parser as dependency
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+set(BUILD_TESTING OFF CACHE INTERNAL "")
+add_subdirectory(${RUSH_DEPS_DIR}/Json)
+target_link_libraries(Rush PRIVATE nlohmann_json::nlohmann_json)
 
 # Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
     set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
     add_subdirectory("${RUSH_DEPS_DIR}/assimp")
-    target_link_libraries(Rush assimp)
+    target_link_libraries(Rush PRIVATE assimp)
     message(STATUS "Building assimp")
 else()
     find_package(Assimp REQUIRED)
     target_include_directories(Rush PRIVATE ${ASSIMP_INCLUDE_DIRS})
-    target_link_libraries(Rush ${ASSIMP_LIBRARIES})
+    target_link_libraries(Rush PRIVATE ${ASSIMP_LIBRARIES})
 endif()
 
 # Add EnTT as dependency
 add_subdirectory("${RUSH_DEPS_DIR}/entt")
-target_link_libraries(Rush EnTT::EnTT)
+target_link_libraries(Rush PUBLIC EnTT::EnTT)
 
 # Add Window manager and renderer implementation as dependency
 if(RUSH_OPENGL)
@@ -139,11 +147,11 @@ if(RUSH_OPENGL)
         set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
     endif()
     add_subdirectory("${RUSH_DEPS_DIR}/glfw")
-    target_link_libraries(Rush glfw)
+    target_link_libraries(Rush PRIVATE glfw)
 
     find_package(OpenGL REQUIRED)
-    target_link_libraries(Rush OpenGL::GL)
+    target_link_libraries(Rush PRIVATE OpenGL::GL)
 
     add_subdirectory(${RUSH_DEPS_DIR}/glad)
-    target_link_libraries(Rush glad)
+    target_link_libraries(Rush PRIVATE glad)
 endif()
