@@ -9,7 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
-#include <glad/glad.h>
 
 EditorLayer::EditorLayer() {}
 
