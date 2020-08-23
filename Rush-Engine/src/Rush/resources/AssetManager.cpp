@@ -36,8 +36,7 @@ MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) {
     RUSH_PROFILE_FUNCTION();
     auto cached = s_Materials.find(path);
     if(cached == s_Materials.end())
-        RUSH_ASSERT(false); // Asset manager currently relies on models loading their mats
-        //s_Materials.emplace(path,CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
+        s_Materials.emplace(path,Material::Load(path));
 
     return {s_Materials[path]}; 
 }
