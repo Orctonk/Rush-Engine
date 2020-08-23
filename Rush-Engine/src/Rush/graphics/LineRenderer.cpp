@@ -37,7 +37,7 @@ void LineRenderer::Init(){
 
     s_Data.lineSegmentCount = 0;
 
-    s_Data.lineShader = AssetManager::GetShader("res/lineShader.glsl");
+    s_Data.lineShader = AssetManager::GetShader("res/shaders/lineShader.glsl");
 
     s_Data.rendererVA = VertexArray::Create();
     s_Data.rendererVB = VertexBuffer::Create(s_Data.BATCH_VERTEX_COUNT * sizeof(Vertex));

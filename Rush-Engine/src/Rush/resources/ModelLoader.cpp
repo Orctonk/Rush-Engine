@@ -15,8 +15,8 @@ Shared<Texture> ModelLoader::s_DefaultNormalTexture;
 
 RootMesh ModelLoader::LoadModel(const std::string &path){
     RUSH_PROFILE_FUNCTION();
-    if(!s_DefaultColorTexture) s_DefaultColorTexture = AssetManager::GetTexture("res/white.png");
-    if(!s_DefaultNormalTexture) s_DefaultNormalTexture = AssetManager::GetTexture("res/blue.png");
+    if(!s_DefaultColorTexture) s_DefaultColorTexture = AssetManager::GetTexture("res/textures/white.png");
+    if(!s_DefaultNormalTexture) s_DefaultNormalTexture = AssetManager::GetTexture("res/textures/blue.png");
 
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph | aiProcess_OptimizeMeshes);
@@ -104,9 +104,10 @@ MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const 
     RUSH_PROFILE_FUNCTION();
     aiString str;
     material->Get(AI_MATKEY_NAME,str);
-    std::string matName = s_CurDirectory + str.C_Str();
-    if(AssetManager::HasMaterial(matName))
-        return AssetManager::GetMaterialInstance(matName);
+    std::string matName = s_CurDirectory + str.C_Str() + ".mat";
+    MaterialInstance matInst = AssetManager::GetMaterialInstance(matName);
+    if(matInst.parent != nullptr)
+        return matInst;
 
     Shared<Material> mat = CreateShared<Material>();
     auto ret = material->GetTexture(aiTextureType_DIFFUSE,0,&str);
@@ -119,6 +120,7 @@ MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const 
     if(ret != AI_FAILURE)   mat->normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     else                    mat->normalTexture = s_DefaultNormalTexture;
 
+    Material::Write(mat,Path(matName));
     AssetManager::PutMaterial(matName,mat);
 
     return {mat};

@@ -32,9 +32,9 @@ void Scene::DeleteEntity(Entity e){
 
 void Scene::Render(){
     if(!m_SceneShader)
-        m_SceneShader = AssetManager::GetShader("res/materialShader.glsl");
+        m_SceneShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
     if(!m_SkyboxShader)
-        m_SkyboxShader = AssetManager::GetShader("res/skyboxShader.glsl");
+        m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
     
     CameraComponent *mainCamera = nullptr;
     glm::mat4 view;
@@ -67,7 +67,7 @@ void Scene::Render(){
             glm::quat rot = t.GetRotation();
             plv = glm::vec4(trans,l.cutOff);
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::rotate(rot,glm::vec4(1.0f,0.0f,0.0f,0.0f));
+            plv = glm::rotate(rot,glm::vec4(0.0f,0.0f,1.0f,0.0f));
             plv.w = l.outerCutOff;
             m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.ambient,l.constant);

@@ -56,9 +56,9 @@ void Renderer2D::Init(){
     s_Data.quadCount = 0;
     s_Data.nextTexture = 1;
 
-    s_Data.whiteTexture = AssetManager::GetTexture("res/white.png");
+    s_Data.whiteTexture = AssetManager::GetTexture("res/textures/white.png");
     s_Data.textures[0] = s_Data.whiteTexture;
-    s_Data.textureShader = AssetManager::GetShader("res/textureShader2D.glsl");
+    s_Data.textureShader = AssetManager::GetShader("res/shaders/textureShader2D.glsl");
 
     s_Data.rendererVA = VertexArray::Create();
     s_Data.rendererVB = VertexBuffer::Create(s_Data.BATCH_VERTEX_COUNT * sizeof(Vertex));
