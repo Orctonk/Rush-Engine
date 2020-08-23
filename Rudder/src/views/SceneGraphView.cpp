@@ -66,9 +66,18 @@ SceneGraphView::SceneGraphView(){
     m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Entity &e){
         for(auto &mesh : e.GetComponent<MeshInstance>().mesh->submeshes){
             if(ImGui::TreeNode(mesh.meshName.c_str())){
-                ImGui::Text("Mesh data...");
-                ImGui::Separator();
-                SceneGraphView::RenderMaterial(*mesh.material.parent);
+                ImGui::Text("Material:  ");
+                ImGui::SameLine();
+                if(mesh.material.parent == nullptr)
+                    ImGui::Button("None");
+                else
+                    ImGui::Button( mesh.material.parent->GetName().c_str());
+                if(ImGui::BeginDragDropTarget()){
+                    const ImGuiPayload *matPath = ImGui::AcceptDragDropPayload("material");
+                    if(matPath != NULL)
+                        mesh.material = AssetManager::GetMaterialInstance((const char *)matPath->Data);
+                    ImGui::EndDragDropTarget();
+                }
                 ImGui::TreePop();
             }
         }
@@ -99,6 +108,7 @@ SceneGraphView::SceneGraphView(){
             ImGui::DragFloat2("Cutoff",&l.cutOff);
         }
     });
+    m_EEVisible = true;
     m_Renaming = false;   
     enabled = true; // TODO: Make window open status persistent over application close
 }
