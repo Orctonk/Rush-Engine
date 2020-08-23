@@ -1,0 +1,67 @@
+Texture AlbedoSpecular {
+    Size = ViewportSize;
+    Format = RGBA;
+}
+
+Texture Position {
+    Size = ViewportSize;
+    Format = RGBA;
+}
+
+Texture Normal {
+    Size ViewportSize;
+    Format = RGBA;
+}
+
+RenderBuffer Depth {
+    Size = ViewportSize;
+    Format = DEPTH32;
+}
+
+Framebuffer GBuffer {
+    Color = { Position, Normal, AlbedoSpecular };
+    DST = Depth;
+}
+
+Effect DefaultMaterial {
+    PostProcessing = False;
+
+    Technique Forward {
+        Pass 0 {
+            CullMode = Back;
+            PolygonMode = Fill;
+            Blending = Add;
+            DepthTest = Less;
+            VertexProgram = ForwardVertex.glsl;
+            FragmentProgram = ForwardFragment.glsl;
+        }
+    }
+
+    Technique Deferred {
+        Pass 0 {
+            CullMode = Back;
+            PolygonMode = Fill;
+            Blending = None;
+            DepthTest = Less;
+            VertexProgram = GeometryPassVertex.glsl;
+            FragmentProgram = GeometryPassFragment.glsl;
+            Target = GBuffer;
+            RenderMode = SceneGeometry;
+        }
+        Pass 1 {
+            CullMode = None;
+            PolygonMode = Fill;
+            Blending = None;
+            DepthTest = None;
+            VertexProgram = LightingPassVertex.glsl;
+            FragmentProgram = FragmentPassFragment.glsl;
+            RenderMode = FullscreenQuad;
+
+            SetTexture(gPosition) = Position;
+            SetTexture(gNormal) = Normal;
+            SetTexture(gColor) = AlbedoSpecular;
+
+            BlitToCurrentTarget = Depth;
+        }
+    }
+}
