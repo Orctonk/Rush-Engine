@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <Rush.h>
 
 class AssetView {
 private:
@@ -13,12 +14,15 @@ private:
         Mesh = 3,
         Count = 4
     };
-
+    
     bool m_AssetFilters[AssetFilter::Count];
-    std::vector<std::string> m_DisplayedAssets;
+    Rush::Path m_CurrentDir;
+    Rush::Path m_SelectedAsset;
+    std::unordered_map<std::string,Rush::Shared<Rush::Texture>> m_MaterialPreviews;
 
-    void RenderAsset(std::string &curDir, const std::string &asset, bool &disp);
-    void InvalidateDisplayedAssets();
+    void RenderFile(Rush::File &file);
+    void RenderMaterialPreview(const std::string &path);
+    void PathDragDrop(Rush::Path Path, const char *name);
 
 public:
     bool enabled;
