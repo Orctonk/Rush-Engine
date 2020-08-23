@@ -16,3 +16,6 @@
 [submodule "Rudder/Libraries/ImGuizmo"]
 	path = Rudder/Libraries/ImGuizmo
 	url = git@github.com:CedricGuillemet/ImGuizmo.git
+[submodule "Rush-Engine/Libraries/Json"]
+	path = Rush-Engine/Libraries/Json
+	url = git@github.com:nlohmann/json.git
