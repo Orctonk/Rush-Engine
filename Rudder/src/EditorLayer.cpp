@@ -31,7 +31,7 @@ void EditorLayer::OnAttach() {
     testLight.GetComponent<TransformComponent>().Translate({1.0f,1.0f,1.0f});
 
     auto model = m_Scene.NewEntity();
-    model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/backpack/backpack.obj"));
+    model.AddComponent<MeshInstance>(AssetManager::GetMeshInstance("res/models/backpack/backpack.obj"));
     model.AddComponent<EntityName>("Model Test");
 
     auto camera = m_Scene.NewEntity();

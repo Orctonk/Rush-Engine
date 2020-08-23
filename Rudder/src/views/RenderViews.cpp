@@ -29,18 +29,18 @@ void RenderViews::Init(Rush::Entity cameraEntity){
 
     cameraEntity.GetComponent<CameraComponent>().skybox = AssetManager::GetCubemap("res/skybox");
 
-    m_SpotlightTexture = AssetManager::GetTexture("res/lightbulb.png");
-    m_DirlightTexture = AssetManager::GetTexture("res/directional.png");
-    m_SelectionShader = AssetManager::GetShader("res/selectionShader.glsl");
-    m_SkyboxShader = AssetManager::GetShader("res/skyboxShader.glsl");
+    m_SpotlightTexture = AssetManager::GetTexture("res/textures/lightbulb.png");
+    m_DirlightTexture = AssetManager::GetTexture("res/textures/directional.png");
+    m_SelectionShader = AssetManager::GetShader("res/shaders/selectionShader.glsl");
+    m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
     int j = 0;
     m_SkyboxShader->SetUniform("u_Skybox",Rush::ShaderData::INT,&j);
-    m_CameraMesh = AssetManager::GetMeshInstance("res/camera.obj");
+    m_CameraMesh = AssetManager::GetMeshInstance("res/models/camera.obj");
 
-    m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/renderviewPreview.glsl");
-    m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/renderviewNormals.glsl");
-    m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/renderviewAlbedo.glsl");
-    m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/renderviewSpecular.glsl");
+    m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/shaders/renderviewPreview.glsl");
+    m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/shaders/renderviewNormals.glsl");
+    m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/shaders/renderviewAlbedo.glsl");
+    m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/shaders/renderviewSpecular.glsl");
     for(int i = 0; i < RENDERVIEW_COUNT; i++){
         j = 0;
         m_RenderViewShaders[i]->SetUniform("u_Material.diffuse",ShaderData::INT,&j);
@@ -84,6 +84,11 @@ void RenderViews::OnUpdate(Rush::Scene &scene){
 }
 
 void RenderViews::OnEvent(Rush::Event &e){
+    auto [x,y] = Rush::Input::MousePos();
+    if(     x < m_RenderViewportPos.x || y < m_RenderViewportPos.y 
+        ||  x > m_RenderViewportPos.x + m_RenderViewportSize.x
+        ||  y > m_RenderViewportPos.y + m_RenderViewportSize.y)
+        return;
     m_CamController.OnEvent(e);
     e.Dispatch<Rush::MouseReleasedEvent>(RUSH_BIND_FN(RenderViews::MouseClickHandle));
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(RenderViews::KeyPressHandle));
@@ -243,13 +248,6 @@ void RenderViews::RenderImguiView(bool resized){
     }
 }
 
-bool RenderViews::MouseClickHandle(Rush::MouseReleasedEvent &e){
-    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT || m_UsingGizmo) return false;
-    
-    m_ObjectPick = true;
-    return true;
-}
-
 void RenderViews::DoObjectPick(Rush::Scene &scene){
     using namespace Rush;
     m_ObjectPick = false;
@@ -332,6 +330,13 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     entt::entity picked = (entt::entity)id;
 
     GlobalEntitySelection::SetSelection({reg, picked});
+}
+
+bool RenderViews::MouseClickHandle(Rush::MouseReleasedEvent &e){
+    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT || m_UsingGizmo) return false;
+    
+    m_ObjectPick = true;
+    return true;
 }
 
 bool RenderViews::KeyPressHandle(Rush::KeyboardPressEvent &e){
