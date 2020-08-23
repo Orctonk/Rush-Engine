@@ -23,6 +23,8 @@
 #include "Rush/scene/Entity.h"
 
 #include "Rush/resources/AssetManager.h"
+#include "Rush/resources/Path.h"
+#include "Rush/resources/File.h"
 #include "Rush/resources/Material.h"
 #include "Rush/resources/MeshInstance.h"
 #include "Rush/resources/MaterialInstance.h"

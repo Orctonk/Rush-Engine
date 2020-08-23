@@ -39,6 +39,8 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Scene.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/AssetManager.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/resources/Path.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/resources/File.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiLayer.cpp
                     ${RUSH_SOURCE_DIR}/Rush/imgui/ImguiImpl.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
