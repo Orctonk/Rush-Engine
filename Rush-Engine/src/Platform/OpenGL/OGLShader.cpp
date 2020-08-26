@@ -3,6 +3,7 @@
 #include "Rush/core/Logger.h"
 #include "Rushpch.h"
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Rush {
 
@@ -124,12 +125,7 @@ void OGLShader::Unbind() {
 void OGLShader::SetUniform(std::string name, ShaderData type, const void *data) {
     RUSH_PROFILE_FUNCTION();
     glUseProgram(m_Shader);
-    if(m_UniformCache.find(name) == m_UniformCache.end()){
-        auto loc = glGetUniformLocation(m_Shader,name.c_str());
-        m_UniformCache[name] = loc;
-        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugPath + "'!");
-    }
-    auto loc = m_UniformCache[name];
+    auto loc = GetUniformLocation(name);
     switch (type) {
     case ShaderData::FLOAT: glUniform1fv(loc,1,static_cast<const GLfloat *>(data)); break;
     case ShaderData::FLOAT2: glUniform2fv(loc,1,static_cast<const GLfloat *>(data)); break;
@@ -144,6 +140,93 @@ void OGLShader::SetUniform(std::string name, ShaderData type, const void *data) 
     case ShaderData::MAT4: glUniformMatrix4fv(loc,1,GL_FALSE,static_cast<const GLfloat *>(data)); break;
     default: RUSH_ASSERT(false); break;
     }
+}
+
+void OGLShader::SetUniform(std::string name, int val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform1i(loc,val);
+}
+
+void OGLShader::SetUniform(std::string name, int val1, int val2){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform2i(loc,val1,val2);
+}
+
+void OGLShader::SetUniform(std::string name, int val1, int val2, int val3){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform3i(loc,val1,val2,val3);
+}
+
+void OGLShader::SetUniform(std::string name, int val1, int val2, int val3, int val4){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform4i(loc,val1,val2,val3,val4);
+}
+
+void OGLShader::SetUniform(std::string name, float val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform1f(loc,val);
+}
+
+void OGLShader::SetUniform(std::string name, glm::vec2 val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform2f(loc,val.x,val.y);
+}
+
+void OGLShader::SetUniform(std::string name, glm::vec3 val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform3f(loc,val.x,val.y,val.z);
+}
+
+void OGLShader::SetUniform(std::string name, glm::vec4 val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform4f(loc,val.x,val.y,val.z,val.w);
+}
+
+void OGLShader::SetUniform(std::string name, bool val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniform1i(loc,val);
+}
+
+void OGLShader::SetUniform(std::string name, glm::mat3 val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniformMatrix3fv(loc,1,GL_FALSE,glm::value_ptr(val));
+}
+
+void OGLShader::SetUniform(std::string name, glm::mat4 val){
+    RUSH_PROFILE_FUNCTION();
+    glUseProgram(m_Shader);
+    auto loc = GetUniformLocation(name);
+    glUniformMatrix4fv(loc,1,GL_FALSE,glm::value_ptr(val));
+}
+
+int OGLShader::GetUniformLocation(std::string name){
+    RUSH_PROFILE_FUNCTION();
+    if(m_UniformCache.find(name) == m_UniformCache.end()){
+        auto loc = glGetUniformLocation(m_Shader,name.c_str());
+        m_UniformCache[name] = loc;
+        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugPath + "'!");
+    }
+    return m_UniformCache[name];
 }
 
 }
