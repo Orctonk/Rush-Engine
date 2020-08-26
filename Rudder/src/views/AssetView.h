@@ -16,6 +16,7 @@ private:
     };
     
     bool m_AssetFilters[AssetFilter::Count];
+    bool m_Dirty;
     Rush::Path m_CurrentDir;
     Rush::Path m_SelectedAsset;
     std::unordered_map<std::string,Rush::Shared<Rush::Texture>> m_MaterialPreviews;
@@ -30,6 +31,7 @@ public:
     AssetView();
     ~AssetView();
 
+    void OnUpdate();
     void OnImguiRender();
 };
 

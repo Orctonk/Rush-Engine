@@ -13,10 +13,16 @@ AssetView::AssetView()
     enabled = true;
     for(int i = 0; i < AssetFilter::Count; i++)
         m_AssetFilters[i] = true;
+    m_Dirty = false;
 }
 
 AssetView::~AssetView(){
 
+}
+
+void AssetView::OnUpdate(){
+    if(m_Dirty)
+        RenderMaterialPreview(m_SelectedAsset.GetRawPath());
 }
 
 void AssetView::OnImguiRender(){
@@ -63,12 +69,58 @@ void AssetView::OnImguiRender(){
             float scale = glm::min(winSize.x / tex->GetProperties().width, winSize.y / tex->GetProperties().height);
             ImGui::Image((ImTextureID)tex->GetID(),ImVec2(tex->GetProperties().width * scale, tex->GetProperties().height * scale),ImVec2(0,1),ImVec2(1,0));
         } else if(fileext == "mat"){
-            if(m_MaterialPreviews.find(m_SelectedAsset.GetRawPath()) == m_MaterialPreviews.end())
-                RenderMaterialPreview(m_SelectedAsset.GetRawPath());
-            Rush::Shared<Rush::Texture> tex = m_MaterialPreviews[m_SelectedAsset.GetRawPath()];
-            auto winSize = ImGui::GetContentRegionAvail();
-            float scale = glm::min(winSize.x / tex->GetProperties().width, winSize.y / tex->GetProperties().height);
-            ImGui::Image((ImTextureID)tex->GetID(),ImVec2(tex->GetProperties().width * scale, tex->GetProperties().height * scale),ImVec2(0,1),ImVec2(1,0));
+            Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterialInstance(m_SelectedAsset.GetRawPath()).parent;
+            ImGui::Text("Render mode: ");
+            ImGui::SameLine();
+            m_Dirty |= ImGui::Combo("##Rendermode", (int *)&mat->mode,"Opaque\0Transparent\0Cutoff\0\0");
+            ImGui::Text("Color:       ");
+            ImGui::SameLine();
+            m_Dirty |= ImGui::ColorEdit4("##Color",glm::value_ptr(mat->color));
+            ImGui::Text("Diffuse:     ");
+            ImGui::SameLine();
+            if(mat->diffuseTexture == nullptr)
+                ImGui::Button("None");
+            else
+                ImGui::Button(mat->diffuseTexture->GetDebugPath().c_str());
+            if(ImGui::BeginDragDropTarget()){
+                const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
+                if(texPath != NULL){
+                    mat->diffuseTexture = Rush::AssetManager::GetTexture((const char *)texPath->Data);
+                    m_Dirty = true;
+                }
+                ImGui::EndDragDropTarget();
+            }
+            ImGui::Text("Specular:    ");
+            ImGui::SameLine();
+            if(mat->specularTexture == nullptr)
+                ImGui::Button("None");
+            else
+                ImGui::Button(mat->specularTexture->GetDebugPath().c_str());
+            if(ImGui::BeginDragDropTarget()){
+                const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
+                if(texPath != NULL){
+                    mat->specularTexture = Rush::AssetManager::GetTexture((const char *)texPath->Data);
+                    m_Dirty = true;
+                }
+                ImGui::EndDragDropTarget();
+            }
+            ImGui::Text("Shininess:   ");
+            ImGui::SameLine();
+            m_Dirty |= ImGui::DragFloat("##Shininess",&mat->shininess);
+            ImGui::Text("Normal:      ");
+            ImGui::SameLine();
+            if(mat->normalTexture == nullptr)
+                ImGui::Button("None");
+            else
+                ImGui::Button(mat->normalTexture->GetDebugPath().c_str());
+            if(ImGui::BeginDragDropTarget()){
+                const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
+                if(texPath != NULL){
+                    mat->normalTexture = Rush::AssetManager::GetTexture((const char *)texPath->Data);
+                    m_Dirty = true;
+                }
+                ImGui::EndDragDropTarget();
+            }
         }
 
         ImGui::End();
@@ -128,44 +180,35 @@ void AssetView::RenderMaterialPreview(const std::string &path){
 
     FBO->Bind();
     Rush::Camera cam = Rush::Camera(1.0f,45.0f);
-    glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-3.0f)));
+    glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-2.6f)));
     Rush::Renderer::BeginScene(cam,view);
-    Rush::Shared<Rush::Shader> shader = Rush::AssetManager::GetShader("res/shaders/materialShader.glsl"); 
     MaterialInstance mat = Rush::AssetManager::GetMaterialInstance(path);
-    mat.parent->diffuseTexture->Bind(0);
-    mat.parent->specularTexture->Bind(1);
-    mat.parent->normalTexture->Bind(2);
-    int i = 0;
-    shader->SetUniform("u_Material.diffuse",Rush::ShaderData::INT,&i);
-    shader->SetUniform("u_DLightCount", Rush::ShaderData::INT,&i);
-    i = 1;
-    shader->SetUniform("u_Material.specular",Rush::ShaderData::INT,&i);
-    shader->SetUniform("u_LightCount", Rush::ShaderData::INT,&i);
-    i = 2;
-    shader->SetUniform("u_Material.normal",Rush::ShaderData::INT,&i);
+    mat.parent->Bind();
+    mat.parent->materialShader->SetUniform("u_DLightCount", 0);
+    mat.parent->materialShader->SetUniform("u_LightCount", 1);
     glm::vec3 trans = glm::vec3(-1.0f,1.0f,1.5f);
     glm::vec4 plv = glm::vec4(trans,0.0f);
-    shader->SetUniform("u_Lights[0].position_cutoff",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat.parent->materialShader->SetUniform("u_Lights[0].position_cutoff",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(0.0f,0.0f,0.0f,0.0f);
-    shader->SetUniform("u_Lights[0].direction_cutoffOuter",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat.parent->materialShader->SetUniform("u_Lights[0].direction_cutoffOuter",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(0.75f,0.75f,0.75f,1.0f);
-    shader->SetUniform("u_Lights[0].ambient_constant",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat.parent->materialShader->SetUniform("u_Lights[0].ambient_constant",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(1.0f,1.0f,1.0f,0.35f);
-    shader->SetUniform("u_Lights[0].diffuse_linear",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat.parent->materialShader->SetUniform("u_Lights[0].diffuse_linear",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(1.0f,1.0f,1.0f,0.44f);
-    shader->SetUniform("u_Lights[0].specular_quadratic",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat.parent->materialShader->SetUniform("u_Lights[0].specular_quadratic",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     for(auto &sm : mesh.mesh->submeshes)
-        Rush::Renderer::Submit(shader,sm.vertices,glm::mat4(1.0f));
+        Rush::Renderer::Submit(mat,sm.vertices,glm::mat4(1.0f));
 
     Rush::Renderer::EndScene();
     FBO->Unbind();
 
     m_MaterialPreviews[path] = FBO->GetTextures().at(0);
+    m_Dirty = false;
 }
 
 void AssetView::PathDragDrop(Rush::Path path, const char *name){
     if(ImGui::BeginDragDropSource()){
-        m_SelectedAsset = path;
         ImGui::SetDragDropPayload(name,path.GetRawPath().c_str(),path.GetRawPath().size()+1,ImGuiCond_Once);
         ImGui::Text(path.GetFileName().c_str());
         ImGui::EndDragDropSource();
