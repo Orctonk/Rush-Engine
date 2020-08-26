@@ -33,6 +33,8 @@ protected:
     bool m_IsHandled = false;
 public:
 
+    virtual ~Event() {}
+
     bool IsHandled() { return m_IsHandled; }
 
     static EventType GetStaticType();
