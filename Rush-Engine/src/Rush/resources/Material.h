@@ -31,6 +31,7 @@ public:
     float shininess                 {1.0f};
 
     std::string GetName(){ return m_Name; }
+    void Bind();
 
     static void Write(Shared<Material> mat, Path matPath);
     static Shared<Material> Load(Path matPath);

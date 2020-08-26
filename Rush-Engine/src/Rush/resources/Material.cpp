@@ -8,6 +8,18 @@
 
 namespace Rush{
 
+void Material::Bind() {
+    materialShader->Bind();
+    materialShader->SetUniform("u_Material.diffuse",0);
+    diffuseTexture->Bind(0);
+    materialShader->SetUniform("u_Material.specular",1);
+    specularTexture->Bind(1);
+    materialShader->SetUniform("u_Material.normal",2);
+    normalTexture->Bind(2);
+    materialShader->SetUniform("u_Material.shininess",shininess);
+    materialShader->SetUniform("u_Material.color",color);
+}
+
 void Material::Write(Shared<Material> mat, Path matPath){
     nlohmann::json j;
     switch(mat->mode){
@@ -38,6 +50,7 @@ Shared<Material> Material::Load(Path matPath){
     auto matStream = matFile.OpenFile(OpenMode::Read);
 
     mat->m_Name = matPath.GetFileName();
+    mat->materialShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
 
     nlohmann::json j;
     matStream >> j;
