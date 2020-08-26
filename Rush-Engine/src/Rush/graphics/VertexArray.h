@@ -28,7 +28,7 @@ public:
     Shared<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
     std::vector<Shared<VertexBuffer>> GetVertexBuffers() { return m_VertexBuffers; }
 
-    static Unique<VertexArray> Create();
+    static Shared<VertexArray> Create();
 };
     
 } // namespace Rush

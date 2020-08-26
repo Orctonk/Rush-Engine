@@ -37,7 +37,7 @@ void Renderer::ResetRenderStats(){
     s_Stats = RenderStats();
 }
 
-void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va,const glm::mat4 &model) {
+void Renderer::Submit(const Shared<Shader> &shader, const Shared<VertexArray> &va,const glm::mat4 &model) {
     RUSH_PROFILE_FUNCTION();
     shader->Bind();
     shader->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_SceneVP));
@@ -58,7 +58,7 @@ void Renderer::Submit(const Shared<Shader> &shader, const Unique<VertexArray> &v
 
 void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
     RUSH_PROFILE_FUNCTION();
-    static const Unique<VertexArray> boxVA = VertexArray::Create();
+    static const Shared<VertexArray> boxVA = VertexArray::Create();
     static bool init = false;
     if(!init){
         const float boxVert[] = {

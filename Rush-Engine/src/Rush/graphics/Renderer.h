@@ -34,7 +34,7 @@ public:
     static void ResetRenderStats();
     static RenderStats GetRenderStats(){return s_Stats;}
 
-    static void Submit(const Shared<Shader> &shader, const Unique<VertexArray> &va, const glm::mat4 &model);
+    static void Submit(const Shared<Shader> &shader, const Shared<VertexArray> &va, const glm::mat4 &model);
 
     static void RenderCube(const Shared<Shader> &shader, const glm::mat4 &model);
 

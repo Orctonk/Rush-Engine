@@ -128,7 +128,7 @@ void OGLRenderingAPI::SetLineWidth(float width){
 }
 
 
-void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, Primitive type){
+void OGLRenderingAPI::DrawIndexed(const Shared<VertexArray> &va, Primitive type){
     RUSH_PROFILE_FUNCTION();
     GLenum primType;
     switch(type){
@@ -146,7 +146,7 @@ void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, Primitive type)
     glDrawElements(primType,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
 }
 
-void OGLRenderingAPI::DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type){
+void OGLRenderingAPI::DrawIndexed(const Shared<VertexArray> &va, uint32_t count, Primitive type){
     RUSH_PROFILE_FUNCTION();
     GLenum primType;
     switch(type){

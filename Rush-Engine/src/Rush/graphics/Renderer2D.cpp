@@ -28,7 +28,7 @@ struct RendererData{
     static const uint32_t BATCH_INDEX_COUNT = BATCH_SIZE * 6;
     static const uint8_t  MAX_TEXTURES = 32;
 
-    Unique<VertexArray>  rendererVA;
+    Shared<VertexArray>  rendererVA;
     Shared<VertexBuffer> rendererVB;
     Shared<Texture> whiteTexture;
     Shared<Shader> textureShader;

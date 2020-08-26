@@ -16,7 +16,7 @@ struct RendererData{
     static const uint32_t BATCH_VERTEX_COUNT = BATCH_SIZE * 2;
     static const uint32_t BATCH_INDEX_COUNT = BATCH_SIZE * 2;
 
-    Unique<VertexArray>  rendererVA;
+    Shared<VertexArray>  rendererVA;
     Shared<VertexBuffer> rendererVB;
     Shared<Shader> lineShader;
 

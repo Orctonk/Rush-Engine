@@ -12,8 +12,8 @@ VertexArray::VertexArray() { }
 
 VertexArray::~VertexArray() { }
 
-Unique<VertexArray> VertexArray::Create() {
-    return CreateUnique<OGLVertexArray>();
+Shared<VertexArray> VertexArray::Create() {
+    return CreateShared<OGLVertexArray>();
 }
 
 }

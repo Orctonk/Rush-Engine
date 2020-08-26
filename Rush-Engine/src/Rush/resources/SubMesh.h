@@ -8,7 +8,7 @@
 
 struct RUSH_API SubMesh {
     std::string meshName;
-    Rush::Unique<Rush::VertexArray> vertices;
+    Rush::Shared<Rush::VertexArray> vertices;
     MaterialInstance material;
 };
 

@@ -67,8 +67,8 @@ public:
     virtual void SetClearColor(glm::vec4 color) = 0;
     virtual void Clear() = 0;
 
-    virtual void DrawIndexed(const Unique<VertexArray> &va, Primitive type = Primitive::Triangle) = 0;
-    virtual void DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) = 0;
+    virtual void DrawIndexed(const Shared<VertexArray> &va, Primitive type = Primitive::Triangle) = 0;
+    virtual void DrawIndexed(const Shared<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) = 0;
 
     static Unique<RenderingAPI> Create();
 };

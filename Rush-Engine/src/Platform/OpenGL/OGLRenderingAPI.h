@@ -23,8 +23,8 @@ public:
     void SetPointSize(float size) override;
     void SetLineWidth(float width) override;
 
-    void DrawIndexed(const Unique<VertexArray> &va, Primitive type = Primitive::Triangle) override;
-    void DrawIndexed(const Unique<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) override;
+    void DrawIndexed(const Shared<VertexArray> &va, Primitive type = Primitive::Triangle) override;
+    void DrawIndexed(const Shared<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) override;
 };
 
 }
