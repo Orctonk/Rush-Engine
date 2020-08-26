@@ -45,6 +45,7 @@ struct PackedLight {
 };
 
 struct Material {
+    vec4 color;
     sampler2D diffuse;
     sampler2D specular;
     sampler2D normal;
@@ -80,7 +81,7 @@ void main() {
     for(int i = u_DLightCount; i < u_LightCount; i++)
         result += CalcOtherLight(u_Lights[i],normal,fs_in.FragPos,viewDir);
 
-    FragColor = vec4(result,1.0);
+    FragColor = u_Material.color * vec4(result,1.0);
 }
 
 vec3 CalcDirLight(PackedLight light, vec3 normal, vec3 viewDir){
@@ -89,7 +90,7 @@ vec3 CalcDirLight(PackedLight light, vec3 normal, vec3 viewDir){
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
     // combine results
     vec3 ambient = light.ambient_constant.rgb * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
     vec3 diffuse = light.diffuse_linear.rgb * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
@@ -103,7 +104,7 @@ vec3 CalcOtherLight(PackedLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
     // attenuation
     float distance = length(light.position_cutoff.xyz - fragPos);
     float attenuation = 1.0 / (light.ambient_constant.a + light.diffuse_linear.a * distance + light.specular_quadratic.a * (distance * distance));     

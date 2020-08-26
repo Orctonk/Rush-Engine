@@ -45,6 +45,7 @@ struct DirectionalLight {
 };
 
 struct Material {
+    vec4 color;
     sampler2D diffuse;
     sampler2D specular;
     sampler2D normal;
@@ -75,7 +76,7 @@ void main() {
     for(int i = 0; i < DLIGHT_COUNT; i++)
         result += CalcDirLight(u_DLights[i],normal,viewDir);
 
-    FragColor = vec4(result,1.0);
+    FragColor = u_Material.color * vec4(result,1.0f);
 }
 
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
@@ -84,7 +85,7 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
     // combine results
     vec3 ambient = light.ambient * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
     vec3 diffuse = light.diffuse * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
