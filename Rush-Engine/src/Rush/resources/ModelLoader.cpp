@@ -110,6 +110,7 @@ MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const 
         return matInst;
 
     Shared<Material> mat = CreateShared<Material>();
+    mat->materialShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
     auto ret = material->GetTexture(aiTextureType_DIFFUSE,0,&str);
     if(ret != AI_FAILURE)   mat->diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     else                    mat->diffuseTexture = s_DefaultColorTexture;
