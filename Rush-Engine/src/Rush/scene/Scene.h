@@ -15,6 +15,7 @@ private:
     Shared<Shader> m_SceneShader;
     Shared<Shader> m_SkyboxShader;
 
+    void SetLightData(Shared<Shader> shader);
 public:
     Scene();
     ~Scene();

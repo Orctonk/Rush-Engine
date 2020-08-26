@@ -57,6 +57,26 @@ void Scene::Render(){
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(mainCamera->camera,view);
 
+    
+    for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
+        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
+        glm::mat4 model = transform.GetModelMatrix();
+
+        for(auto &sm : mesh.mesh->submeshes){
+            sm.material.parent->Bind();
+            SetLightData(sm.material.parent->materialShader);
+            Renderer::Submit(sm.material,sm.vertices,model);
+        }
+    }
+
+    if(mainCamera->skybox != nullptr){
+        mainCamera->skybox->Bind(0);
+        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
+    }
+    Renderer::EndScene();
+}
+
+void Scene::SetLightData(Shared<Shader> shader){
     glm::vec4 plv;
     int lightCount = 0;
     for(auto e : m_SceneRegistry.view<LightComponent>()){
@@ -66,20 +86,20 @@ void Scene::Render(){
             glm::vec3 trans = t.GetTranslation();
             glm::quat rot = t.GetRotation();
             plv = glm::vec4(trans,l.cutOff);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::rotate(rot,glm::vec4(0.0f,0.0f,1.0f,0.0f));
             plv.w = l.outerCutOff;
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.ambient,l.constant);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.diffuse,l.linear);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.specular,l.quadratic);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
             lightCount++;
         }
     }
-    m_SceneShader->SetUniform("u_DLightCount",ShaderData::INT,&lightCount);
+    shader->SetUniform("u_DLightCount",lightCount);
     for(auto e : m_SceneRegistry.view<LightComponent>()){
         auto &l = m_SceneRegistry.get<LightComponent>(e);
         if(l.type != LightType::DIRECTIONAL){
@@ -87,47 +107,24 @@ void Scene::Render(){
             glm::vec3 trans = t.GetTranslation();
             glm::quat rot = t.GetRotation();
             plv = glm::vec4(trans,glm::cos(glm::radians(l.cutOff)));
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
             if(l.type == LightType::POINT)
                 plv = glm::vec4(0.0f,0.0f,0.0f,glm::cos(glm::radians(l.outerCutOff)));
             else {
                 plv = glm::rotate(rot, glm::vec4(1.0f,0.0f,0.0f,0.0f));
                 plv.w = glm::cos(glm::radians(l.outerCutOff));
             }
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.ambient,l.constant);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.diffuse,l.linear);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
             plv = glm::vec4(l.specular,l.quadratic);
-            m_SceneShader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
+            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
             lightCount++;
         }
     }
-    m_SceneShader->SetUniform("u_LightCount",ShaderData::INT,&lightCount);
-    for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
-        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
-        glm::mat4 model = transform.GetModelMatrix();
-        int j = 0;
-        m_SceneShader->SetUniform("u_Material.diffuse",ShaderData::INT,&j);
-        j = 1;
-        m_SceneShader->SetUniform("u_Material.specular",ShaderData::INT,&j);
-        j = 2;
-        m_SceneShader->SetUniform("u_Material.normal",ShaderData::INT,&j);
-
-        for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
-            mesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
-            mesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
-            mesh.mesh->submeshes[i].material.parent->normalTexture->Bind(2);
-            Renderer::Submit(m_SceneShader,mesh.mesh->submeshes[i].vertices,model);
-        }
-    }
-
-    if(mainCamera->skybox != nullptr){
-        mainCamera->skybox->Bind(0);
-        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
-    }
-    Renderer::EndScene();
+    shader->SetUniform("u_LightCount",lightCount);
 }
 
 }
