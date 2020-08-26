@@ -63,7 +63,7 @@ unsigned int indices[] = {  // note that we start from 0!
 
 class Sandbox : public Application{
 private: 
-	Unique<VertexArray> m_VA;
+	Shared<VertexArray> m_VA;
 	Camera m_Cam;
 	TransformComponent m_Trans;
 	Shared<Shader> m_Shader;
