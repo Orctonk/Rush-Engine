@@ -46,6 +46,7 @@ void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
     m_RenderViews.OnUpdate(m_Scene);
     m_SceneView.OnUpdate(m_Scene);
+    m_AssetView.OnUpdate();
 }
 
 void EditorLayer::OnEvent(Rush::Event &e) {
