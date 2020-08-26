@@ -33,22 +33,14 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     m_DirlightTexture = AssetManager::GetTexture("res/textures/directional.png");
     m_SelectionShader = AssetManager::GetShader("res/shaders/selectionShader.glsl");
     m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
-    int j = 0;
-    m_SkyboxShader->SetUniform("u_Skybox",Rush::ShaderData::INT,&j);
+    m_SkyboxShader->SetUniform("u_Skybox",0);
     m_CameraMesh = AssetManager::GetMeshInstance("res/models/camera.obj");
 
     m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/shaders/renderviewPreview.glsl");
     m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/shaders/renderviewNormals.glsl");
     m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/shaders/renderviewAlbedo.glsl");
     m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/shaders/renderviewSpecular.glsl");
-    for(int i = 0; i < RENDERVIEW_COUNT; i++){
-        j = 0;
-        m_RenderViewShaders[i]->SetUniform("u_Material.diffuse",ShaderData::INT,&j);
-        j = 1;
-        m_RenderViewShaders[i]->SetUniform("u_Material.specular",ShaderData::INT,&j);
-        j = 2;
-        m_RenderViewShaders[i]->SetUniform("u_Material.normal",ShaderData::INT,&j);
-    }
+    
     glm::vec3 dlightcol(1.0f);
     glm::vec3 dlights[2];
     dlights[0] = glm::vec3(-1.0f);
@@ -139,17 +131,14 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     }
     LineRenderer::EndScene();
 
-    Renderer::BeginScene(cam.camera,view);
+    Renderer::BeginScene(cam.camera,view,m_RenderViewShaders[m_CurrentView]);
     auto reg = scene.GetRegistry();
 
     for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
         glm::mat4 model = transform.GetModelMatrix();
-        for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
-            mesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
-            mesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
-            mesh.mesh->submeshes[i].material.parent->normalTexture->Bind(2);
-            Renderer::Submit(m_RenderViewShaders[m_CurrentView],mesh.mesh->submeshes[i].vertices,model);
+        for(auto &sm : mesh.mesh->submeshes){
+            Renderer::Submit(sm.material,sm.vertices,model);
         }
     }
 
@@ -157,20 +146,18 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         cam.skybox->Bind(0);
         Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
     }
-
     if(m_CurrentView == RENDERVIEW_RENDER){
         for(auto e: reg->view<CameraComponent>()){
             if(e == m_CamController.GetCamera()) continue;
             auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
             glm::mat4 model = t.GetModelMatrix();
-            for(int i = 0; i < m_CameraMesh.mesh->submeshes.size(); i++){
-                m_CameraMesh.mesh->submeshes[i].material.parent->diffuseTexture->Bind(0);
-                m_CameraMesh.mesh->submeshes[i].material.parent->specularTexture->Bind(1);
-                m_CameraMesh.mesh->submeshes[i].material.parent->normalTexture->Bind(2);
-                Renderer::Submit(m_RenderViewShaders[RENDERVIEW_RENDER],m_CameraMesh.mesh->submeshes[i].vertices,model);
+            for(auto &sm : m_CameraMesh.mesh->submeshes){
+                Renderer::Submit(sm.material,sm.vertices,model);
             }
         }
-
+    }
+    Renderer::EndScene();
+    if(m_CurrentView == RENDERVIEW_RENDER){ // TODO: Fix editor not drawing billboards that are behind transparent objects
         Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
         LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
         LineRenderer::GetAPI()->SetLineWidth(2.0f);
@@ -199,7 +186,6 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         Renderer2D::EndScene();
     }
 
-    Renderer::EndScene();
     m_RenderView->Unbind();
 }
 
