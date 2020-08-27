@@ -5,6 +5,7 @@
 #include "Rush/core/Logger.h"
 #include "Rush/core/Input.h"
 #include "Rush/core/Time.h"
+#include "Rush/core/Random.h"
 
 #include "Rush/graphics/IndexBuffer.h"
 #include "Rush/graphics/VertexBuffer.h"

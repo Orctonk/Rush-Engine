@@ -21,6 +21,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/LayerStack.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Time.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Input.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/Random.cpp
                     ${RUSH_SOURCE_DIR}/Rush/events/EventQueue.cpp
                     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp
