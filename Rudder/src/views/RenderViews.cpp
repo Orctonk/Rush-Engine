@@ -45,12 +45,12 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     glm::vec3 dlights[2];
     dlights[0] = glm::vec3(-1.0f);
     dlights[1] = glm::vec3(1.0f);
-    glm::vec3 zero(0.0f);
+    glm::vec3 one(1.0f);
     for(int i = 0; i < 2; i++){
         m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].direction",ShaderData::FLOAT3,glm::value_ptr(dlights[i]));
         m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].ambient",ShaderData::FLOAT3,glm::value_ptr(dlightcol * 0.1f));
         m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].diffuse",ShaderData::FLOAT3,glm::value_ptr(dlightcol));
-        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].specular",ShaderData::FLOAT3,glm::value_ptr(zero));
+        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].specular",ShaderData::FLOAT3,glm::value_ptr(one));
     }
 
     m_RenderView = Framebuffer::Create({
