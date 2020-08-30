@@ -36,6 +36,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Renderer2D.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/RenderingAPI.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Framebuffer.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/graphics/particles/ParticleSystem.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
                     ${RUSH_SOURCE_DIR}/Rush/scene/Scene.cpp
                     ${RUSH_SOURCE_DIR}/Rush/resources/AssetManager.cpp

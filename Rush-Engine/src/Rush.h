@@ -17,6 +17,7 @@
 #include "Rush/graphics/LineRenderer.h"
 #include "Rush/graphics/Renderer2D.h"
 #include "Rush/graphics/Framebuffer.h"
+#include "Rush/graphics/particles/ParticleSystem.h"
 
 #include "Rush/scene/Components.h"
 #include "Rush/scene/Camera.h"
