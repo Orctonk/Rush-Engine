@@ -44,6 +44,7 @@ void EditorLayer::OnAttach() {
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
+    m_Scene.OnUpdate();
     m_RenderViews.OnUpdate(m_Scene);
     m_SceneView.OnUpdate(m_Scene);
     m_AssetView.OnUpdate();
