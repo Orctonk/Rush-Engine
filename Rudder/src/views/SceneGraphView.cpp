@@ -64,7 +64,20 @@ SceneGraphView::SceneGraphView(){
         }
     });
     m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Entity &e){
-        for(auto &mesh : e.GetComponent<MeshInstance>().mesh->submeshes){
+        auto &mi = e.GetComponent<MeshInstance>();
+        ImGui::Text("Mesh: ");
+        ImGui::SameLine();
+        if(mi.mesh == nullptr)
+            ImGui::Button("None");
+        else
+            ImGui::Button( mi.mesh->name.c_str());
+        if(ImGui::BeginDragDropTarget()){
+            const ImGuiPayload *meshPath = ImGui::AcceptDragDropPayload("mesh");
+            if(meshPath != NULL)
+                mi.mesh = AssetManager::GetMeshInstance((const char *)meshPath->Data).mesh;
+            ImGui::EndDragDropTarget();
+        }
+        for(auto &mesh : mi.mesh->submeshes){
             if(ImGui::TreeNode(mesh.meshName.c_str())){
                 ImGui::Text("Material:  ");
                 ImGui::SameLine();
