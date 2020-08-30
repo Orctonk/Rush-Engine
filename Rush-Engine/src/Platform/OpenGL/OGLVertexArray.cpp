@@ -37,17 +37,48 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
     vb->Bind();
 
     for(auto e: vb->GetLayout()){
-        glEnableVertexAttribArray(m_VertexIndex);
-        glVertexAttribPointer(
-            m_VertexIndex,
-            getElemCount(e.objType),
-            getOpenGLType(e.objType),
-            e.normalized ? GL_TRUE : GL_FALSE,
-            e.stride,
-            (void *)e.offset
-        );
+        switch(e.objType){
+            case ShaderData::BOOL:
+            case ShaderData::FLOAT:
+            case ShaderData::FLOAT2:
+            case ShaderData::FLOAT3:
+            case ShaderData::FLOAT4:
+            case ShaderData::INT:
+            case ShaderData::INT2:
+            case ShaderData::INT3:
+            case ShaderData::INT4:
+                glEnableVertexAttribArray(m_VertexIndex);
+                glVertexAttribPointer(
+                    m_VertexIndex,
+                    getElemCount(e.objType),
+                    getOpenGLType(e.objType),
+                    e.normalized ? GL_TRUE : GL_FALSE,
+                    e.stride,
+                    (void *)e.offset
+                );
+                if(vb->IsInstanced())
+                    glVertexAttribDivisor(m_VertexIndex,1);
+                m_VertexIndex++;
+                break;
+            case ShaderData::MAT3:
+            case ShaderData::MAT4:
+                for(int i = 0; i < getElemCount(e.objType); i++){
+                    glEnableVertexAttribArray(m_VertexIndex);
+                    glVertexAttribPointer(
+                        m_VertexIndex,
+                        getElemCount(e.objType),
+                        getOpenGLType(e.objType),
+                        e.normalized ? GL_TRUE : GL_FALSE,
+                        e.stride,
+                        (void *)(e.offset + sizeof(float) * getElemCount(e.objType) * i)
+                    );
+                    if(vb->IsInstanced())
+                        glVertexAttribDivisor(m_VertexIndex,1);
+                    m_VertexIndex++;
+                }
+                break;
+        }
 
-        m_VertexIndex++;
     }
     m_VertexBuffers.push_back(vb);
     Unbind();

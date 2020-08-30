@@ -148,7 +148,10 @@ void OGLRenderingAPI::DrawIndexed(const Shared<VertexArray> &va, Primitive type)
             break;
     }
     va->Bind();
-    glDrawElements(primType,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
+    if(va->GetInstanceCount() == 0)
+        glDrawElements(primType,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0);
+    else 
+        glDrawElementsInstanced(primType,va->GetIndexBuffer()->GetIndexCount(),GL_UNSIGNED_INT,0,va->GetInstanceCount());
 }
 
 void OGLRenderingAPI::DrawIndexed(const Shared<VertexArray> &va, uint32_t count, Primitive type){

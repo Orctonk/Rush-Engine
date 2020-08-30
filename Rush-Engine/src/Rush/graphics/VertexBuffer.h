@@ -19,7 +19,8 @@ struct RUSH_API LayoutElement {
 class RUSH_API VertexBuffer {
 protected:
     std::vector<LayoutElement> m_Layout;
-    
+    bool m_Instanced = false;
+
     VertexBuffer(uint32_t size);
     VertexBuffer(const float *data, uint32_t size);
 public:
@@ -34,6 +35,8 @@ public:
     virtual void SetBatchedLayout(std::vector<ShaderData> layout) = 0;
     void SetCustomLayout(std::vector<LayoutElement> layout) { m_Layout = layout; }
     std::vector<LayoutElement> GetLayout() { return m_Layout; }
+    bool IsInstanced(){ return m_Instanced; }
+    void SetInstanced(bool instanced){ m_Instanced = instanced; }
 
     static Shared<VertexBuffer> Create(const float *data, uint32_t size);
     static Shared<VertexBuffer> Create(uint32_t size);

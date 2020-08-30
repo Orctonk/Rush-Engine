@@ -14,6 +14,7 @@ class RUSH_API VertexArray {
 protected:
     Shared<IndexBuffer> m_IndexBuffer;
     std::vector<Shared<VertexBuffer>> m_VertexBuffers;
+    uint32_t m_InstanceCount = 0;
     VertexArray();
 public:
     virtual ~VertexArray();
@@ -27,6 +28,8 @@ public:
 
     Shared<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
     std::vector<Shared<VertexBuffer>> GetVertexBuffers() { return m_VertexBuffers; }
+    uint32_t GetInstanceCount() { return m_InstanceCount; }
+    void SetInstanceCount(uint32_t count) { m_InstanceCount = count; }
 
     static Shared<VertexArray> Create();
 };
