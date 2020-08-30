@@ -121,44 +121,6 @@ void Renderer::Submit(MaterialInstance material, const Shared<VertexArray> &va,c
         sortParam,
         s_Data.submittedRenderables.size() - 1
     });
-    // if(s_Data.shaderOverride == nullptr){
-    //     material.parent->Bind();
-    //     material.parent->materialShader->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_Data.sceneVP));
-    //     material.parent->materialShader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
-    //     material.parent->materialShader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_Data.cameraPos));
-    // } else {
-    //     s_Data.shaderOverride->Bind();
-    //     s_Data.shaderOverride->SetUniform("u_Material.diffuse",0);
-    //     material.parent->diffuseTexture->Bind(0);
-    //     s_Data.shaderOverride->SetUniform("u_Material.specular",1);
-    //     material.parent->specularTexture->Bind(1);
-    //     s_Data.shaderOverride->SetUniform("u_Material.normal",2);
-    //     material.parent->normalTexture->Bind(2);
-    //     s_Data.shaderOverride->SetUniform("u_Material.shininess",material.parent->shininess);
-    //     s_Data.shaderOverride->SetUniform("u_Material.color",material.parent->color);
-    //     s_Data.shaderOverride->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_Data.sceneVP));
-    //     s_Data.shaderOverride->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
-    //     s_Data.shaderOverride->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_Data.cameraPos));
-    // }
-    // s_API->SetOption(PolygonMode::Fill);
-    // s_API->SetOption(CullFace::Clockwise);
-    // if(material.parent->mode == RenderingMode::Opaque){
-    //     s_API->SetOption(DepthTest::Less);
-    //     s_API->SetOption(BlendMode::None);
-    // } else if (material.parent->mode == RenderingMode::Transparent){
-    //     s_API->SetOption(DepthTest::Less);
-    //     s_API->SetOption(BlendMode::Add);
-    // } else if (material.parent->mode == RenderingMode::Cutoff){
-    //     s_API->SetOption(DepthTest::Less);
-    //     s_API->SetOption(BlendMode::None);
-    // }
-    // s_API->DrawIndexed(va);
-
-    // s_Stats.drawCallCount++;
-    // uint32_t ic = va->GetIndexBuffer()->GetIndexCount();
-    // s_Stats.primitiveCount += ic / 3;
-    // s_Stats.vertexCount += ic;
-    // s_Stats.programCount++;
 }
 
 void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
