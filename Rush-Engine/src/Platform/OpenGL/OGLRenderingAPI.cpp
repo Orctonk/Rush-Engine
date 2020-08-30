@@ -65,13 +65,18 @@ void OGLRenderingAPI::SetOption(BlendMode blendMode){
             break;
         case BlendMode::Add:
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
             glBlendEquation(GL_FUNC_ADD);
             break;
         case BlendMode::Subtract:
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
             glBlendEquation(GL_FUNC_SUBTRACT);
+            break;
+        case BlendMode::Alpha:
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendEquation(GL_FUNC_ADD);
             break;
     }
 }

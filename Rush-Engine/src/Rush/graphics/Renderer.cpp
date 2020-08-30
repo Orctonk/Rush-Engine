@@ -53,7 +53,7 @@ void Renderer::EndScene(){
         auto &model = s_Data.submittedRenderables[key.renderableIndex].model;
         auto &va = s_Data.submittedRenderables[key.renderableIndex].va;
         if(!switched && (key.sortParam & (1UL << 63))){
-            s_API->SetOption(BlendMode::Add);
+            s_API->SetOption(BlendMode::Alpha);
             switched = true;
         }
         if(s_Data.shaderOverride == nullptr){

@@ -25,7 +25,8 @@ enum class PolygonMode{
 enum class BlendMode{
     None,
     Add,
-    Subtract
+    Subtract,
+    Alpha
 };
 
 enum class Multisampling{
