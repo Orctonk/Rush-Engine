@@ -108,6 +108,26 @@ SceneGraphView::SceneGraphView(){
             ImGui::DragFloat2("Cutoff",&l.cutOff);
         }
     });
+    m_EE.Register<ParticleEmitterComponent>("Particle Emitter",[](Rush::Entity &e){
+        auto &pe = e.GetComponent<ParticleEmitterComponent>();
+        ParticleProperties &pp = pe.emissionProperties;
+        ImGui::DragFloat("Emission rate", &pe.emissionRate,0.1f);
+        ImGui::DragFloat3("Position",&pp.position.x,0.1f);
+        ImGui::DragFloat3("Position variance",&pp.positionVariance.x,0.1f);
+        ImGui::DragFloat3("Velocity",&pp.velocity.x,0.1f);
+        ImGui::DragFloat3("Velocity variance",&pp.velocityVariance.x,0.1f);
+        ImGui::DragFloat("Rotation",&pp.rotation);
+        ImGui::DragFloat("Rotation variance",&pp.rotationVariance);
+        ImGui::DragFloat("Angular velocity",&pp.angularVelocity);
+        ImGui::DragFloat("Angular velocity variance",&pp.AVVariance);
+        ImGui::DragFloat("Start size", &pp.sizeBegin,0.1f);
+        ImGui::DragFloat("End size", &pp.sizeEnd,0.1f);
+        ImGui::DragFloat("Size variance", &pp.sizeVariance,0.1f);
+        ImGui::ColorEdit3("Start color", &pp.colorBegin.x);
+        ImGui::ColorEdit3("End color", &pp.colorEnd.x);
+        ImGui::DragFloat("Particle lifetime", &pp.lifetime,0.01f);
+        ImGui::DragFloat("Lifetime Variance", &pp.lifetimeVariance,0.01f);
+    });
     m_EEVisible = true;
     m_Renaming = false;   
     enabled = true; // TODO: Make window open status persistent over application close
