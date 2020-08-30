@@ -18,9 +18,9 @@ GLenum getOpenGLType(ShaderData type){
     case ShaderData::BOOL:
         return GL_BOOL;
     case ShaderData::MAT3:
-        return GL_FLOAT_MAT3;
+        return GL_FLOAT;
     case ShaderData::MAT4:
-        return GL_FLOAT_MAT4;
+        return GL_FLOAT;
     default:
         RUSH_ASSERT(false);
         return 0;
@@ -43,9 +43,9 @@ uint8_t getElemCount(ShaderData type){
     case ShaderData::INT4:
         return 4;
     case ShaderData::MAT3:
-        return 9;
+        return 3;
     case ShaderData::MAT4:
-        return 16;
+        return 4;
     default:
         RUSH_ASSERT(false);
         return 0;
@@ -71,10 +71,10 @@ uint8_t getSize(ShaderData type){
         size = sizeof(bool);
         break;
     case ShaderData::MAT3:
-        size = sizeof(float);
+        size = 3*sizeof(float);
         break;
     case ShaderData::MAT4:
-        size = sizeof(float);
+        size = 4*sizeof(float);
         break;
     default:
         RUSH_ASSERT(false);
