@@ -156,6 +156,13 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
             }
         }
     }
+
+    for(auto &e : reg->view<ParticleEmitterComponent>()){
+        auto [transform, pe] = reg->get<TransformComponent,ParticleEmitterComponent>(e);
+        glm::mat4 model = transform.GetModelMatrix();
+        pe.particleSystem.Render(camTrans.GetModelMatrix(),model);
+    }
+    
     Renderer::EndScene();
     if(m_CurrentView == RENDERVIEW_RENDER){ // TODO: Fix editor not drawing billboards that are behind transparent objects
         Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
