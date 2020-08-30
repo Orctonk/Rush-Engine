@@ -1,0 +1,13 @@
+{
+    "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "diffuse": "res/textures/brick_diffuse.jpg",
+    "normal": "res/textures/brick_normal.jpg",
+    "rendermode": "opaque",
+    "shininess": 1.0,
+    "specular": "res/textures/white.png"
+}
