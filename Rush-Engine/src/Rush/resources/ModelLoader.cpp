@@ -120,6 +120,9 @@ MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const 
     ret = material->GetTexture(aiTextureType_NORMALS,0,&str);
     if(ret != AI_FAILURE)   mat->normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     else                    mat->normalTexture = s_DefaultNormalTexture;
+    ret = aiGetMaterialFloat(material,AI_MATKEY_SHININESS,&mat->shininess);
+    if(ret == AI_FAILURE)
+        mat->shininess = 20.0f;
 
     Material::Write(mat,Path(matName));
     AssetManager::PutMaterial(matName,mat);
