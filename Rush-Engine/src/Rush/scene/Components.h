@@ -2,6 +2,7 @@
 #define __COMPONENTS_H__
 
 #include "Camera.h"
+#include "Rush/graphics/particles/ParticleSystem.h"
 #include "Rush/graphics/Cubemap.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -104,6 +105,13 @@ struct RUSH_API LightComponent {
     glm::vec3 ambient   {0.1f,0.1f,0.1f};
     glm::vec3 diffuse   {1.0f,1.0f,1.0f};
     glm::vec3 specular  {1.0f,1.0f,1.0f};
+};
+
+struct RUSH_API ParticleEmitterComponent {
+    Rush::ParticleSystem particleSystem;
+    Rush::ParticleProperties emissionProperties;
+    float emissionRate      {0.0f};
+    float timeSinceEmission {0.0f};
 };
 
 #endif // __COMPONENTS_H__

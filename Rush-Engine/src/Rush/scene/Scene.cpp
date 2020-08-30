@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Rush/core/Time.h"
 #include "Rush/resources/AssetManager.h"
 #include "Rush/resources/MeshInstance.h"
 #include "Rush/graphics/Renderer.h"
@@ -30,6 +31,19 @@ void Scene::DeleteEntity(Entity e){
     m_SceneRegistry.destroy(e.m_Entity);
 }
 
+void Scene::OnUpdate(){
+    for(auto e : m_SceneRegistry.view<ParticleEmitterComponent>()){
+        auto &pe = m_SceneRegistry.get<ParticleEmitterComponent>(e);
+        pe.particleSystem.OnUpdate();
+        if(pe.emissionRate <= 0.0f)
+            continue;
+        pe.timeSinceEmission += Time::Delta();
+        for(;pe.timeSinceEmission > 1.0f/pe.emissionRate;pe.timeSinceEmission -= 1.0f/pe.emissionRate){
+            pe.particleSystem.Emit(pe.emissionProperties);
+        }
+    }
+}
+
 void Scene::Render(){
     if(!m_SceneShader)
         m_SceneShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
@@ -44,7 +58,7 @@ void Scene::Render(){
         if(c.main){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
             view = t.GetModelMatrix();
-
+            
             mainCamera = &c;
         }
     }
@@ -56,7 +70,6 @@ void Scene::Render(){
     Renderer::GetAPI()->SetClearColor(mainCamera->clearColor);
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(mainCamera->camera,view);
-
     
     for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
         auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
@@ -67,6 +80,12 @@ void Scene::Render(){
             SetLightData(sm.material.parent->materialShader);
             Renderer::Submit(sm.material,sm.vertices,model);
         }
+    }
+
+    for(auto &e : m_SceneRegistry.view<ParticleEmitterComponent>()){
+        auto [transform, pe] = m_SceneRegistry.get<TransformComponent,ParticleEmitterComponent>(e);
+        glm::mat4 model = transform.GetModelMatrix();
+        pe.particleSystem.Render(view,model);
     }
 
     if(mainCamera->skybox != nullptr){

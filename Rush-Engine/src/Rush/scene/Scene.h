@@ -27,6 +27,7 @@ public:
 
     entt::registry *GetRegistry(){ return &m_SceneRegistry; }
 
+    void OnUpdate();
     void Render();
 };
 
