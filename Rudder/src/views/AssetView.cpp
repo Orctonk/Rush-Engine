@@ -51,7 +51,9 @@ void AssetView::OnImguiRender(){
         return f1.GetType() < f2.GetType();
     });
     auto size = ImGui::GetContentRegionAvailWidth();
-    ImGui::Columns(size/(64),NULL,false);
+    int columns = size/64;
+    columns = columns < 1 ? 1 : columns;
+    ImGui::Columns(columns,NULL,false);
     for(Rush::File f : files){
         ImGui::PushID(f.GetPath().GetRawPath().c_str());
         RenderFile(f);
