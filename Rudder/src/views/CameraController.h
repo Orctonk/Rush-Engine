@@ -26,7 +26,7 @@ public:
     CameraController();
     ~CameraController();
 
-    void SetControlledCamera(Rush::Entity camera){ m_Camera = camera; }
+    void SetControlledCamera(Rush::Entity camera);
 
     void OnUpdate();
     void OnEvent(Rush::Event &e);

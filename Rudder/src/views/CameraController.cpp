@@ -7,6 +7,15 @@ CameraController::CameraController()
 
 CameraController::~CameraController() { }
 
+void CameraController::SetControlledCamera(Rush::Entity camera){
+    m_Camera = camera;
+    TransformComponent &tc = camera.GetComponent<TransformComponent>();
+    auto rot = tc.GetRotation();
+    m_YPR.y = glm::degrees(glm::yaw(rot));
+    m_YPR.x = glm::degrees(glm::pitch(rot));
+    m_YPR.z = glm::degrees(glm::roll(rot));
+}
+
 void CameraController::OnUpdate() { }
 void CameraController::OnEvent(Rush::Event &e){
     e.Dispatch<Rush::MousePressedEvent>(RUSH_BIND_FN(CameraController::MousePressHandle));
