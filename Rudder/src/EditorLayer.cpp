@@ -42,8 +42,15 @@ void EditorLayer::OnImguiRender() {
 
     ImGui::BeginMainMenuBar();
     if(ImGui::BeginMenu("File")){
-        if(ImGui::MenuItem("New","Ctrl+N")); // TODO: Implement New button
-        if(ImGui::MenuItem("Save","Ctrl+S")); // TODO: Implement Save button
+        if(ImGui::MenuItem("New","Ctrl+N")){
+            m_Scene.Load(Rush::Path("res/scenes/new.scene"));
+            auto *reg = m_Scene.GetRegistry();
+            for(auto e : reg->view<CameraComponent>()){
+                m_RenderViews.Init({reg,e});
+            }
+        }
+        if(ImGui::MenuItem("Save","Ctrl+S"))
+            m_Scene.Save(Rush::Path("res/scenes/saved.scene"));
         if(ImGui::MenuItem("Open","Ctrl+O")); // TODO: Implement Open button
         if(ImGui::BeginMenu("Open recent")){
             if(ImGui::MenuItem("recent_file_1.scene")); // TODO: Implement Open recent button
