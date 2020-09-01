@@ -64,6 +64,9 @@ void RenderViews::Init(Rush::Entity cameraEntity){
         Application::GetInstance().GetWindow()->GetHeight(),
         {8}
     });
+
+    // Trigger resize on reinit
+    m_RenderViewportSize = {0.0f,0.0f};
 }
 
 void RenderViews::OnUpdate(Rush::Scene &scene){
