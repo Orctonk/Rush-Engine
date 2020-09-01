@@ -121,8 +121,8 @@ SceneGraphView::SceneGraphView(){
             ImGui::DragFloat2("Cutoff",&l.cutOff);
         }
     });
-    m_EE.Register<ParticleEmitterComponent>("Particle Emitter",[](Rush::Entity &e){
-        auto &pe = e.GetComponent<ParticleEmitterComponent>();
+    m_EE.Register<ParticleComponent>("Particle Emitter",[](Rush::Entity &e){
+        auto &pe = e.GetComponent<ParticleComponent>();
         ParticleProperties &pp = pe.emissionProperties;
         ImGui::DragFloat("Emission rate", &pe.emissionRate,0.1f);
         ImGui::DragFloat3("Position",&pp.position.x,0.1f);

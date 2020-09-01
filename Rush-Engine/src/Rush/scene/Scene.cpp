@@ -32,8 +32,8 @@ void Scene::DeleteEntity(Entity e){
 }
 
 void Scene::OnUpdate(){
-    for(auto e : m_SceneRegistry.view<ParticleEmitterComponent>()){
-        auto &pe = m_SceneRegistry.get<ParticleEmitterComponent>(e);
+    for(auto e : m_SceneRegistry.view<ParticleComponent>()){
+        auto &pe = m_SceneRegistry.get<ParticleComponent>(e);
         pe.particleSystem.OnUpdate();
         if(pe.emissionRate <= 0.0f)
             continue;
@@ -82,8 +82,8 @@ void Scene::Render(){
         }
     }
 
-    for(auto &e : m_SceneRegistry.view<ParticleEmitterComponent>()){
-        auto [transform, pe] = m_SceneRegistry.get<TransformComponent,ParticleEmitterComponent>(e);
+    for(auto &e : m_SceneRegistry.view<ParticleComponent>()){
+        auto [transform, pe] = m_SceneRegistry.get<TransformComponent,ParticleComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
         pe.particleSystem.Render(view,model);
     }

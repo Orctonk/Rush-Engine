@@ -157,8 +157,8 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
         }
     }
 
-    for(auto &e : reg->view<ParticleEmitterComponent>()){
-        auto [transform, pe] = reg->get<TransformComponent,ParticleEmitterComponent>(e);
+    for(auto &e : reg->view<ParticleComponent>()){
+        auto [transform, pe] = reg->get<TransformComponent,ParticleComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
         pe.particleSystem.Render(camTrans.GetModelMatrix(),model);
     }
