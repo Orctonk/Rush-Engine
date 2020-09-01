@@ -41,6 +41,8 @@ void EditorLayer::OnAttach() {
 
     m_RenderViews.Init(camera);
     m_SceneView.Init();
+
+    m_Scene.Save<TransformComponent>(Path("test.scene"));
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {
