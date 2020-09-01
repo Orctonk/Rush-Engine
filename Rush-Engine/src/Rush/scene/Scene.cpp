@@ -19,9 +19,10 @@ Scene::~Scene(){
     
 }
 
-Entity Scene::NewEntity(){
+Entity Scene::NewEntity(std::string name){
     Entity e = {&m_SceneRegistry, m_SceneRegistry.create()};
     e.AddComponent<TransformComponent>();
+    e.AddComponent<TagComponent>(name == "" ? "New entity" : name);
     return e;
 }
 

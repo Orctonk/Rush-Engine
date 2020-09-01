@@ -23,7 +23,7 @@ public:
     Scene(Scene &) = delete;
     Scene(const Scene &) = delete;
 
-    Entity NewEntity();
+    Entity NewEntity(std::string name = "");
     void DeleteEntity(Entity e);
 
     entt::registry *GetRegistry(){ return &m_SceneRegistry; }
