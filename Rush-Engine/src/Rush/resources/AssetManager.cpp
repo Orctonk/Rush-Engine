@@ -23,22 +23,22 @@ void AssetManager::Shutdown(){
     
 }
 
-MeshInstance AssetManager::GetMeshInstance(const std::string &path) {
+Shared<RootMesh> AssetManager::GetMesh(const std::string &path) {
     RUSH_PROFILE_FUNCTION();
     auto cached = s_Meshes.find(path);
     if(cached == s_Meshes.end())
         s_Meshes.emplace(path,CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
 
-    return {s_Meshes[path]}; 
+    return s_Meshes[path]; 
 }
 
-MaterialInstance AssetManager::GetMaterialInstance(const std::string &path) { 
+Shared<Material> AssetManager::GetMaterial(const std::string &path) { 
     RUSH_PROFILE_FUNCTION();
     auto cached = s_Materials.find(path);
     if(cached == s_Materials.end())
         s_Materials.emplace(path,Material::Load(path));
 
-    return {s_Materials[path]}; 
+    return s_Materials[path]; 
 }
 
 Shared<Texture> AssetManager::GetTexture(const std::string &path){

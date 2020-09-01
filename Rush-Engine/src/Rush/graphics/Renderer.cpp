@@ -111,10 +111,10 @@ void Renderer::Submit(const Shared<Shader> &shader, const Shared<VertexArray> &v
     s_Stats.programCount++;
 }
 
-void Renderer::Submit(MaterialInstance material, const Shared<VertexArray> &va,const glm::mat4 &model) {
+void Renderer::Submit(Shared<Material> material, const Shared<VertexArray> &va,const glm::mat4 &model) {
     RUSH_PROFILE_FUNCTION();
-    s_Data.submittedRenderables.push_back({model,material.parent,va});
-    uint64_t sortParam = material.parent->mode == RenderingMode::Opaque ? 0 : (1UL << 63);
+    s_Data.submittedRenderables.push_back({model,material,va});
+    uint64_t sortParam = material->mode == RenderingMode::Opaque ? 0 : (1UL << 63);
     float distance = glm::distance(glm::vec3(model[3]),s_Data.cameraPos);
     sortParam |= ((uint64_t)(distance * 100) & 0x7FFFFFFFFFFFFFFF);
     s_Data.keys.push_back({

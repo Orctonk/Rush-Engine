@@ -2,7 +2,6 @@
 
 #include "Rush/core/Time.h"
 #include "Rush/resources/AssetManager.h"
-#include "Rush/resources/MeshInstance.h"
 #include "Rush/graphics/Renderer.h"
 #include "Components.h"
 
@@ -71,13 +70,13 @@ void Scene::Render(){
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(mainCamera->camera,view);
     
-    for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshInstance>())){
-        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshInstance>(e);
+    for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
+        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
 
         for(auto &sm : mesh.mesh->submeshes){
-            sm.material.parent->Bind();
-            SetLightData(sm.material.parent->materialShader);
+            sm.material->Bind();
+            SetLightData(sm.material->materialShader);
             Renderer::Submit(sm.material,sm.vertices,model);
         }
     }

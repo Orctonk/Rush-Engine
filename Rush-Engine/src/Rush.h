@@ -28,8 +28,6 @@
 #include "Rush/resources/Path.h"
 #include "Rush/resources/File.h"
 #include "Rush/resources/Material.h"
-#include "Rush/resources/MeshInstance.h"
-#include "Rush/resources/MaterialInstance.h"
 #include "Rush/resources/RootMesh.h"
 
 #include "Rush/imgui/ImguiLayer.h"

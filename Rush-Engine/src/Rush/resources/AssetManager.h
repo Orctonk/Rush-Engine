@@ -10,8 +10,6 @@
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Cubemap.h"
 
-#include "MeshInstance.h"
-#include "MaterialInstance.h"
 #include "RootMesh.h"
 #include "Material.h"
 
@@ -33,8 +31,8 @@ public:
     static void Init();
     static void Shutdown();
 
-    static MeshInstance GetMeshInstance(const std::string &path);
-    static MaterialInstance GetMaterialInstance(const std::string &path);
+    static Shared<RootMesh> GetMesh(const std::string &path);
+    static Shared<Material> GetMaterial(const std::string &path);
     static Shared<Texture> GetTexture(const std::string &path);
     static Shared<Cubemap> GetCubemap(const std::string &path);
     static Shared<Shader> GetShader(const std::string &path);

@@ -100,16 +100,16 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
     return m;
 }
 
-MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
+Shared<Material> ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
     RUSH_PROFILE_FUNCTION();
     aiString str;
     material->Get(AI_MATKEY_NAME,str);
     std::string matName = s_CurDirectory + str.C_Str() + ".mat";
-    MaterialInstance matInst = AssetManager::GetMaterialInstance(matName);
-    if(matInst.parent != nullptr)
-        return matInst;
+    Shared<Material> mat = AssetManager::GetMaterial(matName);
+    if(mat != nullptr)
+        return mat;
 
-    Shared<Material> mat = CreateShared<Material>();
+    mat = CreateShared<Material>();
     mat->materialShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
     auto ret = material->GetTexture(aiTextureType_DIFFUSE,0,&str);
     if(ret != AI_FAILURE)   mat->diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
@@ -127,7 +127,7 @@ MaterialInstance ModelLoader::ProcessMaterial(const aiMaterial *material, const 
     Material::Write(mat,Path(matName));
     AssetManager::PutMaterial(matName,mat);
 
-    return {mat};
+    return mat;
 }
 
 }

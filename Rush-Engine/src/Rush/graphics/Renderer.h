@@ -1,7 +1,7 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
-#include "Rush/resources/MaterialInstance.h"
+#include "Rush/resources/Material.h"
 #include "Rush/scene/Camera.h"
 #include "Rush/core/Core.h"
 #include "RenderingAPI.h"
@@ -54,7 +54,7 @@ public:
     static RenderStats GetRenderStats(){return s_Stats;}
 
     static void Submit(const Shared<Shader> &shader, const Shared<VertexArray> &va, const glm::mat4 &model);
-    static void Submit(MaterialInstance material, const Shared<VertexArray> &va, const glm::mat4 &model);
+    static void Submit(Shared<Material> material, const Shared<VertexArray> &va, const glm::mat4 &model);
 
     static void RenderCube(const Shared<Shader> &shader, const glm::mat4 &model);
 

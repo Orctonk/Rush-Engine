@@ -4,12 +4,17 @@
 #include <Rushpch.h>
 #include "Rush/core/Core.h"
 #include "Rush/graphics/VertexArray.h"
-#include "MaterialInstance.h"
+#include "Material.h"
+
+namespace Rush {
 
 struct RUSH_API SubMesh {
     std::string meshName;
-    Rush::Shared<Rush::VertexArray> vertices;
-    MaterialInstance material;
+    Shared<VertexArray> vertices;
+    Shared<Material> material;
 };
+
+}
+
 
 #endif // __SUBMESH_H__

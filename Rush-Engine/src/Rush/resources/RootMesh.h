@@ -4,9 +4,13 @@
 #include "Rushpch.h"
 #include "SubMesh.h"
 
+namespace Rush {
+
 struct RootMesh {
     std::string name;
     std::vector<SubMesh> submeshes;
 };
+
+}
 
 #endif // __ROOTMESH_H__
