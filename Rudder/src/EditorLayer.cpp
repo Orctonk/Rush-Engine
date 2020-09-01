@@ -15,28 +15,15 @@ EditorLayer::~EditorLayer() {}
 void EditorLayer::OnAttach() {
     using namespace Rush;
 
-    auto globalLight = m_Scene.NewEntity("Test directional light");
-    auto &l = globalLight.AddComponent<LightComponent>();
-    l.type = LightType::DIRECTIONAL;
-    l.ambient = {0.2f,0.2f,0.2f};
-    l.diffuse = {0.0f,0.0f,0.0f};
-    l.specular = {0.0f,0.0f,0.0f};
+    m_Scene.Load(Path("res/scenes/test.scene"));
 
-    auto testLight = m_Scene.NewEntity("Test point Light");
-    testLight.AddComponent<LightComponent>();
-    testLight.GetComponent<TransformComponent>().Translate({1.0f,1.0f,1.0f});
+    auto *reg = m_Scene.GetRegistry();
+    for(auto e : reg->view<CameraComponent>()){
+        m_RenderViews.Init({reg,e});
+    }
 
-    auto model = m_Scene.NewEntity("Model Test");
-    model.AddComponent<MeshRendererComponent>(AssetManager::GetMesh("res/models/backpack/backpack.obj"));
-
-    auto camera = m_Scene.NewEntity("Editor camera");
-    camera.GetComponent<TransformComponent>().Translate({0.0f,0.0f,3.0f});
-    camera.AddComponent<CameraComponent>(false,Rush::Camera(1024.0f/720.0f,45.0f));
-
-    m_RenderViews.Init(camera);
     m_SceneView.Init();
 
-    m_Scene.Save<TransformComponent>(Path("test.scene"));
 }
 void EditorLayer::OnDetach() {}
 void EditorLayer::OnUpdate() {

@@ -1,0 +1,177 @@
+{
+    "value0": 4,
+    "value1": 0,
+    "value2": 1,
+    "value3": 2,
+    "value4": 3,
+    "value5": 4,
+    "value6": 0,
+    "value7": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value8": 1,
+    "value9": {
+        "position": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value10": 2,
+    "value11": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value12": 3,
+    "value13": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 3.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value14": 1,
+    "value15": 3,
+    "value16": {
+        "main": false,
+        "clear": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+        },
+        "type": "perspective",
+        "frustum": {
+            "near": 0.10000000149011612,
+            "far": 100.0,
+            "fov": 45.0
+        },
+        "skybox": "none"
+    },
+    "value17": 4,
+    "value18": 0,
+    "value19": {
+        "name": "Test directional light"
+    },
+    "value20": 1,
+    "value21": {
+        "name": "Test point Light"
+    },
+    "value22": 2,
+    "value23": {
+        "name": "Model Test"
+    },
+    "value24": 3,
+    "value25": {
+        "name": "Editor camera"
+    },
+    "value26": 2,
+    "value27": 0,
+    "value28": {
+        "type": "directional",
+        "range": 7.0,
+        "manualAttenuation": false,
+        "constant": 1.0,
+        "linear": 0.699999988079071,
+        "quadratic": 1.7999999523162842,
+        "cutoff": 35.0,
+        "outerCutoff": 45.0,
+        "ambientColor": {
+            "r": 0.20000000298023225,
+            "g": 0.20000000298023225,
+            "b": 0.20000000298023225
+        },
+        "diffuseColor": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0
+        },
+        "specularColor": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0
+        }
+    },
+    "value29": 1,
+    "value30": {
+        "type": "point",
+        "range": 7.0,
+        "manualAttenuation": false,
+        "constant": 1.0,
+        "linear": 0.699999988079071,
+        "quadratic": 1.7999999523162842,
+        "cutoff": 35.0,
+        "outerCutoff": 45.0,
+        "ambientColor": {
+            "r": 0.10000000149011612,
+            "g": 0.10000000149011612,
+            "b": 0.10000000149011612
+        },
+        "diffuseColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        },
+        "specularColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        }
+    },
+    "value31": 1,
+    "value32": 2,
+    "value33": {
+        "mesh": "res/models/backpack/backpack.obj"
+    }
+}
