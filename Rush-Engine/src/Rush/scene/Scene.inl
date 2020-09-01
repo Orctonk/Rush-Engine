@@ -7,16 +7,9 @@
 #include <entt/entity/snapshot.hpp>
 #include <cereal/archives/json.hpp>
 
-namespace Rush {
+#define ENGINE_COMPONENTS TransformComponent, CameraComponent, TagComponent, LightComponent, MeshRendererComponent
 
-template<typename Archive>
-void serialize(Archive &archive, TransformComponent &tc){
-    archive(
-        cereal::make_nvp("PosX",tc.m_Translation.x),
-        cereal::make_nvp("PosY",tc.m_Translation.y),
-        cereal::make_nvp("PosZ",tc.m_Translation.z)
-    );
-}
+namespace Rush {
 
 template<typename ...Components>
 void Scene::Save(const Path &scenePath){
@@ -24,7 +17,7 @@ void Scene::Save(const Path &scenePath){
     if(sf.Exists()){
         RUSH_LOG_WARNING("'" + scenePath.GetRawPath() + "' already exists, overwriting.");
         if(sf.GetType() != FileType::Regular){
-            RUSH_LOG_ERROR("Failed to load scene '" + scenePath.GetRawPath() + "': File is not regular file!");
+            RUSH_LOG_ERROR("Failed to write scene '" + scenePath.GetRawPath() + "': File is not regular file!");
             return;
         }
     }
@@ -35,12 +28,37 @@ void Scene::Save(const Path &scenePath){
         return;
     }
     
-    fs << "Test";
+    cereal::JSONOutputArchive archive(fs);
+
+    entt::snapshot ss(m_SceneRegistry);
+    ss.entities(archive).component<ENGINE_COMPONENTS>(archive);
 }
 
 template<typename ...Components>
-Scene Scene::Load(const Path &scenePath){
-    return Scene();
+void Scene::Load(const Path &scenePath){
+    File sf(scenePath);
+    if(!sf.Exists()){
+        RUSH_LOG_ERROR("'" + scenePath.GetRawPath() + "' doesn't exist!");
+        return;
+    }
+    if(sf.GetType() != FileType::Regular){
+        RUSH_LOG_ERROR("Failed to load scene '" + scenePath.GetRawPath() + "': File is not regular file!");
+        return;
+    }
+
+    auto fs = sf.OpenFile(OpenMode::Read);
+    if(!fs.is_open()){
+        RUSH_LOG_ERROR("Failed to open scene file '" + scenePath.GetRawPath() + "'!");
+        return;
+    }
+    
+    cereal::JSONInputArchive archive(fs);
+
+    m_SceneRegistry.clear();
+    entt::snapshot_loader sl(m_SceneRegistry);
+
+    sl.entities(archive)
+        .component<ENGINE_COMPONENTS>(archive);
 }
 
 }

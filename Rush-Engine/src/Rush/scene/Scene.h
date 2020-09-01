@@ -35,7 +35,7 @@ public:
     void Save(const Path &scenePath);
 
     template<typename ...Components>
-    Scene Load(const Path &scenePath);
+    void Load(const Path &scenePath);
 };
 
 } // namespace Rush

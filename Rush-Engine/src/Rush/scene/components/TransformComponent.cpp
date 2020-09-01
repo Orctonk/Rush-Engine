@@ -1,6 +1,5 @@
 #include "TransformComponent.h"
 
-
 void TransformComponent::RecalcTransform(){
     m_Model = glm::toMat4(m_Rotation);
     m_Model = glm::translate(glm::mat4(1.0f),m_Translation) * m_Model;
