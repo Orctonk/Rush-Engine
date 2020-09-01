@@ -122,6 +122,9 @@ set(BUILD_TESTING OFF CACHE INTERNAL "")
 add_subdirectory(${RUSH_DEPS_DIR}/Json)
 target_link_libraries(Rush PRIVATE nlohmann_json::nlohmann_json)
 
+# Add Cereal as dependency for serialization
+target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/cereal/include)
+
 # Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
     set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
