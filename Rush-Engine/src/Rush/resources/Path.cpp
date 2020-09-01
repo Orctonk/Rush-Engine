@@ -17,7 +17,7 @@ Path::~Path(){
 
 }
 
-Path Path::GetParentDirectory(){
+Path Path::GetParentDirectory() const{
 #ifdef RUSH_WINDOWS
     return Path(m_Raw.substr(0,m_Raw.find_last_of('\\')));
 #else
@@ -25,12 +25,12 @@ Path Path::GetParentDirectory(){
 #endif
 }
 
-std::string Path::GetFileName(){
+std::string Path::GetFileName() const{
     std::string filename = GetFullFileName();
     return filename.substr(0,filename.find_last_of('.'));
 }
 
-std::string Path::GetFullFileName(){
+std::string Path::GetFullFileName() const{
 #ifdef RUSH_WINDOWS
     return m_Raw.substr(m_Raw.find_last_of('\\') + 1);
 #else
@@ -38,7 +38,7 @@ std::string Path::GetFullFileName(){
 #endif
 }
 
-std::string Path::GetFileExtension(){
+std::string Path::GetFileExtension() const{
     return m_Raw.substr(m_Raw.find_last_of('.') + 1);
 }
     
