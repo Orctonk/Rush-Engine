@@ -17,7 +17,7 @@ enum RenderView{
 
 class RenderViews {
 private:
-    MeshInstance m_CameraMesh;
+    Rush::Shared<Rush::RootMesh> m_CameraMesh;
     Rush::Shared<Rush::Texture> m_SpotlightTexture;
     Rush::Shared<Rush::Texture> m_DirlightTexture;
     Rush::Shared<Rush::Shader> m_SelectionShader;

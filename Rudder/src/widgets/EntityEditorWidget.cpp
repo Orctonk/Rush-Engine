@@ -1,5 +1,4 @@
 #include "EntityEditorWidget.h"
-#include "views/EditorComponents.h"
 
 EntityEditor::EntityEditor(){
 
@@ -15,13 +14,15 @@ void EntityEditor::Render(Rush::Entity e, bool *shown){
         ImGui::End();
         return;
     }
-    const char * name = "";
-    if(e.HasComponent<EntityName>())
-        name = e.GetComponent<EntityName>().name.c_str();
-    if(strlen(name) == 0)
+    std::string name;
+    if(e.HasComponent<TagComponent>())
+        name = e.GetComponent<TagComponent>().tag;
+    if(name.empty())
         ImGui::Text("Entity: %d", e.GetID());
+    else if(name == "New entity")
+        ImGui::Text("%s (%d)", name.c_str(), e.GetID());
     else
-        ImGui::Text(name);
+        ImGui::Text(name.c_str());
 
     std::vector<entt::id_type> unused;
     for(auto &[id, data] : m_CompMap){

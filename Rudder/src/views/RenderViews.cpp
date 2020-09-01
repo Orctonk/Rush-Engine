@@ -34,7 +34,7 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     m_SelectionShader = AssetManager::GetShader("res/shaders/selectionShader.glsl");
     m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
     m_SkyboxShader->SetUniform("u_Skybox",0);
-    m_CameraMesh = AssetManager::GetMeshInstance("res/models/camera.obj");
+    m_CameraMesh = AssetManager::GetMesh("res/models/camera.obj");
 
     m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/shaders/renderviewPreview.glsl");
     m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/shaders/renderviewNormals.glsl");
@@ -134,8 +134,8 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     Renderer::BeginScene(cam.camera,view,m_RenderViewShaders[m_CurrentView]);
     auto reg = scene.GetRegistry();
 
-    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
-        auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
+    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
+        auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
         for(auto &sm : mesh.mesh->submeshes){
             Renderer::Submit(sm.material,sm.vertices,model);
@@ -151,7 +151,7 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
             if(e == m_CamController.GetCamera()) continue;
             auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
             glm::mat4 model = t.GetModelMatrix();
-            for(auto &sm : m_CameraMesh.mesh->submeshes){
+            for(auto &sm : m_CameraMesh->submeshes){
                 Renderer::Submit(sm.material,sm.vertices,model);
             }
         }
@@ -267,13 +267,13 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     Renderer::BeginScene(cam.camera,view);
 
     auto reg = scene.GetRegistry();
-    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshInstance>())){
+    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
         color.r = ((float)(entt::to_integral(e) & 0x0000FF))/255.0f;
         color.g = ((float)((entt::to_integral(e) >> 8) & 0x0000FF))/255.0f;
         color.b = ((float)((entt::to_integral(e) >> 16) & 0x0000FF))/255.0f;
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
         m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
-        auto [transform, mesh] = reg->get<TransformComponent,MeshInstance>(e);
+        auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
         for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
             Renderer::Submit(m_SelectionShader,mesh.mesh->submeshes[i].vertices,model);
@@ -301,8 +301,8 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
         glm::mat4 model = t.GetModelMatrix();
-        for(int i = 0; i < m_CameraMesh.mesh->submeshes.size(); i++){
-            Renderer::Submit(m_SelectionShader,m_CameraMesh.mesh->submeshes[i].vertices,model);
+        for(int i = 0; i < m_CameraMesh->submeshes.size(); i++){
+            Renderer::Submit(m_SelectionShader,m_CameraMesh->submeshes[i].vertices,model);
         }
     }
     Renderer::EndScene();

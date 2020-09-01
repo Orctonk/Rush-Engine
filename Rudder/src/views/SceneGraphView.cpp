@@ -1,6 +1,5 @@
 #include "GlobalEntitySelection.h"
 #include "SceneGraphView.h"
-#include "EditorComponents.h"
 #include "widgets/FileBrowser.h"
 
 #include <imgui.h>
@@ -63,8 +62,8 @@ SceneGraphView::SceneGraphView(){
             if(modified) c.camera.SetOrthographic(left,right,top,bottom,near,far);
         }
     });
-    m_EE.Register<MeshInstance>("MeshInstance",[](Rush::Entity &e){
-        auto &mi = e.GetComponent<MeshInstance>();
+    m_EE.Register<MeshRendererComponent>("Mesh Renderer",[](Rush::Entity &e){
+        auto &mi = e.GetComponent<MeshRendererComponent>();
         ImGui::Text("Mesh: ");
         ImGui::SameLine();
         if(mi.mesh == nullptr)
@@ -74,21 +73,21 @@ SceneGraphView::SceneGraphView(){
         if(ImGui::BeginDragDropTarget()){
             const ImGuiPayload *meshPath = ImGui::AcceptDragDropPayload("mesh");
             if(meshPath != NULL)
-                mi.mesh = AssetManager::GetMeshInstance((const char *)meshPath->Data).mesh;
+                mi.mesh = AssetManager::GetMesh((const char *)meshPath->Data);
             ImGui::EndDragDropTarget();
         }
         for(auto &mesh : mi.mesh->submeshes){
             if(ImGui::TreeNode(mesh.meshName.c_str())){
                 ImGui::Text("Material:  ");
                 ImGui::SameLine();
-                if(mesh.material.parent == nullptr)
+                if(mesh.material == nullptr)
                     ImGui::Button("None");
                 else
-                    ImGui::Button( mesh.material.parent->GetName().c_str());
+                    ImGui::Button( mesh.material->GetName().c_str());
                 if(ImGui::BeginDragDropTarget()){
                     const ImGuiPayload *matPath = ImGui::AcceptDragDropPayload("material");
                     if(matPath != NULL)
-                        mesh.material = AssetManager::GetMaterialInstance((const char *)matPath->Data);
+                        mesh.material = AssetManager::GetMaterial((const char *)matPath->Data);
                     ImGui::EndDragDropTarget();
                 }
                 ImGui::TreePop();
@@ -178,11 +177,11 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
 }
 
 void SceneGraphView::RenderEntity(Rush::Entity e){
-    const char *name = "";
-    if(e.HasComponent<EntityName>())
-        name = e.GetComponent<EntityName>().name.c_str();
-    if (strlen(name) == 0)
-        name = std::to_string(e.GetID()).c_str();
+    std::string name;
+    if(e.HasComponent<TagComponent>())
+        name = e.GetComponent<TagComponent>().tag;
+    if(name.empty())
+        name = "Entity %d" + std::to_string(e.GetID());
 
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
     if(GlobalEntitySelection::IsSelection(e)) {
@@ -198,7 +197,7 @@ void SceneGraphView::RenderEntity(Rush::Entity e){
         // }
     } else {
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        ImGui::TreeNodeEx(name,flags);
+        ImGui::TreeNodeEx(name.c_str(),flags);
     }
     if(ImGui::IsItemClicked() || ImGui::IsItemClicked(1)){
         if(!(GlobalEntitySelection::IsSelection(e)))
@@ -210,12 +209,12 @@ void SceneGraphView::RenderEntity(Rush::Entity e){
         }
     }
     if(m_Renaming && GlobalEntitySelection::IsSelection(e)){
-        if(!e.HasComponent<EntityName>())
-            e.AddComponent<EntityName>();
+        if(!e.HasComponent<TagComponent>())
+            e.AddComponent<TagComponent>();
     
-        EntityName &name = e.GetComponent<EntityName>();
+        TagComponent &name = e.GetComponent<TagComponent>();
         ImGui::SameLine();
-        ImGui::InputText("##rename_field",&name.name);
+        ImGui::InputText("##rename_field",&name.tag);
         ImGui::SetKeyboardFocusHere();
 
         if(ImGui::IsMouseClicked(0) && !ImGui::IsItemClicked()){

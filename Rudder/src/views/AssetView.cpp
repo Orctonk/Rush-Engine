@@ -71,7 +71,7 @@ void AssetView::OnImguiRender(){
             float scale = glm::min(winSize.x / tex->GetProperties().width, winSize.y / tex->GetProperties().height);
             ImGui::Image((ImTextureID)tex->GetID(),ImVec2(tex->GetProperties().width * scale, tex->GetProperties().height * scale),ImVec2(0,1),ImVec2(1,0));
         } else if(fileext == "mat"){
-            Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterialInstance(m_SelectedAsset.GetRawPath()).parent;
+            Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterial(m_SelectedAsset.GetRawPath());
             ImGui::Text("Render mode: ");
             ImGui::SameLine();
             m_Dirty |= ImGui::Combo("##Rendermode", (int *)&mat->mode,"Opaque\0Transparent\0Cutoff\0\0");
@@ -173,7 +173,7 @@ void AssetView::RenderFile(Rush::File &file){
 }
 
 void AssetView::RenderMaterialPreview(const std::string &path){
-    MeshInstance mesh = Rush::AssetManager::GetMeshInstance("res/models/UVSphere.obj");
+    Rush::Shared<Rush::RootMesh> mesh = Rush::AssetManager::GetMesh("res/models/UVSphere.obj");
     Rush::FramebufferOptions fboptions;
     fboptions.width = 512;
     fboptions.height = 512;
@@ -184,22 +184,22 @@ void AssetView::RenderMaterialPreview(const std::string &path){
     Rush::Camera cam = Rush::Camera(1.0f,45.0f);
     glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-2.6f)));
     Rush::Renderer::BeginScene(cam,view);
-    MaterialInstance mat = Rush::AssetManager::GetMaterialInstance(path);
-    mat.parent->Bind();
-    mat.parent->materialShader->SetUniform("u_DLightCount", 0);
-    mat.parent->materialShader->SetUniform("u_LightCount", 1);
+    Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterial(path);
+    mat->Bind();
+    mat->materialShader->SetUniform("u_DLightCount", 0);
+    mat->materialShader->SetUniform("u_LightCount", 1);
     glm::vec3 trans = glm::vec3(-1.0f,1.0f,1.5f);
     glm::vec4 plv = glm::vec4(trans,0.0f);
-    mat.parent->materialShader->SetUniform("u_Lights[0].position_cutoff",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat->materialShader->SetUniform("u_Lights[0].position_cutoff",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(0.0f,0.0f,0.0f,0.0f);
-    mat.parent->materialShader->SetUniform("u_Lights[0].direction_cutoffOuter",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat->materialShader->SetUniform("u_Lights[0].direction_cutoffOuter",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(0.75f,0.75f,0.75f,1.0f);
-    mat.parent->materialShader->SetUniform("u_Lights[0].ambient_constant",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat->materialShader->SetUniform("u_Lights[0].ambient_constant",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(1.0f,1.0f,1.0f,0.35f);
-    mat.parent->materialShader->SetUniform("u_Lights[0].diffuse_linear",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    mat->materialShader->SetUniform("u_Lights[0].diffuse_linear",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
     plv = glm::vec4(1.0f,1.0f,1.0f,0.44f);
-    mat.parent->materialShader->SetUniform("u_Lights[0].specular_quadratic",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
-    for(auto &sm : mesh.mesh->submeshes)
+    mat->materialShader->SetUniform("u_Lights[0].specular_quadratic",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    for(auto &sm : mesh->submeshes)
         Rush::Renderer::Submit(mat,sm.vertices,glm::mat4(1.0f));
 
     Rush::Renderer::EndScene();
