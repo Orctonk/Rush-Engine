@@ -79,7 +79,7 @@ void LineRenderer::Flush(){
     s_Data.rendererVA->Bind();
     s_Data.lineShader->Bind();
     s_Data.lineShader->SetUniform("u_ViewProj",ShaderData::MAT4, glm::value_ptr(s_SceneVP));
-    s_API->SetOption(BlendMode::Add);
+    s_API->SetOption(BlendMode::Alpha);
     s_API->SetOption(PolygonMode::Fill);
     s_API->SetOption(CullFace::None);
     s_API->SetOption(DepthTest::Less);
