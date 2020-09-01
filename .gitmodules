@@ -19,3 +19,6 @@
 [submodule "Rush-Engine/Libraries/Json"]
 	path = Rush-Engine/Libraries/Json
 	url = git@github.com:nlohmann/json.git
+[submodule "Rush-Engine/Libraries/cereal"]
+	path = Rush-Engine/Libraries/cereal
+	url = git@github.com:USCiLab/cereal.git
