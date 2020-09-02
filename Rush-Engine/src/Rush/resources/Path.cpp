@@ -2,6 +2,8 @@
 
 namespace Rush {
 
+Path Path::s_CWD("/");
+
 Path::Path(std::string raw){
     m_Raw = raw;
 #ifdef RUSH_WINDOWS
