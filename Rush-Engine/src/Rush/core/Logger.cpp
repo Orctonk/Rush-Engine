@@ -1,12 +1,8 @@
+#include "Rushpch.h"
+#include "Logger.h"
+
 #include <iostream>
 #include <iomanip>
-#include <sstream>
-#include <thread>
-
-#include "Logger.h"
-#include "Rush/events/WindowEvent.h"
-#include "Rush/events/KeyboardEvent.h"
-#include "Rush/events/MouseEvent.h"
 
 namespace Rush {
 

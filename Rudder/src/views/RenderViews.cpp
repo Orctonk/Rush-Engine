@@ -204,7 +204,7 @@ void RenderViews::RenderImguiView(bool resized){
     ImVec2 windowSize = ImGui::GetWindowSize();
     if(!resized){
         ImGui::GetWindowDrawList()->AddImage(
-            (void *)m_RenderView->GetTextures().at(0)->GetID(),
+            (void *)(uint64_t)m_RenderView->GetTextures().at(0)->GetID(),
             ImVec2(windowPos.x,windowPos.y),
             ImVec2(windowPos.x + windowSize.x, windowPos.y + windowSize.y),
             ImVec2(0,1),

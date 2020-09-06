@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Input.h"
 
 namespace Rush{

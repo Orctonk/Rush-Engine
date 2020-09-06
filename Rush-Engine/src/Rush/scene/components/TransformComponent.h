@@ -1,16 +1,15 @@
 #ifndef __TRANSFORMCOMPONENT_H__
 #define __TRANSFORMCOMPONENT_H__
 
+#include "Rush/core/Core.h"
+
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
 
-struct TransformComponent {
+struct RUSH_API TransformComponent {
 private:
     glm::vec3 m_Translation;
     glm::quat m_Rotation;

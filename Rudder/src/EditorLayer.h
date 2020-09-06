@@ -11,6 +11,8 @@
 class EditorLayer : public Rush::Layer {
 private:
     Rush::Scene m_Scene;
+    Rush::Path m_ScenePath;
+
     RenderViews m_RenderViews;
     SceneGraphView m_SceneGraph;
     SceneView m_SceneView;

@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "RenderingAPI.h"
 
 #ifdef RUSH_OPENGL

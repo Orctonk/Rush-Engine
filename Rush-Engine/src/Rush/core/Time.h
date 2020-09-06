@@ -1,9 +1,10 @@
 #ifndef __TIME_H__
 #define __TIME_H__
 
-#include "Rush/core/Core.h"
-#include <stdint.h>
+#include "Core.h"
+
 #include <chrono>
+#include <stdint.h>
 
 namespace Rush {
 

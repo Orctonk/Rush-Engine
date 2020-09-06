@@ -7,7 +7,7 @@
 
 namespace Rush {
 
-enum class ProjectionMode{
+enum class RUSH_API ProjectionMode{
     PERSPECTIVE,
     ORTHOGRAPHIC
 };

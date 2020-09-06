@@ -2,10 +2,10 @@
 #define __PROFILER_H__
 
 #include <string.h>
+#include <stdint.h>
+#include <ostream>
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-
-#include "Rushpch.h"
 
 namespace Rush {
 

@@ -5,7 +5,7 @@
 
 namespace Rush {
 
-class RUSH_API OGLRenderingAPI : public RenderingAPI {
+class OGLRenderingAPI : public RenderingAPI {
 public:
     void Init() override;
     void Shutdown() override;

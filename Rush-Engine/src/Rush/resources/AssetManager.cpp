@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "AssetManager.h"
 
 #include "ModelLoader.h"

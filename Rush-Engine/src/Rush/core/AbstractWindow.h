@@ -6,20 +6,20 @@
 
 namespace Rush {
 
-enum class WindowMode{
+enum class RUSH_API WindowMode{
     WINDOWED,
     WINDOWED_FULLSCREEN,
     FULLSCREEN
 };
 
-struct WindowProperties{
+struct RUSH_API WindowProperties{
     char *m_Title = nullptr;
     WindowMode windowMode = WindowMode::WINDOWED;
     int xPos = 0, yPos = 0;
     uint32_t width = 1024, height = 768;
 };
 
-class AbstractWindow{
+class RUSH_API AbstractWindow{
 protected:
     WindowProperties m_Properties;
     AbstractWindow(const WindowProperties &props);

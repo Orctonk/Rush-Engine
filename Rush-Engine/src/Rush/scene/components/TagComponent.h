@@ -6,7 +6,7 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/types/string.hpp>
 
-struct TagComponent {
+struct RUSH_API TagComponent {
     std::string tag;
 
     template<typename Archive>

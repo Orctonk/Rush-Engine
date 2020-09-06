@@ -1,8 +1,9 @@
 #ifndef __INDEXBUFFER_H__
 #define __INDEXBUFFER_H__
 
-#include <stdint.h>
 #include "Rush/core/Core.h"
+
+#include <stdint.h>
 
 namespace Rush {
     

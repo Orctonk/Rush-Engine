@@ -1,9 +1,8 @@
+#include "Rushpch.h"
 #include "OGLTexture.h"
 
 #include <stb_image.h>
 #include <glad/glad.h>
-
-#include "Rush/core/Logger.h"
 
 namespace Rush {
 

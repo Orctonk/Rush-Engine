@@ -34,7 +34,7 @@ void SceneView::OnImguiRender(){
         glm::vec2 offset = glm::vec2((windowSize.x-m_SceneViewSize.x*scale)/2,(windowSize.y-m_SceneViewSize.y*scale)/2);
 
         ImGui::GetWindowDrawList()->AddImage(
-            (void *)m_SceneBuffer->GetTextures().at(0)->GetID(),
+            (void *)(uint64_t)m_SceneBuffer->GetTextures().at(0)->GetID(),
             ImVec2(windowPos.x + offset.x,windowPos.y + offset.y),
             ImVec2(windowPos.x + offset.x + m_SceneViewSize.x*scale, windowPos.y + offset.y + m_SceneViewSize.y*scale),
             ImVec2(0,1),

@@ -1,12 +1,14 @@
 #ifndef __TEXTURE_H__
 #define __TEXTURE_H__
 
-#include "Rushpch.h"
 #include "Rush/core/Core.h"
+
+#include <string>
+#include <stdint.h>
 
 namespace Rush {
 
-struct TextureProperties {
+struct RUSH_API TextureProperties {
     int width,height;
     int channels = 4;
     int bpp = 8;

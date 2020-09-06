@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "VertexArray.h"
 
 #ifdef RUSH_OPENGL

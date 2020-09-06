@@ -1,18 +1,19 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-#include <stdint.h>
-#include <utility>
-
+#include "Core.h"
 #include "Rush/events/Keycodes.h"
 #include "Rush/events/Mousecodes.h"
 #include "Rush/events/Event.h"
 #include "Rush/events/MouseEvent.h"
 #include "Rush/events/KeyboardEvent.h"
 
+#include <stdint.h>
+#include <utility>
+
 namespace Rush{
 
-class Input {
+class RUSH_API Input {
 private:
     bool m_KeyStates[RUSH_KEYCODE_LAST+1];
     bool m_MouseButtonStates[RUSH_MOUSE_BUTTON_LAST + 1];

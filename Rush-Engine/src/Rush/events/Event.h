@@ -1,10 +1,10 @@
 #ifndef __RUSH_EVENT_H__
 #define __RUSH_EVENT_H__
 
-#include <string>
-
-#include "Rushpch.h"
 #include "Rush/core/Core.h"
+
+#include <functional>
+#include <string>
 
 #define RUSH_BIND_FN(x) (std::bind(&x,this,std::placeholders::_1))
 

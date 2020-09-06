@@ -1,7 +1,7 @@
+#include "Rushpch.h"
 #include "Application.h"
 
 #include "Time.h"
-#include "Logger.h"
 #include "Input.h"
 #include "Random.h"
 #include "Rush/resources/AssetManager.h"

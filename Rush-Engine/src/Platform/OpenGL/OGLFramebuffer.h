@@ -1,3 +1,6 @@
+#ifndef __OGLFRAMEBUFFER_H__
+#define __OGLFRAMEBUFFER_H__
+
 #include "Rush/graphics/Framebuffer.h"
 
 #include <stdint.h>
@@ -19,3 +22,5 @@ public:
 };
 
 }
+
+#endif // __OGLFRAMEBUFFER_H__

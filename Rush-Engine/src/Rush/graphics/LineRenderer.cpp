@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "LineRenderer.h"
 
 #include "Rush/resources/AssetManager.h"

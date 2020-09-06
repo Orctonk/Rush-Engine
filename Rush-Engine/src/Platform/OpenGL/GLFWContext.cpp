@@ -1,8 +1,6 @@
+#include "Rushpch.h"
 #include <glad/glad.h>
 #include "GLFWContext.h"
-
-#include "Rush/core/Core.h"
-#include "Rush/core/Logger.h"
 
 namespace Rush {
 

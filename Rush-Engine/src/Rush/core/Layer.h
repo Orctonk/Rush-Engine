@@ -1,6 +1,7 @@
 #ifndef __LAYER_H__
 #define __LAYER_H__
 
+#include "Rush/core/Core.h"
 #include "Rush/events/Event.h"
 
 namespace Rush {

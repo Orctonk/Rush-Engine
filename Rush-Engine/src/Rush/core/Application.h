@@ -9,7 +9,7 @@
 
 namespace Rush {
 
-class Application {
+class RUSH_API Application {
 private:
     static Application *s_Instance;
     LayerStack m_LayerStack;

@@ -1,6 +1,6 @@
+#include "Rushpch.h"
 #include "OGLVertexArray.h"
 
-#include "Rush/core/Core.h"
 #include "ShaderDataUtil.h"
 
 #include <glad/glad.h>
@@ -54,7 +54,7 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
                     getOpenGLType(e.objType),
                     e.normalized ? GL_TRUE : GL_FALSE,
                     e.stride,
-                    (void *)e.offset
+                    (void *)(uint64_t)e.offset
                 );
                 if(vb->IsInstanced())
                     glVertexAttribDivisor(m_VertexIndex,1);

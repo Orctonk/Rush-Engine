@@ -1,9 +1,12 @@
 #ifndef __RUSH_LOGGER_H__
 #define __RUSH_LOGGER_H__
 
-#include "Rushpch.h"
-
 #include "Core.h"
+
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
 
 namespace Rush {
 

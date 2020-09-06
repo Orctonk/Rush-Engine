@@ -1,4 +1,13 @@
+#include "Rushpch.h"
 #include "Path.h"
+
+#if defined(RUSH_LINUX)
+    #define PATH_DELIM '/'
+#elif defined(RUSH_WINDOWS)
+    #define PATH_DELIM '\\'
+#else
+    #error "Paths are not implemented on this platform!"
+#endif
 
 namespace Rush {
 
@@ -8,11 +17,10 @@ Path::Path(std::string raw){
     m_Raw = raw;
 #ifdef RUSH_WINDOWS
     for(size_t p = m_Raw.find("/");p != m_Raw.npos; p = m_Raw.find("/",p))
-        m_Raw = m_Raw.replace(p,1,"\\");
 #else
     for(size_t p = m_Raw.find("\\");p != m_Raw.npos; p = m_Raw.find("\\",p))
-        m_Raw = m_Raw.replace(p,1,"/");
 #endif
+        m_Raw[p] = PATH_DELIM;
 }
 
 Path::~Path(){
@@ -20,11 +28,19 @@ Path::~Path(){
 }
 
 Path Path::GetParentDirectory() const{
-#ifdef RUSH_WINDOWS
-    return Path(m_Raw.substr(0,m_Raw.find_last_of('\\')));
-#else
-    return Path(m_Raw.substr(0,m_Raw.find_last_of('/')));
-#endif
+    return Path(m_Raw.substr(0,m_Raw.find_last_of(PATH_DELIM)));
+}
+
+bool Path::IsAbsolute() const {
+    if(!m_Raw.empty())
+        return m_Raw[0] == PATH_DELIM;
+    return false;
+}
+
+Path Path::ToAbsolute() const {
+    if(IsAbsolute())
+        return *this;
+    return GetCWD().m_Raw + m_Raw;
 }
 
 std::string Path::GetFileName() const{
@@ -33,11 +49,7 @@ std::string Path::GetFileName() const{
 }
 
 std::string Path::GetFullFileName() const{
-#ifdef RUSH_WINDOWS
-    return m_Raw.substr(m_Raw.find_last_of('\\') + 1);
-#else
-    return m_Raw.substr(m_Raw.find_last_of('/') + 1);
-#endif
+    return m_Raw.substr(m_Raw.find_last_of(PATH_DELIM) + 1);
 }
 
 std::string Path::GetFileExtension() const{

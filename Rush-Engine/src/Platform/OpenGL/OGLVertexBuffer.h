@@ -1,12 +1,11 @@
 #ifndef __OGLVERTEXBUFFER_H__
 #define __OGLVERTEXBUFFER_H__
 
-#include "Rushpch.h"
-
 #include "Rush/graphics/VertexBuffer.h"
 #include "Rush/graphics/Shader.h"
 
 #include <stdint.h>
+#include <vector>
 
 namespace Rush {
 

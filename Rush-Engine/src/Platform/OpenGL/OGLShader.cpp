@@ -1,7 +1,6 @@
+#include "Rushpch.h"
 #include "OGLShader.h"
 
-#include "Rush/core/Logger.h"
-#include "Rushpch.h"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 

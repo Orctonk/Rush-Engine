@@ -1,7 +1,6 @@
 #ifndef __SUBMESH_H__
 #define __SUBMESH_H__
 
-#include <Rushpch.h>
 #include "Rush/core/Core.h"
 #include "Rush/graphics/VertexArray.h"
 #include "Material.h"

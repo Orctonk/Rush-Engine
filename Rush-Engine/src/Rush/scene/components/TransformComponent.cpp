@@ -1,4 +1,9 @@
+#include "Rushpch.h"
 #include "TransformComponent.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 void TransformComponent::RecalcTransform(){
     m_Model = glm::toMat4(m_Rotation);

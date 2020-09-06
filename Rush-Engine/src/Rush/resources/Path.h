@@ -1,20 +1,25 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
-#include "Rushpch.h"
+#include "Rush/core/Core.h"
+
+#include <string>
 
 namespace Rush {
 
-class Path {
+class RUSH_API Path {
 private:
     std::string m_Raw;
     static Path s_CWD;
 
 public:
+    Path(){ Path("/"); }
     Path(std::string raw);
     ~Path();
 
     Path GetParentDirectory() const;
+    bool IsAbsolute() const;
+    Path ToAbsolute() const;
     std::string GetFileName() const;
     std::string GetFullFileName() const;
     std::string GetFileExtension() const;

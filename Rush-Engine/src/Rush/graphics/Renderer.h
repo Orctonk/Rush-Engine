@@ -9,6 +9,7 @@
 #include "Shader.h"
 
 #include <stdint.h>
+#include <vector>
 
 namespace Rush {
 
@@ -23,7 +24,7 @@ class RUSH_API Renderer {
 private:
     struct RenderableKey{
         uint64_t sortParam;
-        uint32_t renderableIndex;
+        uint64_t renderableIndex;
     };
 
     struct Renderable{

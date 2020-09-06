@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Layer.h"
 
 namespace Rush {

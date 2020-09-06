@@ -1,9 +1,10 @@
+// Standard library headers
 #include <memory>
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 #include <string>
 #include <chrono>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
 #include <queue>
 #include <unordered_map>
 #include <functional>
@@ -12,3 +13,6 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+
+#include <Rush/core/Core.h>
+#include <Rush/core/Logger.h>

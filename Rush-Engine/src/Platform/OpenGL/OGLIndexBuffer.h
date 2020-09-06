@@ -23,5 +23,4 @@ public:
 
 } // namespace Rush
 
-
 #endif // __OGLINDEXBUFFER_H__

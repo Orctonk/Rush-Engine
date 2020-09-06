@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "IndexBuffer.h"
 
 #ifdef RUSH_OPENGL

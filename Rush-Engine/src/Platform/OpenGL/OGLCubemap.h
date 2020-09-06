@@ -1,9 +1,10 @@
 #ifndef __OGLTEXTURE_H__
 #define __OGLTEXTURE_H__
 
-#include <stdint.h>
-
 #include "Rush/graphics/Cubemap.h"
+
+#include <stdint.h>
+#include <string>
 
 namespace Rush {
 

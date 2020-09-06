@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "EventQueue.h"
 
 namespace Rush {

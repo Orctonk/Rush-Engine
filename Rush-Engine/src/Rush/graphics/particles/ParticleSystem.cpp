@@ -1,8 +1,9 @@
+#include "Rushpch.h"
 #include "ParticleSystem.h"
 
+#include "Rush/resources/AssetManager.h"
 #include "Rush/core/Random.h"
 #include "Rush/core/Time.h"
-#include "Rush/resources/AssetManager.h"
 
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/orthonormalize.hpp>

@@ -1,7 +1,6 @@
 #ifndef __IMGUILAYER_H__
 #define __IMGUILAYER_H__
 
-#include "Rush/core/Core.h"
 #include "Rush/core/Layer.h"
 #include "Rush/events/WindowEvent.h"
 #include "Rush/events/KeyboardEvent.h"
@@ -9,7 +8,7 @@
 
 namespace Rush {
 
-class RUSH_API ImguiLayer : public Layer {
+class ImguiLayer : public Layer {
 private:
     bool ImguiKeyPressHandle(KeyboardPressEvent &e);
     bool ImguiKeyReleaseHandle(KeyboardReleaseEvent &e);

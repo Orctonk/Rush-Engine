@@ -1,9 +1,9 @@
 #ifndef __GLFWCONTEXT_H__
 #define __GLFWCONTEXT_H__
 
-#include <GLFW/glfw3.h>
-
 #include "Rush/core/Context.h"
+
+#include <GLFW/glfw3.h>
 
 namespace Rush {
     

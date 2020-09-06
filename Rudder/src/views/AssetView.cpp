@@ -69,7 +69,7 @@ void AssetView::OnImguiRender(){
             Rush::Shared<Rush::Texture> tex = Rush::AssetManager::GetTexture(m_SelectedAsset.GetRawPath());
             auto winSize = ImGui::GetContentRegionAvail();
             float scale = glm::min(winSize.x / tex->GetProperties().width, winSize.y / tex->GetProperties().height);
-            ImGui::Image((ImTextureID)tex->GetID(),ImVec2(tex->GetProperties().width * scale, tex->GetProperties().height * scale),ImVec2(0,1),ImVec2(1,0));
+            ImGui::Image((ImTextureID)(uint64_t)tex->GetID(),ImVec2(tex->GetProperties().width * scale, tex->GetProperties().height * scale),ImVec2(0,1),ImVec2(1,0));
         } else if(fileext == "mat"){
             Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterial(m_SelectedAsset.GetRawPath());
             ImGui::Text("Render mode: ");
@@ -134,7 +134,7 @@ void AssetView::RenderFile(Rush::File &file){
     if(!file.Exists() || (filename == "..") || (filename == ".")) return;
     if(file.GetType() == Rush::FileType::Directory){
         Rush::Shared<Rush::Texture> folder = Rush::AssetManager::GetTexture("res/textures/gui/folder.png");
-        if(ImGui::ImageButton((ImTextureID)folder->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+        if(ImGui::ImageButton((ImTextureID)(uint64_t)folder->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
             m_CurrentDir = file.GetPath();
         PathDragDrop(file.GetPath(),"directory");
     } else if(file.GetType() == Rush::FileType::Regular){
@@ -142,29 +142,29 @@ void AssetView::RenderFile(Rush::File &file){
         std::string ext = file.GetPath().GetFileExtension();
         if(ext == "png" || ext == "bmp" || ext == "jpg"){
             tex = Rush::AssetManager::GetTexture(file.GetPath().GetRawPath());
-            if(ImGui::ImageButton((ImTextureID)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"texture");
         } else if (ext == "mat"){
             if(m_MaterialPreviews.find(file.GetPath().GetRawPath()) == m_MaterialPreviews.end())
                 RenderMaterialPreview(file.GetPath().GetRawPath());
             tex = m_MaterialPreviews[file.GetPath().GetRawPath()];
-            if(ImGui::ImageButton((ImTextureID)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"material");
         } else if (ext == "obj"){
             tex = Rush::AssetManager::GetTexture("res/textures/gui/model.png");
-            if(ImGui::ImageButton((ImTextureID)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"mesh");
         }else if (ext == "glsl" || ext == "frag" || ext == "vert"){
             tex = Rush::AssetManager::GetTexture("res/textures/gui/shader.png");
-            if(ImGui::ImageButton((ImTextureID)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"shader");
         } else{
             tex = Rush::AssetManager::GetTexture("res/textures/gui/file.png");
-            if(ImGui::ImageButton((ImTextureID)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
         }
     }

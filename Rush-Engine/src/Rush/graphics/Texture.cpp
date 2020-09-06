@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Texture.h"
 
 #ifdef RUSH_OPENGL

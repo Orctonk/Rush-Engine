@@ -1,6 +1,5 @@
-#include <string>
+#include "Rushpch.h"
 #include <glad/glad.h>
-
 #include "GLFWWindow.h"
 
 #include "GLFWContext.h"
@@ -8,7 +7,6 @@
 #include "Rush/events/WindowEvent.h"
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/MouseEvent.h"
-#include "Rush/core/Logger.h"
 
 namespace Rush{
 

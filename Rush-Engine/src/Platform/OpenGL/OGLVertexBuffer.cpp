@@ -1,6 +1,6 @@
+#include "Rushpch.h"
 #include "OGLVertexBuffer.h"
 
-#include "Rush/core/Core.h"
 #include "ShaderDataUtil.h"
 
 #include <glad/glad.h>

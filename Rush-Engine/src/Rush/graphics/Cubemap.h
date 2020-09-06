@@ -1,12 +1,14 @@
 #ifndef __CUBEMAP_H__
 #define __CUBEMAP_H__
 
-#include "Rushpch.h"
 #include "Rush/core/Core.h"
+
+#include <string>
+#include <stdint.h>
 
 namespace Rush {
 
-struct CubemapProperties {
+struct RUSH_API CubemapProperties {
     int size;
     int channels = 4;
     int bpp = 8;

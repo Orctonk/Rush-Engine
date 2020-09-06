@@ -10,13 +10,13 @@
 
 namespace Rush{
 
-enum class RenderingMode{
+enum class RUSH_API RenderingMode{
     Opaque,
     Transparent,
     Cutoff
 };
 
-class Material {
+class RUSH_API Material {
 private:
     std::string m_Name;
 public:

@@ -1,8 +1,10 @@
 #ifndef __GLFWWINDOW_H__
 #define __GLFWWINDOW_H__
 
+#include "Rush/core/Core.h"
 #include "Rush/core/AbstractWindow.h"
 #include "Rush/core/Context.h"
+
 #include <GLFW/glfw3.h>
 
 namespace Rush{

@@ -1,9 +1,11 @@
 #ifndef __CONTEXT_H__
 #define __CONTEXT_H__
 
+#include "Core.h"
+
 namespace Rush {
 
-class Context {
+class RUSH_API Context {
 public:
     Context() {};
     virtual ~Context() {};

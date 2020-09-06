@@ -1,5 +1,5 @@
+#include "Rushpch.h"
 #include "ShaderDataUtil.h"
-#include "Rush/core/Core.h"
 
 namespace Rush {
     

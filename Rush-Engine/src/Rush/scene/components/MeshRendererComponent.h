@@ -1,6 +1,7 @@
 #ifndef __MESHRENDERERCOMPONENT_H__
 #define __MESHRENDERERCOMPONENT_H__
 
+#include "Rush/core/Core.h"
 #include "Rush/resources/RootMesh.h"
 #include "Rush/resources/AssetManager.h"
 
@@ -9,7 +10,7 @@
 
 // TODO: Add mesh instances to allow renderer-specific materials on same meshes
 
-struct MeshRendererComponent {
+struct RUSH_API MeshRendererComponent {
     Rush::Shared<Rush::RootMesh> mesh;
 
     template<typename Archive>

@@ -1,5 +1,7 @@
 #include "EditorLayer.h"
 
+#include "widgets/FileBrowser.h"
+
 #include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,14 +10,14 @@
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-EditorLayer::EditorLayer() {}
+EditorLayer::EditorLayer()
+: m_ScenePath("res/scenes/test.scene") {}
 
 EditorLayer::~EditorLayer() {}
 
 void EditorLayer::OnAttach() {
     using namespace Rush;
-
-    m_Scene.Load(Path("res/scenes/test.scene"));
+    m_Scene.Load(m_ScenePath);
 
     auto *reg = m_Scene.GetRegistry();
     for(auto e : reg->view<CameraComponent>()){
@@ -39,19 +41,23 @@ void EditorLayer::OnEvent(Rush::Event &e) {
     m_PRView.OnEvent(e);
 }
 void EditorLayer::OnImguiRender() {
-
+    static FileBrowser loadBrowser;
+    bool loadScene = false;
     ImGui::BeginMainMenuBar();
     if(ImGui::BeginMenu("File")){
         if(ImGui::MenuItem("New","Ctrl+N")){
             m_Scene.Load(Rush::Path("res/scenes/new.scene"));
+            m_ScenePath = Rush::Path("NewScene.scene");
             auto *reg = m_Scene.GetRegistry();
             for(auto e : reg->view<CameraComponent>()){
                 m_RenderViews.Init({reg,e});
             }
         }
         if(ImGui::MenuItem("Save","Ctrl+S"))
-            m_Scene.Save(Rush::Path("res/scenes/saved.scene"));
-        if(ImGui::MenuItem("Open","Ctrl+O")); // TODO: Implement Open button
+            m_Scene.Save(m_ScenePath);
+        if(ImGui::MenuItem("Open","Ctrl+O")){
+            loadScene = true;
+        }
         if(ImGui::BeginMenu("Open recent")){
             if(ImGui::MenuItem("recent_file_1.scene")); // TODO: Implement Open recent button
             if(ImGui::MenuItem("recent_file_2.scene"));
@@ -78,6 +84,15 @@ void EditorLayer::OnImguiRender() {
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
+    
+    if(loadScene){
+        loadBrowser.SetTitle("Open scene...");
+        loadBrowser.Open();
+    }
+    loadBrowser.Render();
+    if(loadBrowser.Finished()){
+        m_Scene.Load(loadBrowser.GetSelectedFile());
+    }
 
     ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);

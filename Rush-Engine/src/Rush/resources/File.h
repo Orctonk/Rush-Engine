@@ -1,26 +1,27 @@
 #ifndef __FILE_H__
 #define __FILE_H__
 
+#include "Rush/core/Core.h"
 #include "Path.h"
 
 #include <fstream>
 
 namespace Rush{
 
-enum class FileType {
+enum class RUSH_API FileType {
     Directory,
     Regular,
     Link,
     Unknown
 };
 
-enum class OpenMode {
+enum class RUSH_API OpenMode {
     Read,
     Write,
     Append
 };
 
-class File {
+class RUSH_API File {
 private:
     Path m_Path;
     FileType m_Type;

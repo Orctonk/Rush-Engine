@@ -1,6 +1,5 @@
+#include "Rushpch.h"
 #include "Time.h"
-
-#include <chrono>
 
 namespace Rush {
 

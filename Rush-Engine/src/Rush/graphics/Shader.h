@@ -1,8 +1,9 @@
 #ifndef __SHADER_H__
 #define __SHADER_H__
 
-#include "Rushpch.h"
 #include "Rush/core/Core.h"
+
+#include <string>
 #include <stdint.h>
 #include <glm/glm.hpp>
 

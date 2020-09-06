@@ -1,6 +1,6 @@
+#include "Rushpch.h"
 #include "OGLFramebuffer.h"
 
-#include "Rush/core/Logger.h"
 #include "OGLTexture.h"
 
 #include <glad/glad.h>

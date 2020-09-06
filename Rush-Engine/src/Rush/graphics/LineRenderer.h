@@ -5,6 +5,7 @@
 #include "RenderingAPI.h"
 
 #include <vector>
+#include <glm/glm.hpp>
 
 namespace Rush {
 
@@ -14,7 +15,7 @@ struct RUSH_API LineRenderStats {
     int lineCount = 0;
 };
     
-class LineRenderer {
+class RUSH_API LineRenderer {
 private:
     static Unique<RenderingAPI> s_API;
     static LineRenderStats s_Stats;

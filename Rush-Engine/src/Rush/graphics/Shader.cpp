@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Shader.h"
 
 #ifdef RUSH_OPENGL

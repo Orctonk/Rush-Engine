@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Cubemap.h"
 
 #ifdef RUSH_OPENGL

@@ -1,12 +1,14 @@
 #ifndef __LAYERSTACK_H__
 #define __LAYERSTACK_H__
 
-#include "Rushpch.h"
+#include "Core.h"
 #include "Layer.h"
+
+#include <vector>
 
 namespace Rush {
 
-class LayerStack {
+class RUSH_API LayerStack {
 public:
     using iterator          = typename std::vector<Layer *>::const_iterator;
     using const_iterator    = typename std::vector<Layer *>::const_iterator;

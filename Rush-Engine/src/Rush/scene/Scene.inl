@@ -1,7 +1,4 @@
-#include "Scene.h"
-
 #include "Rush/resources/File.h"
-#include "Rush/core/Logger.h"
 #include "Components.h"
 
 #include <entt/entity/snapshot.hpp>

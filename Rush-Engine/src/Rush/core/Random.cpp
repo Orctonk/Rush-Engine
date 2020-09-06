@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Random.h"
 
 namespace Rush {

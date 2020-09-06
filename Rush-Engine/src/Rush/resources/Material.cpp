@@ -1,10 +1,10 @@
+#include "Rushpch.h"
 #include "Material.h"
 
 #include "File.h"
+#include "AssetManager.h"
 
 #include <nlohmann/json.hpp>
-#include "Rush/core/Logger.h"
-#include "AssetManager.h"
 
 namespace Rush{
 

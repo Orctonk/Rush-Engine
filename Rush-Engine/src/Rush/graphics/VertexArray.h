@@ -1,12 +1,12 @@
 #ifndef __VERTEXARRAY_H__
 #define __VERTEXARRAY_H__
 
-#include "Rushpch.h"
-
+#include "Rush/core/Core.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#include "Rush/core/Core.h"
+#include <vector>
+#include <stdint.h>
 
 namespace Rush {
 

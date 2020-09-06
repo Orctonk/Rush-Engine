@@ -1,11 +1,11 @@
 #ifndef __VERTEXBUFFER_H__
 #define __VERTEXBUFFER_H__
 
-#include "Rushpch.h"
-#include "Shader.h"
 #include "Rush/core/Core.h"
+#include "Shader.h"
 
 #include <stdint.h>
+#include <vector>
 
 namespace Rush {
 

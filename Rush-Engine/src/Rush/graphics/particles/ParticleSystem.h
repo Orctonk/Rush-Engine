@@ -3,9 +3,10 @@
 
 #include "Rush/core/Core.h"
 #include "Rush/graphics/Renderer.h"
-#include "Rushpch.h"
 
 #include <glm/glm.hpp>
+#include <vector>
+#include <stdint.h>
 
 namespace Rush {
 

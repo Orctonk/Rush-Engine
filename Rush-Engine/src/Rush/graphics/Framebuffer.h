@@ -1,13 +1,15 @@
 #ifndef __FRAMEBUFFER_H__
 #define __FRAMEBUFFER_H__
 
-#include "Rushpch.h"
 #include "Rush/core/Core.h"
 #include "Texture.h"
 
+#include <stdint.h>
+#include <vector>
+
 namespace Rush {
 
-struct FramebufferOptions {
+struct RUSH_API FramebufferOptions {
     uint32_t width,height;
     std::vector<uint8_t> texturePrecisions;
 };

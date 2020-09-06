@@ -1,9 +1,8 @@
+#include "Rushpch.h"
 #include "ModelLoader.h"
 
-#include "Rush/core/Logger.h"
 #include "Rush/resources/AssetManager.h"
 
-#include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 

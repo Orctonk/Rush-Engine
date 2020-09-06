@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "VertexBuffer.h"
 
 #ifdef RUSH_OPENGL

@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Profiler.h"
 
 #include "Rush/core/Time.h"

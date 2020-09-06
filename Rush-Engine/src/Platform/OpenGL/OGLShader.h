@@ -3,9 +3,9 @@
 
 #include "Rush/graphics/Shader.h"
 
-#include "Rushpch.h"
 #include <stdint.h>
-
+#include <unordered_map>
+#include <string>
 
 namespace Rush {
 

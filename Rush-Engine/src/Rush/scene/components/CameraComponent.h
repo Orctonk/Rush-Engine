@@ -2,16 +2,16 @@
 #define __CAMERACOMPONENT_H__
 
 #include "../Camera.h"
+#include "Rush/core/Core.h"
 #include "Rush/graphics/Cubemap.h"
 #include "Rush/resources/AssetManager.h"
 
 #include <glm/glm.hpp>
-
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
 #include <cereal/types/string.hpp>
 
-struct CameraComponent {
+struct RUSH_API CameraComponent {
     bool main;
     glm::vec4 clearColor;
     Rush::Shared<Rush::Cubemap> skybox;

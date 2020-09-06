@@ -8,7 +8,7 @@
 
 namespace Rush {
 
-class Entity {
+class RUSH_API Entity {
 private:
     entt::registry *m_Scene = nullptr;
     entt::entity m_Entity = entt::null;

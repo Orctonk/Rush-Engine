@@ -1,10 +1,11 @@
 #ifndef __RUSH_EVENT_MANAGER_H__
 #define __RUSH_EVENT_MANAGER_H__
 
-#include "Rushpch.h"
-
 #include "Rush/core/Core.h"
 #include "Event.h"
+
+#include <mutex>
+#include <queue>
 
 namespace Rush { 
 

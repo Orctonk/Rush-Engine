@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "File.h"
 
 #ifdef RUSH_LINUX

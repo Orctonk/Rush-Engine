@@ -1,10 +1,11 @@
+#include "Rushpch.h"
 #include "Renderer2D.h"
 
-#include <array>
-#include "VertexArray.h"
 #include "Rush/resources/AssetManager.h"
+#include "VertexArray.h"
 #include "Shader.h"
 
+#include <array>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/norm.hpp>

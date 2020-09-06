@@ -10,7 +10,7 @@
 
 namespace Rush {
     
-class Scene{
+class RUSH_API Scene{
 private:
     entt::registry m_SceneRegistry;
     Shared<Shader> m_SceneShader;

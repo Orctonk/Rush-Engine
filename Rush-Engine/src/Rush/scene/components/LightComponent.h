@@ -3,6 +3,7 @@
 
 #include "Rush/core/Core.h"
 
+#include <string>
 #include <glm/glm.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>

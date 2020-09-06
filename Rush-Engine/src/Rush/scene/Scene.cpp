@@ -1,3 +1,4 @@
+#include "Rushpch.h"
 #include "Scene.h"
 
 #include "Rush/core/Time.h"

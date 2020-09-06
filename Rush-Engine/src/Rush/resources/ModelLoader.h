@@ -1,7 +1,6 @@
 #ifndef __MODEL_H__
 #define __MODEL_H__
 
-#include "Rushpch.h"
 #include "RootMesh.h"
 #include "Material.h"
 #include "Rush/core/Core.h"
@@ -9,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <assimp/scene.h>
+#include <string>
 
 namespace Rush {
 

@@ -1,6 +1,5 @@
+#include "Rushpch.h"
 #include "OGLIndexBuffer.h"
-
-#include "Rush/core/Core.h"
 
 #include <glad/glad.h>
 

@@ -1,21 +1,22 @@
 #ifndef __ASSETMANAGER_H__
 #define __ASSETMANAGER_H__
 
-#include <stdint.h>
-
-#include "Rushpch.h"
+#include "RootMesh.h"
+#include "Material.h"
 #include "Rush/core/Core.h"
 #include "Rush/graphics/VertexArray.h"
 #include "Rush/graphics/Shader.h"
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Cubemap.h"
 
-#include "RootMesh.h"
-#include "Material.h"
+#include <stdint.h>
+#include <unordered_map>
+#include <vector>
+#include <string>
 
 namespace Rush {
 
-class AssetManager {
+class RUSH_API AssetManager {
 private:
     static std::unordered_map<std::string,Shared<RootMesh>> s_Meshes;
     static std::unordered_map<std::string,Shared<Material>> s_Materials;
