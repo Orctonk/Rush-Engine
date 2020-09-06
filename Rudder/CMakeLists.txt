@@ -25,6 +25,9 @@ list(APPEND RUDDER_SOURCES
 
 add_executable(Rudder ${RUDDER_SOURCES})
 
+# Add precompiled header
+target_precompile_headers(Rush PRIVATE ${RUSH_SOURCE_DIR}/Rushpch.h)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 

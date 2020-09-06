@@ -9,7 +9,6 @@ private:
     Rush::Unique<Rush::Framebuffer> m_SceneBuffer;
     glm::vec2 m_SceneViewSize;
 
-
 public:
     bool enabled;
 

@@ -1,14 +1,10 @@
+#include "Rudderpch.h"
 #include "ProfilerResultView.h"
 
 #include "widgets/FileBrowser.h" 
 
-#include <imgui.h>
-
-#include <sstream>
-#include <fstream>
 #include <cstring>
 #include <stack>
-
 
 ProfilerResultView::ProfilerResultView(){
     m_CurFile = "None";

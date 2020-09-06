@@ -1,8 +1,9 @@
 #ifndef __FILEBROWSER_H__
 #define __FILEBROWSER_H__
 
-#include "Rushpch.h"
 #include <filesystem>
+#include <vector>
+#include <string>
 
 class FileBrowser {
 private:

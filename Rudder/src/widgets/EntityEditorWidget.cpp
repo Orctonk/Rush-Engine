@@ -1,3 +1,4 @@
+#include "Rudderpch.h"
 #include "EntityEditorWidget.h"
 
 EntityEditor::EntityEditor(){

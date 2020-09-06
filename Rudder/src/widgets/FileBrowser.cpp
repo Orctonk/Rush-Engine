@@ -1,7 +1,5 @@
+#include "Rudderpch.h"
 #include "FileBrowser.h"
-
-#include <imgui.h>
-#include <filesystem>
 
 bool FileBrowser::s_ShowHidden = false;
 

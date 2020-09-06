@@ -1,7 +1,7 @@
+#include "Rudderpch.h"
 #include "AssetView.h"
 
 #include <Rush.h>
-#include <imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

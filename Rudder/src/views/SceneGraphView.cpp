@@ -1,8 +1,9 @@
-#include "GlobalEntitySelection.h"
+#include "Rudderpch.h"
 #include "SceneGraphView.h"
+
+#include "GlobalEntitySelection.h"
 #include "widgets/FileBrowser.h"
 
-#include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 
 SceneGraphView::SceneGraphView(){ 

@@ -1,6 +1,5 @@
+#include "Rudderpch.h"
 #include "SceneView.h"
-
-#include <imgui.h>
 
 SceneView::SceneView() { }
 SceneView::~SceneView() { }
