@@ -25,6 +25,15 @@ struct LogMessage{
     std::string message;
 };
 
+enum LogColor {
+    BLACK = 30,
+    WHITE = 97,
+    RED = 91,
+    GREEN  = 92,
+    YELLOW = 93,
+    BLUE = 94
+};
+
 class RUSH_API Logger{
     private:
         

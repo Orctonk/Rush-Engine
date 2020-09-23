@@ -68,8 +68,25 @@ void Logger::LogPump(){
         }
         else {
             m = i.m_LogQueue.front();
+            std::cout << "\e[";
+            switch(m.level){
+            case TRACE: 
+                std::cout << BLUE;
+                break;
+            case INFO:
+                std::cout << GREEN;
+                break;
+            case WARNING:
+                std::cout << YELLOW;
+                break;
+            case ERROR:
+                std::cout << RED;
+                break;
+            }
+            std::cout << "m";
             std::cout << m.timestamp << ": " << std::left << std::setw(7) << getLevelString(m.level) <<  " [" << m.sender << "] " << m.message << std::endl;
             i.m_LogQueue.pop();
+            std::cout << "\e[" << WHITE << "m";
         }
     }
 }
