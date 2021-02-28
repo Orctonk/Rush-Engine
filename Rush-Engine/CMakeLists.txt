@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 # Rush options
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
 option(RUSH_BUILD_SHARED "Build Rush as a shared library" OFF)
-option(RUSH_BUILD_ASSIMP "Build Assimp from source" OFF)
+option(RUSH_BUILD_ASSIMP "Build Assimp from source" ON)
 
 project(Rush VERSION 1.0)
 
@@ -69,12 +69,15 @@ else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
 
+
 # Specify library type
 if(RUSH_BUILD_SHARED)
     add_library(Rush SHARED ${RUSH_SOURCES})
+    target_compile_definitions(Rush PRIVATE RUSH_SHARED)
 else()
     add_library(Rush STATIC ${RUSH_SOURCES})
 endif()
+target_compile_definitions(Rush PRIVATE RUSH_BUILD)
 
 # Configure RushVersion file for use in applications
 configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
@@ -94,7 +97,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 # Add platform dependent libraries
-if(WINDOWS)
+if(WIN32)
     message(WARNING "Windows has not yet been tested!")
     add_definitions(-DRUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
@@ -128,11 +131,11 @@ target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/cereal/include)
 
 # Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
+    message(STATUS "Building assimp")
     set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
     add_subdirectory("${RUSH_DEPS_DIR}/assimp")
     target_link_libraries(Rush PRIVATE assimp)
-    message(STATUS "Building assimp")
 else()
     find_package(Assimp REQUIRED)
     target_include_directories(Rush PRIVATE ${ASSIMP_INCLUDE_DIRS})

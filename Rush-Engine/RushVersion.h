@@ -1,0 +1,2 @@
+#define RUSH_VERSION_MAJOR 1
+#define RUSH_VERSION_MINOR 0

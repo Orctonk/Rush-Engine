@@ -13,20 +13,38 @@
 	#error "Unknown platform"
 #endif
 
-#ifdef RUSH_PLATFORM_WINDOWS
-	#ifdef RUSH_BUILD_SHARED
-		#define RUSH_API __declspec(dllexport)
-	#else
-		#define RUSH_API __declspec(dllimport)
-	#endif
-#elif defined(RUSH_PLATFORM_LINUX)
-	#ifdef RUSH_BUILD_SHARED
-		#define RUSH_API __attribute__((visibility("default")))
-	#else
-		#define RUSH_API
+//#ifdef RUSH_PLATFORM_WINDOWS
+//	#ifdef RUSH_BUILD_SHARED
+//		#define RUSH_API __declspec(dllexport)
+//	#else
+//		#define RUSH_API __declspec(dllimport)
+//	#endif
+//#elif defined(RUSH_PLATFORM_LINUX)
+//	#ifdef RUSH_BUILD_SHARED
+//		#define RUSH_API __attribute__((visibility("default")))
+//	#else
+//		#define RUSH_API
+//	#endif
+//#else
+//	#error	Platform not supported!
+//#endif
+
+#ifdef RUSH_SHARED
+	#ifdef RUSH_PLATFORM_WINDOWS
+		#ifdef RUSH_BUILD
+			#define RUSH_API __declspec(dllexport)
+		#else
+			#define RUSH_API __declspec(dllimport)
+		#endif
+	#elif RUSH_PLATFORM_LINUX
+		#ifdef RUSH_BUILD
+			#define RUSH_API __attribute__((visibility("default")))
+		#else
+			#define RUSH_API 
+		#endif
 	#endif
 #else
-	#error	Platform not supported!
+	#define RUSH_API
 #endif
 
 #ifdef RUSH_DEBUG

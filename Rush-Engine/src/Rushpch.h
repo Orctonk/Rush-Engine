@@ -13,6 +13,7 @@
 #include <vector>
 #include <iterator>
 #include <algorithm>
+#include <array>
 
 #include <Rush/core/Core.h>
 #include <Rush/core/Logger.h>

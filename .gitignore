@@ -33,9 +33,17 @@
 
 # Build results
 build/**
+out/**
 
 # VSCode project settings
 .vscode/
+
+# Visual Studio settings
+.vs/
+
+# CMake settings
+CMakeSettings.json
+CMakeFiles/
 
 # Include 3D Model resources
 !**/res/**/*.obj
