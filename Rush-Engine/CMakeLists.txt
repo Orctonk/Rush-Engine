@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 # Rush options
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
-option(RUSH_BUILD_SHARED "Build Rush as a shared library" OFF)
+option(RUSH_BUILD_SHARED "Build Rush as a shared library" ON)
 option(RUSH_BUILD_ASSIMP "Build Assimp from source" ON)
 
 project(Rush VERSION 1.0)
@@ -69,13 +69,14 @@ else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
 
-
 # Specify library type
 if(RUSH_BUILD_SHARED)
     add_library(Rush SHARED ${RUSH_SOURCES})
     target_compile_definitions(Rush PRIVATE RUSH_SHARED)
+    set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 else()
     add_library(Rush STATIC ${RUSH_SOURCES})
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 endif()
 target_compile_definitions(Rush PRIVATE RUSH_BUILD)
 
@@ -85,7 +86,7 @@ configure_file(${RUSH_CMAKE_CONFIG_DIR}/RushVersion.h.in RushVersion.h)
 # Add precompiled header
 target_precompile_headers(Rush PRIVATE ${RUSH_SOURCE_DIR}/Rushpch.h)
 
-# Set public includes for rush
+# Set public includes for Rush
 target_include_directories(Rush PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(Rush PUBLIC ${RUSH_SOURCE_DIR})
 
@@ -135,11 +136,20 @@ if(RUSH_BUILD_ASSIMP)
     set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
     add_subdirectory("${RUSH_DEPS_DIR}/assimp")
-    target_link_libraries(Rush PRIVATE assimp)
+    target_link_libraries(Rush PRIVATE assimp::assimp)
+    if(WIN32)
+        file(GLOB_RECURSE ASSIMP_DLLS "${CMAKE_CURRENT_BINARY_DIR}/Libraries/assimp/bin/*")
+        add_custom_command(
+            TARGET Rush POST_BUILD        # Adds a post-build event to MyTest
+            COMMAND ${CMAKE_COMMAND} -E copy_directory  # which executes "cmake - E copy_if_different..."
+            "${CMAKE_CURRENT_BINARY_DIR}/Libraries/assimp/bin/$<CONFIG>"      # <--this is in-file
+            $<TARGET_FILE_DIR:Rush>
+        )
+    endif()
 else()
     find_package(Assimp REQUIRED)
     target_include_directories(Rush PRIVATE ${ASSIMP_INCLUDE_DIRS})
-    target_link_libraries(Rush PRIVATE ${ASSIMP_LIBRARIES})
+    target_link_libraries(Rush PRIVATE assimp::assimp)
 endif()
 
 # Add EnTT as dependency
@@ -152,9 +162,6 @@ if(RUSH_OPENGL)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    if(RUSH_BUILD_SHARED)
-        set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-    endif()
     add_subdirectory("${RUSH_DEPS_DIR}/glfw")
     target_link_libraries(Rush PRIVATE glfw)
 
@@ -164,3 +171,8 @@ if(RUSH_OPENGL)
     add_subdirectory(${RUSH_DEPS_DIR}/glad)
     target_link_libraries(Rush PRIVATE glad)
 endif()
+
+install(TARGETS Rush
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin)

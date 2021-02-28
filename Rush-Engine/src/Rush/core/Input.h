@@ -29,9 +29,9 @@ private:
     bool KeyPressHandle(KeyboardPressEvent &e);
     bool KeyReleaseHandle(KeyboardReleaseEvent &e);
 public:
-    static bool KeyDown(int keycode) { return s_Instance->m_KeyStates[keycode]; }
-    static bool MousePressed(int button) { return s_Instance->m_MouseButtonStates[button]; }
-    static std::pair<float,float> MousePos() { return s_Instance->m_MousePos; }
+    static bool KeyDown(int keycode);
+    static bool MousePressed(int button);
+    static std::pair<float, float> MousePos();
 
     static void Update(Event &e);
 };

@@ -56,4 +56,8 @@ std::string Path::GetFileExtension() const{
     return m_Raw.substr(m_Raw.find_last_of('.') + 1);
 }
     
+void Path::SetCWD(Path newCWD) { s_CWD = newCWD; }
+
+Path Path::GetCWD() { return s_CWD; };
+
 }

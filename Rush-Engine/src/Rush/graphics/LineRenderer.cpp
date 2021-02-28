@@ -126,5 +126,6 @@ void LineRenderer::ResetRenderStats(){
     s_Stats = LineRenderStats();
 }
 
+Unique<RenderingAPI>& LineRenderer::GetAPI() { return s_API; }
 
 }

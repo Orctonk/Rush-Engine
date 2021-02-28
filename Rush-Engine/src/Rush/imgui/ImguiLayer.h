@@ -8,7 +8,7 @@
 
 namespace Rush {
 
-class ImguiLayer : public Layer {
+class RUSH_API ImguiLayer : public Layer {
 private:
     bool ImguiKeyPressHandle(KeyboardPressEvent &e);
     bool ImguiKeyReleaseHandle(KeyboardReleaseEvent &e);

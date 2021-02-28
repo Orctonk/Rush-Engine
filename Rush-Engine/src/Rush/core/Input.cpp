@@ -46,5 +46,8 @@ bool Input::KeyReleaseHandle(KeyboardReleaseEvent &e){
     return false;
 }
 
+bool Input::KeyDown(int keycode) { return s_Instance->m_KeyStates[keycode]; }
+bool Input::MousePressed(int button) { return s_Instance->m_MouseButtonStates[button]; }
+std::pair<float, float> Input::MousePos() { return s_Instance->m_MousePos; }
 
 }

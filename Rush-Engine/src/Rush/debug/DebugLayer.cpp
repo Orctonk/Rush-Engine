@@ -9,10 +9,10 @@
 
 namespace Rush {
 
-bool DebugLayer::ShowWindow;
+bool DebugLayer::s_ShowWindow;
 
 DebugLayer::DebugLayer(){
-    ShowWindow = true;
+    s_ShowWindow = true;
 }
 DebugLayer::~DebugLayer(){}
 void DebugLayer::OnAttach(){
@@ -27,8 +27,8 @@ void DebugLayer::OnUpdate(){
 }
 void DebugLayer::OnEvent(Event &e){}
 void DebugLayer::OnImguiRender(){
-    if(!ShowWindow) return;
-    if(ImGui::Begin("Debug info",&ShowWindow)){
+    if(!s_ShowWindow) return;
+    if(ImGui::Begin("Debug info",&s_ShowWindow)){
         float tot = 0.0f;
         for(int i = 0; i < DEBUG_FPS_SAMPLES; i++)
             tot += m_FrameTimes[i];
@@ -68,5 +68,8 @@ void DebugLayer::OnImguiRender(){
 
     ImGui::End();
 }
+
+bool DebugLayer::GetShown() { return s_ShowWindow;  }
+void DebugLayer::SetShown(bool show) { s_ShowWindow = show; }
 
 }

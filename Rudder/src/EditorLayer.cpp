@@ -79,7 +79,9 @@ void EditorLayer::OnImguiRender() {
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
         ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
         ImGui::MenuItem("Profiler inspector", "", &m_PRView.enabled);
-        ImGui::MenuItem("Debug Info", "", &Rush::DebugLayer::ShowWindow);
+        bool show = Rush::DebugLayer::GetShown();
+        ImGui::MenuItem("Debug Info", "", &show);
+        Rush::DebugLayer::SetShown(show);
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();

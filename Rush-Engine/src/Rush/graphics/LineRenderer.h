@@ -35,7 +35,7 @@ public:
     static void ResetRenderStats();
     static LineRenderStats GetRenderStats() { return s_Stats; }
 
-    static Unique<RenderingAPI> &GetAPI() { return s_API; }
+    static Unique<RenderingAPI>& GetAPI();
 };
 
 } // namespace Rush

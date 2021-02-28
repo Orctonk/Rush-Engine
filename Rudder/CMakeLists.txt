@@ -25,8 +25,6 @@ list(APPEND RUDDER_SOURCES
 
 add_executable(Rudder ${RUDDER_SOURCES})
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 # Add precompiled header
 target_precompile_headers(Rudder PRIVATE ${RUDDER_SOURCE_DIR}/Rudderpch.h)
 
@@ -47,3 +45,8 @@ else()
 endif()
 
 target_link_libraries(Rudder PUBLIC Rush)
+
+install(TARGETS Rudder
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin)

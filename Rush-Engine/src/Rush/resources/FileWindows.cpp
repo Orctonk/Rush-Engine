@@ -17,7 +17,7 @@ namespace Rush {
         // TODO: Add more robust file type checks
         if (dwAttrib & FILE_ATTRIBUTE_DIRECTORY)
             m_Type = FileType::Directory;
-        else if (FILE_ATTRIBUTE_REPARSE_POINT)
+        else if (dwAttrib & FILE_ATTRIBUTE_REPARSE_POINT)
             m_Type = FileType::Link;
         else
             m_Type = FileType::Regular;
@@ -43,12 +43,12 @@ namespace Rush {
 
     std::vector<File> File::OpenDir() {
         std::vector<File> content;
-        LPWIN32_FIND_DATAA found;
-        HANDLE findHandle = FindFirstFile((m_Path.GetRawPath() + "\\*").c_str(), found);
+        WIN32_FIND_DATA found;
+        HANDLE findHandle = FindFirstFile((m_Path.GetRawPath() + "\\*").c_str(), &found);
         if (findHandle != INVALID_HANDLE_VALUE) {
             do {
-                content.emplace_back(m_Path.GetRawPath() + "\\" + found->cFileName);
-            } while (FindNextFile(findHandle, found));
+                content.emplace_back(m_Path.GetRawPath() + "\\" + found.cFileName);
+            } while (FindNextFile(findHandle, &found));
             FindClose(findHandle);
         }
         return content;

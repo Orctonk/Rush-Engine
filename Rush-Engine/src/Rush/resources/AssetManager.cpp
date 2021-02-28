@@ -3,7 +3,9 @@
 
 #include "ModelLoader.h"
 
-#define STB_IMAGE_IMPLEMENTATION
+#ifdef RUSH_SHARED
+    #define STB_IMAGE_IMPLEMENTATION
+#endif
 #include <stb_image.h>
 
 namespace Rush {

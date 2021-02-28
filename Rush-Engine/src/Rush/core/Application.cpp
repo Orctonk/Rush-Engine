@@ -99,8 +99,8 @@ void Application::PollEvents(){
         e->Dispatch<WindowResizeEvent>(RUSH_BIND_FN(Application::WindowResizeHandle));
         Input::Update(*e);
         RUSH_LOG_TRACE(e->GetString());
-        for(auto it = m_LayerStack.end()-1;it != m_LayerStack.begin() - 1; it--){
-            (*it)->OnEvent(*e);
+        for(auto it = m_LayerStack.end();it != m_LayerStack.begin(); it--){
+            (*(it-1))->OnEvent(*e);
             if(e->IsHandled())
                 break;
         }
@@ -118,5 +118,7 @@ bool Application::WindowResizeHandle(WindowResizeEvent &e){
     Renderer::OnResize(e.width,e.height);
     return false;
 }
+
+Application& Application::GetInstance() { return *s_Instance; }
 
 }

@@ -34,7 +34,7 @@ public:
     void PushOverlay(Layer *layer);
     void Run();
 
-    static Application &GetInstance() { return *s_Instance; }
+    static Application& GetInstance();
 };
 
 Application* CreateApplication();

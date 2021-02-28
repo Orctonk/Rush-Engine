@@ -32,8 +32,8 @@
 *.app
 
 # Build results
-build/**
-out/**
+build/
+out/
 
 # VSCode project settings
 .vscode/

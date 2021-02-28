@@ -53,23 +53,23 @@ class RUSH_API Logger{
     public:
         Logger(const Logger&) = delete;
 
-        static RUSH_API void Init();
-        static RUSH_API void Destroy();
+        static void Init();
+        static void Destroy();
 
-        static RUSH_API Logger& getInstance(){
+        static Logger& getInstance(){
             static Logger s_Instance;
             return s_Instance;
         }
         
-        static RUSH_API void Trace(std::string message, std::string sender = "");
-        static RUSH_API void Debug(std::string message, std::string sender = "");
-        static RUSH_API void Info(std::string message, std::string sender = "");
-        static RUSH_API void Warning(std::string message, std::string sender = "");
-        static RUSH_API void Error(std::string message, std::string sender = "");
+        static void Trace(std::string message, std::string sender = "");
+        static void Debug(std::string message, std::string sender = "");
+        static void Info(std::string message, std::string sender = "");
+        static void Warning(std::string message, std::string sender = "");
+        static void Error(std::string message, std::string sender = "");
 
-        static RUSH_API void SetThreshold(LogLevel level);
+        static void SetThreshold(LogLevel level);
 
-        static RUSH_API void SetAlias(std::string alias, std::thread::id id = std::thread::id());
+        static void SetAlias(std::string alias, std::thread::id id = std::thread::id());
 };
 }
 

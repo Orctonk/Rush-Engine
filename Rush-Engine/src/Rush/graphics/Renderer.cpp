@@ -157,4 +157,7 @@ void Renderer::RenderCube(const Shared<Shader> &shader, const glm::mat4 &model){
 
     Submit(shader,boxVA,model);
 }
+
+Unique<RenderingAPI>& Renderer::GetAPI() { return s_API; }
+
 }

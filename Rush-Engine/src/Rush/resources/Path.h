@@ -25,8 +25,8 @@ public:
     std::string GetFileExtension() const;
     std::string GetRawPath() const { return m_Raw; }
 
-    static void SetCWD(Path newCWD) { s_CWD = newCWD; }
-    static Path GetCWD() { return s_CWD; };
+    static void SetCWD(Path newCWD);
+    static Path GetCWD();
 
     bool operator==(const Path &other){ return m_Raw == other.m_Raw; }
 };

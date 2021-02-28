@@ -6,11 +6,11 @@
 
 namespace Rush {
 
-class DebugLayer : public Layer {
+class RUSH_API DebugLayer : public Layer {
     float m_FrameTimes[DEBUG_FPS_SAMPLES];
     int m_FrameTimeOffset;
+    static bool s_ShowWindow;
 public:
-    static bool ShowWindow;
 
     DebugLayer();
     ~DebugLayer();
@@ -20,6 +20,9 @@ public:
     void OnUpdate() override;
     void OnEvent(Event &e) override;
     void OnImguiRender() override;
+
+    static bool GetShown();
+    static void SetShown(bool show);
 };
 
 }

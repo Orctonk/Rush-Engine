@@ -59,7 +59,7 @@ public:
 
     static void RenderCube(const Shared<Shader> &shader, const glm::mat4 &model);
 
-    static Unique<RenderingAPI> &GetAPI() { return s_API; }
+    static Unique<RenderingAPI>& GetAPI();
 };
     
 } // namespace Rush

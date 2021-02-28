@@ -47,6 +47,8 @@
 	#define RUSH_API
 #endif
 
+#define IMGUI_API RUSH_API
+
 #ifdef RUSH_DEBUG
 	#ifdef RUSH_PLATFORM_WINDOWS
 		#define RUSH_BREAK() __debugbreak()
