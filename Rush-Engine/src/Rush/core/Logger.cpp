@@ -4,16 +4,52 @@
 #include <iostream>
 #include <iomanip>
 
+#ifdef RUSH_WINDOWS
+    #include <Windows.h>
+#endif
+
 namespace Rush {
 
 bool Logger::s_close = false;
 
+std::ostream& operator<<(std::ostream& os, Color col) {
+#ifndef RUSH_WINDOWS
+    return os << "\e[" << col.col << "m";
+#else
+    static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    switch (col.col) {
+    case BLACK:
+        SetConsoleTextAttribute(hConsole, 0);
+        break;
+    case WHITE:
+        SetConsoleTextAttribute(hConsole, 15);
+        break;
+    case RED:
+        SetConsoleTextAttribute(hConsole, 12);
+        break;
+    case GREEN:
+        SetConsoleTextAttribute(hConsole, 10);
+        break;
+    case YELLOW:
+        SetConsoleTextAttribute(hConsole, 14);
+        break;
+    case BLUE:
+        SetConsoleTextAttribute(hConsole, 9);
+        break;
+    default:
+        RUSH_LOG_WARNING("Invalid color specified!");
+        break;
+    }
+    return os;
+#endif
+}
+
 Logger::Logger()
-:   m_LogQueue(), m_Threshold(INFO), m_QueueLock(), m_AliasMap(){
+:   m_LogQueue(), m_Threshold(LogLevel::Info), m_QueueLock(), m_AliasMap(){
     m_LoggerStart = std::chrono::system_clock::now();
     s_close = false;
     m_LoggerThread = std::thread(LogPump);
-    Log("Logger started!","Logger",INFO);
+    Log("Logger started!","Logger",LogLevel::Info);
 }
 
 void Logger::Log(std::string message, std::string sender, LogLevel level){
@@ -36,20 +72,20 @@ void Logger::Log(std::string message, std::string sender, LogLevel level){
     else
         ss << sender;
     m.sender = ss.str();
-    m_QueueLock.lock();
+    std::unique_lock<std::mutex> guard(m_QueueLock);
     m.timestamp = duration_cast<milliseconds>(system_clock::now() - m_LoggerStart).count();
     m_LogQueue.push(m);
     m_Logged.notify_all();
-    m_QueueLock.unlock();
 }
+
 
 std::string getLevelString(LogLevel level){
     switch(level){
-    case TRACE:     return "TRACE";
-    case DEBUG:     return "DEBUG";
-    case INFO:      return "INFO";
-    case WARNING:   return "WARNING";
-    case ERROR:     return "ERROR";
+    case LogLevel::Trace:     return "TRACE";
+    case LogLevel::Debug:     return "DEBUG";
+    case LogLevel::Info:      return "INFO";
+    case LogLevel::Warning:   return "WARNING";
+    case LogLevel::Error:     return "ERROR";
     default:        return "";
     }
 }
@@ -68,25 +104,23 @@ void Logger::LogPump(){
         }
         else {
             m = i.m_LogQueue.front();
-            std::cout << "\e[";
             switch(m.level){
-            case TRACE: 
-                std::cout << BLUE;
+            case LogLevel::Trace:
+                std::cout << Color(BLUE);
                 break;
-            case INFO:
-                std::cout << GREEN;
+            case LogLevel::Info:
+                std::cout << Color(GREEN);
                 break;
-            case WARNING:
-                std::cout << YELLOW;
+            case LogLevel::Warning:
+                std::cout << Color(YELLOW);
                 break;
-            case ERROR:
-                std::cout << RED;
+            case LogLevel::Error:
+                std::cout << Color(RED);
                 break;
             }
-            std::cout << "m";
             std::cout << m.timestamp << ": " << std::left << std::setw(7) << getLevelString(m.level) <<  " [" << m.sender << "] " << m.message << std::endl;
             i.m_LogQueue.pop();
-            std::cout << "\e[" << WHITE << "m";
+            std::cout << Color(WHITE);
         }
     }
 }
@@ -102,21 +136,21 @@ void Logger::Destroy(){
 }
 
 void Logger::Trace(std::string message, std::string sender){
-    getInstance().Log(message,sender,TRACE);
+    getInstance().Log(message,sender, LogLevel::Trace);
 }
 void Logger::Debug(std::string message, std::string sender){
 #ifdef  RUSH_BUILD_DEBUG
-    getInstance().Log(message,sender,DEBUG);
+    getInstance().Log(message,sender, LogLevel::Debug);
 #endif
 }
 void Logger::Info(std::string message, std::string sender){
-    getInstance().Log(message,sender,INFO);
+    getInstance().Log(message,sender, LogLevel::Info);
 }
 void Logger::Warning(std::string message, std::string sender){
-    getInstance().Log(message,sender,WARNING);
+    getInstance().Log(message,sender, LogLevel::Warning);
 }
 void Logger::Error(std::string message, std::string sender){
-    getInstance().Log(message,sender,ERROR);
+    getInstance().Log(message,sender, LogLevel::Error);
 }
 
 void Logger::SetThreshold(LogLevel level){

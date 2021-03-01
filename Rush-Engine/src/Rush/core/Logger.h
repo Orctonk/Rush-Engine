@@ -10,12 +10,12 @@
 
 namespace Rush {
 
-enum RUSH_API LogLevel{
-    TRACE,
-    DEBUG,
-    INFO,
-    WARNING,
-    ERROR
+enum class RUSH_API LogLevel{
+    Trace = 0,
+    Debug = 1,
+    Info = 2,
+    Warning = 3,
+    Error = 4
 };
 
 struct LogMessage{
@@ -25,7 +25,7 @@ struct LogMessage{
     std::string message;
 };
 
-enum LogColor {
+enum ColorValue {
     BLACK = 30,
     WHITE = 97,
     RED = 91,
@@ -33,6 +33,16 @@ enum LogColor {
     YELLOW = 93,
     BLUE = 94
 };
+
+struct RUSH_API Color {
+    ColorValue col;
+
+    Color(ColorValue color) { col = color; }
+
+    friend std::ostream;
+};
+
+std::ostream& operator<<(std::ostream &os,Color col);
 
 class RUSH_API Logger{
     private:

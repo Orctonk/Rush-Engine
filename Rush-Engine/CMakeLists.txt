@@ -138,11 +138,10 @@ if(RUSH_BUILD_ASSIMP)
     add_subdirectory("${RUSH_DEPS_DIR}/assimp")
     target_link_libraries(Rush PRIVATE assimp::assimp)
     if(WIN32)
-        file(GLOB_RECURSE ASSIMP_DLLS "${CMAKE_CURRENT_BINARY_DIR}/Libraries/assimp/bin/*")
         add_custom_command(
-            TARGET Rush POST_BUILD        # Adds a post-build event to MyTest
-            COMMAND ${CMAKE_COMMAND} -E copy_directory  # which executes "cmake - E copy_if_different..."
-            "${CMAKE_CURRENT_BINARY_DIR}/Libraries/assimp/bin/$<CONFIG>"      # <--this is in-file
+            TARGET Rush POST_BUILD        
+            COMMAND ${CMAKE_COMMAND} -E copy_directory 
+            "${CMAKE_CURRENT_BINARY_DIR}/Libraries/assimp/bin/$<CONFIG>"
             $<TARGET_FILE_DIR:Rush>
         )
     endif()

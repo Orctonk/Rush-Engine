@@ -1,10 +1,12 @@
 #include "Rushpch.h"
 #include "Path.h"
 
+
 #if defined(RUSH_LINUX)
     #define PATH_DELIM '/'
 #elif defined(RUSH_WINDOWS)
     #define PATH_DELIM '\\'
+    #include <direct.h>
 #else
     #error "Paths are not implemented on this platform!"
 #endif
@@ -56,8 +58,13 @@ std::string Path::GetFileExtension() const{
     return m_Raw.substr(m_Raw.find_last_of('.') + 1);
 }
     
-void Path::SetCWD(Path newCWD) { s_CWD = newCWD; }
+void Path::SetCWD(Path newCWD) { 
+    s_CWD = newCWD; 
+    chdir(newCWD.GetRawPath().c_str());
+}
 
-Path Path::GetCWD() { return s_CWD; };
+Path Path::GetCWD() { 
+    return s_CWD; 
+};
 
 }

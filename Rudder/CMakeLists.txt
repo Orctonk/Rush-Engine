@@ -31,7 +31,7 @@ target_precompile_headers(Rudder PRIVATE ${RUDDER_SOURCE_DIR}/Rudderpch.h)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-file(COPY res DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY res DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/..")
 
 target_include_directories(Rudder PRIVATE ${RUDDER_SOURCE_DIR})
 target_include_directories(Rudder PRIVATE ${RUDDER_DEPS_DIR})

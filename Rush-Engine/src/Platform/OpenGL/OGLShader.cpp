@@ -49,60 +49,65 @@ OGLShader::OGLShader(std::string shaderPath)
     uint32_t shaders[SHADER_TYPE_COUNT] = {0,0,0};
     try{
         fs.open(shaderPath);
-        std::stringstream ss;
-        std::string line;
-        int8_t currentType = -1;
-        while(!fs.eof()){
-            ss = std::stringstream();
-            getline(fs,line);
-            while(!fs.eof() && line.substr(0,5) != "#type"){
-                if(currentType == -1)
-                    RUSH_LOG_WARNING("No '#type' read! Discarding shader line '" + line + "'");
-                else
-                    ss << line << "\n";
+        if (fs.is_open()) {
+            std::stringstream ss;
+            std::string line;
+            int8_t currentType = -1;
+            while(!fs.eof()){
+                ss = std::stringstream();
                 getline(fs,line);
+                while(!fs.eof() && line.substr(0,5) != "#type"){
+                    if(currentType == -1)
+                        RUSH_LOG_WARNING("No '#type' read! Discarding shader line '" + line + "'");
+                    else
+                        ss << line << "\n";
+                    getline(fs,line);
+                }
+                if(fs.eof())
+                    ss << line << "\n";
+
+                if(currentType != -1)
+                    shaders[currentType] = createShader(currentType,ss.str());
+
+                if(line.substr(0,5) == "#type"){
+                    if(line.substr(6,6) == "vertex")
+                        currentType = VERTEX_SHADER;
+                    else if (line.substr(6,8) == "geometry")
+                        currentType = GEOMETRY_SHADER;
+                    else if (line.substr(6,8) == "fragment")
+                        currentType = FRAGMENT_SHADER;
+                    else
+                        RUSH_ASSERT(false);
+                }
             }
-            if(fs.eof())
-                ss << line << "\n";
 
-            if(currentType != -1)
-                shaders[currentType] = createShader(currentType,ss.str());
+            for(int i = 0; i < SHADER_TYPE_COUNT; i++)
+                if(shaders[i] != 0)
+                    glAttachShader(m_Shader,shaders[i]);
 
-            if(line.substr(0,5) == "#type"){
-                if(line.substr(6,6) == "vertex")
-                    currentType = VERTEX_SHADER;
-                else if (line.substr(6,8) == "geometry")
-                    currentType = GEOMETRY_SHADER;
-                else if (line.substr(6,8) == "fragment")
-                    currentType = FRAGMENT_SHADER;
-                else
-                    RUSH_ASSERT(false);
-            }
-        }
+            glLinkProgram(m_Shader);
 
-        for(int i = 0; i < SHADER_TYPE_COUNT; i++)
-            if(shaders[i] != 0)
-                glAttachShader(m_Shader,shaders[i]);
-
-        glLinkProgram(m_Shader);
-
-        int success;
-        char log[512];
+            int success;
+            char log[512];
         
-        glGetProgramiv(m_Shader,GL_LINK_STATUS,&success);
-        if(!success){
-            glGetProgramInfoLog(m_Shader,512,nullptr,log);
-            RUSH_LOG_ERROR("Failed to link shader '" + shaderPath + "' with error: " + std::string(log));
-            glDeleteShader(m_Shader);
+            glGetProgramiv(m_Shader,GL_LINK_STATUS,&success);
+            if(!success){
+                glGetProgramInfoLog(m_Shader,512,nullptr,log);
+                RUSH_LOG_ERROR("Failed to link shader '" + shaderPath + "' with error: " + std::string(log));
+                glDeleteShader(m_Shader);
+            }
+
+            for(int i = 0; i < SHADER_TYPE_COUNT; i++)
+                if(shaders[i] != 0)
+                    glDeleteShader(shaders[i]);
+                
+            fs.close();
+        } else {
+            RUSH_LOG_ERROR("Failed to open file" + shaderPath);
         }
 
-        for(int i = 0; i < SHADER_TYPE_COUNT; i++)
-            if(shaders[i] != 0)
-                glDeleteShader(shaders[i]);
-                
-        fs.close();
     } catch(std::ifstream::failure e){
-        RUSH_LOG_ERROR("Failed to load shader '" + shaderPath + "' with error: " + e.what());
+        RUSH_LOG_ERROR("Failed to load shader '" + shaderPath + "' with error: " + strerror(errno));
     }
 }
 
