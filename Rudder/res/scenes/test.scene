@@ -1,12 +1,51 @@
 {
-    "value0": 4,
+    "value0": 5,
     "value1": 0,
     "value2": 1,
     "value3": 2,
     "value4": 3,
     "value5": 4,
-    "value6": 0,
-    "value7": {
+    "value6": 5,
+    "value7": 2,
+    "value8": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": -0.4916679263114929
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value9": 1,
+    "value10": {
+        "position": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value11": 0,
+    "value12": {
         "position": {
             "x": 0.0,
             "y": 0.0,
@@ -24,18 +63,18 @@
             "z": 1.0
         }
     },
-    "value8": 1,
-    "value9": {
+    "value13": 3,
+    "value14": {
         "position": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
+            "x": -1.0741418600082398,
+            "y": 3.281012773513794,
+            "z": 3.7085390090942385
         },
         "orientation": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0,
-            "w": 0.0
+            "x": -0.41465771198272707,
+            "y": 0.011911026202142239,
+            "z": 0.005428167060017586,
+            "w": 0.9098833203315735
         },
         "scale": {
             "x": 1.0,
@@ -43,47 +82,28 @@
             "z": 1.0
         }
     },
-    "value10": 2,
-    "value11": {
-        "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-        },
-        "orientation": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0,
-            "w": 0.0
-        },
-        "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        }
-    },
-    "value12": 3,
-    "value13": {
-        "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 3.0
-        },
-        "orientation": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0,
-            "w": 0.0
-        },
-        "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-        }
-    },
-    "value14": 1,
-    "value15": 3,
+    "value15": 4,
     "value16": {
+        "position": {
+            "x": -4.386106491088867,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value17": 1,
+    "value18": 3,
+    "value19": {
         "main": false,
         "clear": {
             "r": 0.0,
@@ -95,30 +115,34 @@
         "frustum": {
             "near": 0.10000000149011612,
             "far": 100.0,
-            "fov": 45.0
+            "fov": 90.0
         },
-        "skybox": "none"
+        "skybox": "res/skybox"
     },
-    "value17": 4,
-    "value18": 0,
-    "value19": {
+    "value20": 5,
+    "value21": 0,
+    "value22": {
         "name": "Test directional light"
     },
-    "value20": 1,
-    "value21": {
+    "value23": 1,
+    "value24": {
         "name": "Test point Light"
     },
-    "value22": 2,
-    "value23": {
+    "value25": 2,
+    "value26": {
         "name": "Model Test"
     },
-    "value24": 3,
-    "value25": {
+    "value27": 3,
+    "value28": {
         "name": "Editor camera"
     },
-    "value26": 2,
-    "value27": 0,
-    "value28": {
+    "value29": 4,
+    "value30": {
+        "name": "New entity"
+    },
+    "value31": 2,
+    "value32": 0,
+    "value33": {
         "type": "directional",
         "range": 7.0,
         "manualAttenuation": false,
@@ -143,8 +167,8 @@
             "b": 0.0
         }
     },
-    "value29": 1,
-    "value30": {
+    "value34": 1,
+    "value35": {
         "type": "point",
         "range": 7.0,
         "manualAttenuation": false,
@@ -169,9 +193,9 @@
             "b": 1.0
         }
     },
-    "value31": 1,
-    "value32": 2,
-    "value33": {
+    "value36": 1,
+    "value37": 2,
+    "value38": {
         "mesh": "res/models/backpack/backpack.obj"
     }
 }

@@ -152,7 +152,7 @@ void AssetView::RenderFile(Rush::File &file){
             if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"material");
-        } else if (ext == "obj"){
+        } else if (ext == "obj" || ext == "gltf"){
             tex = Rush::AssetManager::GetTexture("res/textures/gui/model.png");
             if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
