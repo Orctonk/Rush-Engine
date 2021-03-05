@@ -12,7 +12,7 @@ namespace Rush {
 bool DebugLayer::ShowWindow;
 
 DebugLayer::DebugLayer(){
-    ShowWindow = true;
+    ShowWindow = false;
 }
 DebugLayer::~DebugLayer(){}
 void DebugLayer::OnAttach(){
