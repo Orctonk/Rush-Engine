@@ -13,6 +13,7 @@ RenderViews::RenderViews()
     m_ObjectPick = false;
     m_GizmoOp = ImGuizmo::TRANSLATE;
     m_GizmoMode = ImGuizmo::WORLD;
+    m_Focused = false;
     m_UsingGizmo = false;
     m_CurrentView = RenderView::RENDERVIEW_RENDER;
     for(int i = 0; i < RENDERVIEW_COUNT; i++)
@@ -97,11 +98,13 @@ void RenderViews::OnImguiRender(){
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f,0.0f));
     if(enabled){
         if(ImGui::Begin("Preview",&enabled)){
+            m_Focused = ImGui::IsWindowFocused();
             ImVec2 windowPos = ImGui::GetWindowPos();
-            ImVec2 windowSize = ImGui::GetWindowSize();
-            m_RenderViewportPos.x = windowPos.x;
-            m_RenderViewportPos.y = windowPos.y;
-            glm::vec2 glmWinSize(windowSize.x,windowSize.y);
+            ImVec2 min = ImGui::GetWindowContentRegionMin();
+            ImVec2 max = ImGui::GetWindowContentRegionMax();
+            m_RenderViewportPos.x = windowPos.x + min.x;
+            m_RenderViewportPos.y = windowPos.y + min.y;
+            glm::vec2 glmWinSize(max.x - min.x,max.y - min.y);
             float renderAspect = glmWinSize.x / glmWinSize.y;
             if(glmWinSize != m_RenderViewportSize){
                 m_CamController.GetCamera().GetComponent<CameraComponent>().camera.SetPerspective(renderAspect,90.0f);
@@ -330,7 +333,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
 }
 
 bool RenderViews::MouseClickHandle(Rush::MouseReleasedEvent &e){
-    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT || m_UsingGizmo) return false;
+    if(e.keycode != RUSH_MOUSE_BUTTON_LEFT || m_UsingGizmo || !m_Focused) return false;
     
     m_ObjectPick = true;
     return true;

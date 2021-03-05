@@ -172,9 +172,7 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
     });
 
     ImGui::End();
-    
-    if(GlobalEntitySelection::GetSelection() && m_EEVisible)
-        m_EE.Render(GlobalEntitySelection::GetSelection(),&m_EEVisible);
+    m_EE.Render(GlobalEntitySelection::GetSelection(),&m_EEVisible);
 }
 
 void SceneGraphView::RenderEntity(Rush::Entity e){
