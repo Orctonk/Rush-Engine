@@ -28,7 +28,7 @@ public:
     Shared<Texture> specularTexture {nullptr};
     Shared<Texture> normalTexture   {nullptr};
     
-    float shininess                 {1.0f};
+    float shininess                 {25.0f};
 
     std::string GetName(){ return m_Name; }
     void Bind();

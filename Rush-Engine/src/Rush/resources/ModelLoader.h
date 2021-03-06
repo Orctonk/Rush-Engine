@@ -27,7 +27,7 @@ private:
 
     static void ProcessNode(RootMesh &root, const aiNode *node, const aiScene *scene);
     static SubMesh ProcessMesh(const aiMesh *mesh, const aiScene *scene);
-    static Shared<Material> ProcessMaterial(const aiMaterial *material, const aiScene *scene);
+    static Shared<Material> ProcessMaterial(const aiMaterial *material, const aiScene *scene, const std::string &parentMesh);
 public:
     ModelLoader() = delete;
     ~ModelLoader();

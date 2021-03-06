@@ -30,6 +30,7 @@ private:
     glm::vec2 m_RenderViewportSize;
     bool m_ObjectPick;
     bool m_UsingGizmo;
+    bool m_Focused;
     ImGuizmo::OPERATION m_GizmoOp;
     ImGuizmo::MODE m_GizmoMode;
     RenderView m_CurrentView;

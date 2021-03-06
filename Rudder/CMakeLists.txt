@@ -42,7 +42,7 @@ else()
     add_compile_definitions(RUSH_APPLE)  
 endif()
 
-target_link_libraries(Rudder PUBLIC Rush)
+target_link_libraries(Rudder PRIVATE Rush)
 
 add_custom_command(TARGET Rudder POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/res $<TARGET_FILE_DIR:Rudder>/res)
