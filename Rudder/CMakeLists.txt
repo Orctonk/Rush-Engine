@@ -44,4 +44,4 @@ else()
     add_compile_definitions(RUSH_APPLE)  
 endif()
 
-target_link_libraries(Rudder PUBLIC Rush)
+target_link_libraries(Rudder PRIVATE Rush)

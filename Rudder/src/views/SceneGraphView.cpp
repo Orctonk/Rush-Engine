@@ -6,6 +6,8 @@
 
 #include <misc/cpp/imgui_stdlib.h>
 
+#define PROPERTY_LABEL(x) ImGui::Text(x); ImGui::SameLine(100.0f); ImGui::SetNextItemWidth(150.0f)
+
 SceneGraphView::SceneGraphView(){ 
     using namespace Rush;
     m_EE.Register<TransformComponent>("Transform",[](Rush::Entity &e){
@@ -17,11 +19,14 @@ SceneGraphView::SceneGraphView(){
         rot.y = glm::degrees(glm::yaw(qrot));
         rot.z = glm::degrees(glm::roll(qrot));
         glm::vec3 scale = t.GetScale();
-        if(ImGui::DragFloat3("Position", &trans.x, 0.01f))
+        PROPERTY_LABEL("Position:");
+        if(ImGui::DragFloat3("##Position", &trans.x, 0.01f,0.0f,0.0f,"%.2f"))
             t.SetTranslation(trans);
-        if(ImGui::DragFloat3("Rotation", &rot.x, 1.0f))
+        PROPERTY_LABEL("Rotation:");
+        if(ImGui::DragFloat3("##Rotation", &rot.x, 1.0f, 0.0f,0.0f,"%.1f"))
             t.SetRotation(glm::radians(rot));
-        if(ImGui::DragFloat3("Scale", &scale.x, 0.01f))
+        PROPERTY_LABEL("Scale:");
+        if(ImGui::DragFloat3("##Scale", &scale.x, 0.01f,0.0f,0.0f,"%.2f"))
             t.SetScale(scale);
     });
     m_EE.Register<CameraComponent>("Camera",[](Rush::Entity &e){
@@ -30,11 +35,14 @@ SceneGraphView::SceneGraphView(){
         float near = c.camera.GetNear();
         float far = c.camera.GetFar();
 
-        ImGui::Checkbox("Main", &c.main);
-        ImGui::ColorEdit4("Clear color",&c.clearColor.r);
+        PROPERTY_LABEL("Main Camera:");
+        ImGui::Checkbox("##Main", &c.main);
+        PROPERTY_LABEL("Clear color:");
+        ImGui::ColorEdit4("##Clear color",&c.clearColor.r);
 
+        PROPERTY_LABEL("Projection:");
         int selProj = c.camera.IsPerspective() ? 0 : 1;
-        if(ImGui::Combo("Projection", &selProj,"Perspective\0Orthographic\0\0")){
+        if(ImGui::Combo("##Projection", &selProj,"Perspective\0Orthographic\0\0")){
             if(selProj == c.camera.IsPerspective()){
                 if(selProj == 0)    c.camera.SetPerspective(1024.0f/720.0f,45.0f);
                 else                c.camera.SetOrthographic(0.0f,1.0f,1.0f,0.0f);
@@ -44,29 +52,64 @@ SceneGraphView::SceneGraphView(){
         if(c.camera.IsPerspective()){
             float fov = c.camera.GetFOV();
             float aspect = c.camera.GetAspect();
-            if(ImGui::SliderFloat("FOV", &fov,10.0f,120.0f,"%.0f")) modified = true;
-            if(ImGui::DragFloat("Aspect", &aspect,0.1f)) modified = true;
-            if(ImGui::DragFloat("Near", &near,0.1f)) modified = true;
-            if(ImGui::DragFloat("Far", &far,0.1f)) modified = true;
+            PROPERTY_LABEL("FOV:");
+            if(ImGui::SliderFloat("##FOV", &fov,10.0f,120.0f,"%.0f")) modified = true;
+            PROPERTY_LABEL("Aspect:");
+            if(ImGui::DragFloat("##Aspect", &aspect,0.1f,0.1f,FLT_MAX/INT_MAX)) modified = true;
+            PROPERTY_LABEL("Clip Planes:");
+            ImGui::Text("N:");
+            ImGui::SameLine(115.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Near", &near,0.1f,0.01f,far-0.1f,"%.1f")) modified = true;
+            ImGui::SameLine(180.0f);
+            ImGui::Text("F:");
+            ImGui::SameLine(195.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Far", &far,0.1f,near+0.1f ,FLT_MAX/INT_MAX,"%.1f")) modified = true;
             if(modified) c.camera.SetPerspective(aspect,fov,near,far);
         } else {
             float left = c.camera.GetLeft();
             float right = c.camera.GetRight();
             float top = c.camera.GetTop();
             float bottom = c.camera.GetBottom();
-            if(ImGui::DragFloat("Left", &left,0.1f)) modified = true;
-            if(ImGui::DragFloat("Right", &right,0.1f)) modified = true;
-            if(ImGui::DragFloat("Top", &top,0.1f)) modified = true;
-            if(ImGui::DragFloat("Bottom", &bottom,0.1f)) modified = true;
-            if(ImGui::DragFloat("Near", &near,0.1f)) modified = true;
-            if(ImGui::DragFloat("Far", &far,0.1f)) modified = true;
+            PROPERTY_LABEL("Clip Planes:");
+            ImGui::Text("T:");
+            ImGui::SameLine(115.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Top", &top,0.1f,bottom+0.1f,FLT_MAX/INT_MAX,"%.1f")) modified = true;
+            ImGui::SameLine(180.0f);
+            ImGui::Text("B:");
+            ImGui::SameLine(195.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Bottom", &bottom,0.1f,-FLT_MAX/INT_MAX ,top-0.1f,"%.1f")) modified = true;
+            ImGui::NewLine();
+            ImGui::SameLine(100.0f);
+            ImGui::Text("L:");
+            ImGui::SameLine(115.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Left", &left,0.1f,-FLT_MAX/INT_MAX,right-0.1f,"%.1f")) modified = true;
+            ImGui::SameLine(180.0f);
+            ImGui::Text("R:");
+            ImGui::SameLine(195.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Right", &right,0.1f,left+0.1f ,FLT_MAX/INT_MAX,"%.1f")) modified = true;
+            ImGui::NewLine();
+            ImGui::SameLine(100.0f);
+            ImGui::Text("N:");
+            ImGui::SameLine(115.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Near", &near,0.1f,0.01f,far-0.1f,"%.1f")) modified = true;
+            ImGui::SameLine(180.0f);
+            ImGui::Text("F:");
+            ImGui::SameLine(195.0f);
+            ImGui::SetNextItemWidth(55.0f);
+            if(ImGui::DragFloat("##Far", &far,0.1f,near+0.1f ,FLT_MAX/INT_MAX,"%.1f")) modified = true;
             if(modified) c.camera.SetOrthographic(left,right,top,bottom,near,far);
         }
     });
     m_EE.Register<MeshRendererComponent>("Mesh Renderer",[](Rush::Entity &e){
         auto &mi = e.GetComponent<MeshRendererComponent>();
-        ImGui::Text("Mesh: ");
-        ImGui::SameLine();
+        PROPERTY_LABEL("Mesh:");
         if(mi.mesh == nullptr)
             ImGui::Button("None");
         else
@@ -97,27 +140,35 @@ SceneGraphView::SceneGraphView(){
     });
     m_EE.Register<LightComponent>("Light",[](Rush::Entity &e){
         auto& l = e.GetComponent<LightComponent>();
+        PROPERTY_LABEL("Light Type:");
         int curType = (int)l.type;
-        if(ImGui::Combo("Light type",&curType,"Directional\0Point\0Spotlight\0\0")){
+        if(ImGui::Combo("##Light type",&curType,"Directional\0Point\0Spotlight\0\0")){
             l.type = (LightType)curType;
         }
-        ImGui::ColorEdit3("Ambient", &l.ambient.r);
-        ImGui::ColorEdit3("Diffuse", &l.diffuse.r);
-        ImGui::ColorEdit3("Specular", &l.specular.r);
+        PROPERTY_LABEL("Ambient:");
+        ImGui::ColorEdit3("##Ambient", &l.ambient.r);
+        PROPERTY_LABEL("Diffuse:");
+        ImGui::ColorEdit3("##Diffuse", &l.diffuse.r);
+        PROPERTY_LABEL("Specular:");
+        ImGui::ColorEdit3("##Specular", &l.specular.r);
         if(l.type != LightType::DIRECTIONAL){
-            ImGui::Checkbox("Manual Attenuation",&l.manualAtten);
-            if(ImGui::DragFloat("Range",&l.range,1.0f,0.0000001f,10000.0f) && !l.manualAtten){
+            PROPERTY_LABEL("Range:");
+            if(ImGui::DragFloat("##Range",&l.range,1.0f,0.01f,10000.0f) && !l.manualAtten){
                 l.constant = 1.0f;
                 l.linear = 4.5f / l.range;
                 l.quadratic = 75.0f / (l.range * l.range);
             } 
+            ImGui::Separator();
+            ImGui::Text("Attenuation");
+            PROPERTY_LABEL("Manual:");
+            ImGui::Checkbox("##Manual Attenuation",&l.manualAtten);
             if(l.manualAtten) {
-                ImGui::Text("Attenuation");
-                ImGui::DragFloat3("Coef.",&l.constant,0.01f,0.0f);
+                PROPERTY_LABEL("Coefficients:");
+                ImGui::DragFloat3("##Coefficients",&l.constant,0.01f,0.0f);
             }
         }
         if(l.type == LightType::SPOTLIGHT){
-            ImGui::Text("Spotlight cutoff");
+            PROPERTY_LABEL("Cutoff:");
             ImGui::DragFloat2("Cutoff",&l.cutOff);
         }
     });
