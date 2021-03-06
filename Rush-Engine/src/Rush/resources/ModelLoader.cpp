@@ -95,15 +95,18 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
 
     m.vertices->SetIndexBuffer(IndexBuffer::Create(indices.data(),indices.size()));
 
-    m.material = ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene);
+    m.material = ProcessMaterial(scene->mMaterials[mesh->mMaterialIndex],scene, m.meshName);
     return m;
 }
 
-Shared<Material> ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene){
+Shared<Material> ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene, const std::string &parentMesh){
     RUSH_PROFILE_FUNCTION();
     aiString str;
-    material->Get(AI_MATKEY_NAME,str);
-    std::string matName = s_CurDirectory + str.C_Str() + ".mat";
+    std::string matName;
+    if(material->Get(AI_MATKEY_NAME,str) != AI_SUCCESS){
+        matName = s_CurDirectory + parentMesh + ".mat";
+    } else 
+        matName = s_CurDirectory + str.C_Str() + ".mat";
     Shared<Material> mat = AssetManager::GetMaterial(matName);
     if(mat != nullptr)
         return mat;
@@ -120,7 +123,7 @@ Shared<Material> ModelLoader::ProcessMaterial(const aiMaterial *material, const 
     if(ret != AI_FAILURE)   mat->normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
     else                    mat->normalTexture = s_DefaultNormalTexture;
     ret = aiGetMaterialFloat(material,AI_MATKEY_SHININESS,&mat->shininess);
-    if(ret == AI_FAILURE)
+    if(ret == AI_FAILURE || mat->shininess <= 0.0f)
         mat->shininess = 20.0f;
 
     Material::Write(mat,Path(matName));

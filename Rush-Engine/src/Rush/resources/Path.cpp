@@ -4,6 +4,7 @@
 
 #if defined(RUSH_LINUX)
     #define PATH_DELIM '/'
+    #include <unistd.h>
 #elif defined(RUSH_WINDOWS)
     #define PATH_DELIM '\\'
     #include <direct.h>

@@ -1,10 +1,10 @@
 #include "Rudderpch.h"
 #include "AssetView.h"
 
-#include <Rush.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#define ICON_ASPECT (3.0f/4.0f)
 
 // TODO: Add proper invalidation through event or such to avoid having to manually refresh
 
@@ -13,7 +13,9 @@ AssetView::AssetView()
     enabled = true;
     for(int i = 0; i < AssetFilter::Count; i++)
         m_AssetFilters[i] = true;
+    m_DirTree = BuildDirTree(m_CurrentDir);
     m_Dirty = false;
+    m_IconSize = 75;
 }
 
 AssetView::~AssetView(){
@@ -32,6 +34,13 @@ void AssetView::OnImguiRender(){
         ImGui::End();
         return;
     }
+    ImGui::BeginChild("Dir Explorer",ImVec2(200.0f,0.0f));
+
+    RenderDirectories(m_DirTree);
+
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("File Explorer");
 
     if(ImGui::Button("Asset root")){
         m_CurrentDir = Rush::Path("res");
@@ -42,6 +51,9 @@ void AssetView::OnImguiRender(){
     }
     ImGui::SameLine();
     ImGui::Text(m_CurrentDir.GetRawPath().c_str());
+    ImGui::SameLine(ImGui::GetWindowWidth()-100.0f);
+    ImGui::SetNextItemWidth(90.0f);
+    ImGui::SliderInt("Icon Size", &m_IconSize,48,75);
     ImGui::Separator();
     ImGui::BeginChild("FileSelect");
     Rush::File curDir(m_CurrentDir);
@@ -50,15 +62,25 @@ void AssetView::OnImguiRender(){
     std::sort(files.begin(),files.end(),[](Rush::File &f1,Rush::File &f2){
         return f1.GetType() < f2.GetType();
     });
-    auto size = ImGui::GetContentRegionAvailWidth();
-    int columns = size/64;
+    ImGui::ShowDemoWindow();
+    float size = ImGui::GetWindowContentRegionWidth();
+    int columns = size/m_IconSize;
     columns = columns < 1 ? 1 : columns;
-    ImGui::Columns(columns,NULL,false);
-    for(Rush::File f : files){
-        ImGui::PushID(f.GetPath().GetRawPath().c_str());
-        RenderFile(f);
-        ImGui::PopID();
+    if(ImGui::BeginTable("Assets",columns)){
+        int i = 0;
+        for(Rush::File f : files){
+            std::string filename = f.GetPath().GetFullFileName();
+            if(!f.Exists() || (filename == "..") || (filename == ".")) continue;
+            if(i % columns == 0) ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(i % columns);
+            ImGui::PushID(f.GetPath().GetRawPath().c_str());
+            RenderFile(f);
+            ImGui::PopID();
+            i++;
+        }
+        ImGui::EndTable();
     }
+    ImGui::EndChild();
     ImGui::EndChild();
 
     ImGui::End();
@@ -131,10 +153,11 @@ void AssetView::OnImguiRender(){
 
 void AssetView::RenderFile(Rush::File &file){
     std::string filename = file.GetPath().GetFullFileName();
-    if(!file.Exists() || (filename == "..") || (filename == ".")) return;
+    ImVec2 buttonSize = {m_IconSize - 10, m_IconSize * ICON_ASPECT};
+    ImGui::SetNextItemWidth(m_IconSize);
     if(file.GetType() == Rush::FileType::Directory){
         Rush::Shared<Rush::Texture> folder = Rush::AssetManager::GetTexture("res/textures/gui/folder.png");
-        if(ImGui::ImageButton((ImTextureID)(uint64_t)folder->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+        if(ImGui::ImageButton((ImTextureID)(uint64_t)folder->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
             m_CurrentDir = file.GetPath();
         PathDragDrop(file.GetPath(),"directory");
     } else if(file.GetType() == Rush::FileType::Regular){
@@ -142,34 +165,33 @@ void AssetView::RenderFile(Rush::File &file){
         std::string ext = file.GetPath().GetFileExtension();
         if(ext == "png" || ext == "bmp" || ext == "jpg"){
             tex = Rush::AssetManager::GetTexture(file.GetPath().GetRawPath());
-            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"texture");
         } else if (ext == "mat"){
             if(m_MaterialPreviews.find(file.GetPath().GetRawPath()) == m_MaterialPreviews.end())
                 RenderMaterialPreview(file.GetPath().GetRawPath());
             tex = m_MaterialPreviews[file.GetPath().GetRawPath()];
-            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"material");
-        } else if (ext == "obj"){
+        } else if (ext == "obj" || ext == "gltf"){
             tex = Rush::AssetManager::GetTexture("res/textures/gui/model.png");
-            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"mesh");
         }else if (ext == "glsl" || ext == "frag" || ext == "vert"){
             tex = Rush::AssetManager::GetTexture("res/textures/gui/shader.png");
-            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
             PathDragDrop(file.GetPath(),"shader");
         } else{
             tex = Rush::AssetManager::GetTexture("res/textures/gui/file.png");
-            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),ImVec2(64-15,64-16),ImVec2(0,1),ImVec2(1,0)))
+            if(ImGui::ImageButton((ImTextureID)(uint64_t)tex->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))
                 m_SelectedAsset = file.GetPath();
         }
     }
     ImGui::TextWrapped(filename.c_str());
-    ImGui::NextColumn();
 }
 
 void AssetView::RenderMaterialPreview(const std::string &path){
@@ -209,10 +231,35 @@ void AssetView::RenderMaterialPreview(const std::string &path){
     m_Dirty = false;
 }
 
+void AssetView::RenderDirectories(Rush::Shared<DirTree> tree){
+    if(ImGui::TreeNode(tree->name.c_str())){
+        for(auto c : tree->children)
+            RenderDirectories(c);
+        ImGui::TreePop();
+    }
+}
+
 void AssetView::PathDragDrop(Rush::Path path, const char *name){
     if(ImGui::BeginDragDropSource()){
         ImGui::SetDragDropPayload(name,path.GetRawPath().c_str(),path.GetRawPath().size()+1,ImGuiCond_Once);
         ImGui::Text(path.GetFileName().c_str());
         ImGui::EndDragDropSource();
     }
+}
+
+Rush::Shared<AssetView::DirTree> AssetView::BuildDirTree(Rush::Path path){
+    Rush::Shared<DirTree> root = Rush::CreateShared<DirTree>();
+    root->name = path.GetFileName();
+    Rush::File f(path);
+    if(f.Exists() && f.GetType() == Rush::FileType::Directory){
+        for(auto c : f.OpenDir()){
+            std::string filename = c.GetPath().GetFullFileName();
+            if(filename == ".." || filename == ".") continue;
+            auto node = BuildDirTree(c.GetPath());
+            if(node)
+                root->children.push_back(node);
+        }
+    } else 
+        return nullptr;
+    return root;
 }
