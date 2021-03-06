@@ -62,7 +62,6 @@ void AssetView::OnImguiRender(){
     std::sort(files.begin(),files.end(),[](Rush::File &f1,Rush::File &f2){
         return f1.GetType() < f2.GetType();
     });
-    ImGui::ShowDemoWindow();
     float size = ImGui::GetWindowContentRegionWidth();
     int columns = size/m_IconSize;
     columns = columns < 1 ? 1 : columns;
