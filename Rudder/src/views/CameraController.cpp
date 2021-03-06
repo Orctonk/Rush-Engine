@@ -92,6 +92,8 @@ bool CameraController::MouseScrollHandle(Rush::MouseScrollEvent &e){
 }
 
 bool CameraController::WindowResizeHandle(Rush::WindowResizeEvent &e){
+    if (e.height == 0)  // Window is most likely minimized
+        return false;
     auto &c = m_Camera.GetComponent<CameraComponent>();
     c.camera.SetPerspective(((float)e.width)/e.height,45.0f);
     return false;

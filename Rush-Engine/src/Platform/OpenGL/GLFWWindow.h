@@ -24,6 +24,7 @@ public:
     void SetWindowMode(WindowMode mode) override;
     void Update() override;
     void SetVSync(bool enable) override;
+    void SetMaximized(bool maximized) override;
 };
 
 }

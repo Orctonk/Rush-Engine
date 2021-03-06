@@ -114,6 +114,10 @@ GLFWWindow::GLFWWindow(const WindowProperties &properties) :
     }
 #endif
 
+    int x, y;
+    glfwGetWindowPos(m_Window, &x, &y);
+    if (m_Properties.xPos == -1) m_Properties.xPos = x;
+    if (m_Properties.yPos == -1) m_Properties.yPos = y;
     Move(m_Properties.xPos,m_Properties.yPos);
     SetWindowMode(m_Properties.windowMode);
     s_WindowCount++;
@@ -209,8 +213,8 @@ void GLFWWindow::SetWindowMode(WindowMode mode) {
         glfwSetWindowMonitor(m_Window,glfwGetPrimaryMonitor(),0,0,m_Properties.width,m_Properties.height,0);
         break;
     case WindowMode::WINDOWED_FULLSCREEN:
-        glfwSetWindowMonitor(m_Window,nullptr,m_Properties.xPos,m_Properties.yPos,m_Properties.width,m_Properties.height,60);
         glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(),0,0,vmode->width, vmode->height, vmode->refreshRate);
+        Resize(vmode->width, vmode->height);
         break;
     case WindowMode::WINDOWED:
         glfwSetWindowMonitor(m_Window,nullptr,m_Properties.xPos,m_Properties.yPos,m_Properties.width,m_Properties.height,60);
@@ -228,4 +232,12 @@ void GLFWWindow::SetVSync(bool enable) {
     RUSH_PROFILE_FUNCTION();
     glfwSwapInterval(enable ? 1 : 0);
 }
+
+void GLFWWindow::SetMaximized(bool maximized) {
+    if (maximized)
+        glfwMaximizeWindow(m_Window);
+    else
+        glfwRestoreWindow(m_Window);
+}
+
 }

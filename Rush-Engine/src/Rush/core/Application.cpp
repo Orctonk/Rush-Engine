@@ -23,7 +23,9 @@ Application::Application(){
     Logger::Init();
 	Logger::SetAlias("Initialization");
     WindowProperties props;
+    props.m_Title = "Rush Engine";
 	m_Window = AbstractWindow::CreateWindow(props);
+    m_Window->SetMaximized(true);
     Renderer::Init();
     LineRenderer::Init();
     Renderer2D::Init();

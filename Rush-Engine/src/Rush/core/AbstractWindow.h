@@ -15,7 +15,7 @@ enum class RUSH_API WindowMode{
 struct RUSH_API WindowProperties{
     char *m_Title = nullptr;
     WindowMode windowMode = WindowMode::WINDOWED;
-    int xPos = 0, yPos = 0;
+    int xPos = -1, yPos = -1;
     uint32_t width = 1024, height = 768;
 };
 
@@ -32,6 +32,7 @@ public:
     virtual void SetWindowMode(WindowMode mode) = 0;
     virtual void Update() = 0;
     virtual void SetVSync(bool enable) = 0;
+    virtual void SetMaximized(bool maximized) = 0;
 
     uint32_t GetWidth() { return m_Properties.width; }
     uint32_t GetHeight() { return m_Properties.height; }
