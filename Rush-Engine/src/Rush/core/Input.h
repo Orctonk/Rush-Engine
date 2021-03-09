@@ -17,7 +17,7 @@ class RUSH_API Input {
 private:
     bool m_KeyStates[RUSH_KEYCODE_LAST+1];
     bool m_MouseButtonStates[RUSH_MOUSE_BUTTON_LAST + 1];
-    std::pair<float,float> m_MousePos;
+    std::pair<int,int> m_MousePos;
 
     static Input *s_Instance;
     
@@ -31,7 +31,7 @@ private:
 public:
     static bool KeyDown(int keycode);
     static bool MousePressed(int button);
-    static std::pair<float, float> MousePos();
+    static std::pair<int, int> MousePos();
 
     static void Update(Event &e);
 };

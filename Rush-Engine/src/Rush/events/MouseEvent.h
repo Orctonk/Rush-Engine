@@ -6,9 +6,9 @@ namespace Rush{
 
 class MouseMoveEvent : public Event{
 public:
-    double x, y;
+    int x, y;
 
-    MouseMoveEvent(double x, double y)
+    MouseMoveEvent(int x, int y)
     : x(x), y(y){}
     EVENT_BODY(MouseMove);
     virtual std::string GetString() const override { return "MouseMoveEvent(" + std::to_string(x) + "," + std::to_string(y) + ")"; }
