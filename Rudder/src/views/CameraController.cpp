@@ -67,10 +67,10 @@ bool CameraController::MouseMoveHandle(Rush::MouseMoveEvent &e){
             m_YPR += glm::vec3(-dy / 2.0f,-dx / 2.0f,0.0f);
             t.SetRotation(glm::radians(m_YPR));
             t.Translate(glm::vec3(
-                right * sinf(-dx/180.0f * 3.14) * 2.0f +
-                front * (1-cosf(-dx/180.0f * 3.14)) * 2.0f +
-                glm::vec3(0.0f,1.0f,0.0f) * sinf(dy/180.0f * 3.14) * 2.0f +
-                front * (1-cosf(-dy/180.0f * 3.14)) * 2.0f
+                right * sinf(-dx/180.0f * 3.14f) * 2.0f +
+                front * (1-cosf(-dx/180.0f * 3.14f)) * 2.0f +
+                glm::vec3(0.0f,1.0f,0.0f) * sinf(dy/180.0f * 3.14f) * 2.0f +
+                front * (1-cosf(-dy/180.0f * 3.14f)) * 2.0f
             ));
             break;
         case MouseDragMode::PAN:

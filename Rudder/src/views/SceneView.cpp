@@ -7,8 +7,8 @@ SceneView::~SceneView() { }
 void SceneView::Init(){
     using namespace Rush;
     enabled = true;
-    m_SceneViewSize.x = Application::GetInstance().GetWindow()->GetWidth();
-    m_SceneViewSize.y = Application::GetInstance().GetWindow()->GetHeight();
+    m_SceneViewSize.x = (float)Application::GetInstance().GetWindow()->GetWidth();
+    m_SceneViewSize.y = (float)Application::GetInstance().GetWindow()->GetHeight();
     m_SceneBuffer = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
         Application::GetInstance().GetWindow()->GetHeight(),

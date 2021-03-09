@@ -59,7 +59,7 @@ void ProfilerResultView::OnImguiRender(){
                 level--;
             }
             auto hash = std::hash<std::string>{}(m_SampleNameMap[s.id]);
-            uint32_t col = 0x000000FF | hash;
+            uint32_t col = (uint32_t)(0x000000FF | hash);
             drawList->AddRectFilled({p.x + xOff,p.y + level * 22},{p.x + xOff + (s.dur/scale),p.y + 20 * (level + 1) + 2 * level},col);
             const char *rem;
             ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(),(s.dur/scale),0.0f,m_SampleNameMap[s.id].c_str(),NULL,&rem);
@@ -184,12 +184,12 @@ bool ProfilerResultView::ScrollHandle(Rush::MouseScrollEvent &e){
 
     if(e.delta >= 0)
         for(int i = 0; i < e.delta; i++){
-            m_FirstDisplayedTime += m_DisplayedDuration * 0.1;
+            m_FirstDisplayedTime += m_DisplayedDuration * 0.1f;
             m_DisplayedDuration *= 0.8f;
         }
     else
         for(int i = 0; i > e.delta; i--){
-            m_FirstDisplayedTime -= m_DisplayedDuration * 0.1;
+            m_FirstDisplayedTime -= m_DisplayedDuration * 0.1f;
             m_DisplayedDuration /= 0.8f;
         }
 

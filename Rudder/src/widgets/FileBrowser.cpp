@@ -37,8 +37,8 @@ void FileBrowser::Render(){
 
         if(ImGui::Button("/"))
             SetCWD("/");
-        auto b = 1;
-        auto e = m_CWD.find("/",b);
+        size_t b = 1;
+        size_t e = m_CWD.find("/",b);
         while(b != m_CWD.npos && m_CWD != "/"){
             ImGui::SameLine();
             if(ImGui::Button(m_CWD.substr(b,e-b).c_str())){

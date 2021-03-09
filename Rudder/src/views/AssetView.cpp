@@ -63,7 +63,7 @@ void AssetView::OnImguiRender(){
         return f1.GetType() < f2.GetType();
     });
     float size = ImGui::GetWindowContentRegionWidth();
-    int columns = size/m_IconSize;
+    int columns = (int)(size/m_IconSize);
     columns = columns < 1 ? 1 : columns;
     if(ImGui::BeginTable("Assets",columns,ImGuiTableFlags_SizingStretchSame)){
         int i = 0;
@@ -153,7 +153,7 @@ void AssetView::OnImguiRender(){
 void AssetView::RenderFile(Rush::File &file){
     std::string filename = file.GetPath().GetFullFileName();
     ImVec2 buttonSize = {(float)(m_IconSize - 10), m_IconSize * ICON_ASPECT};
-    ImGui::SetNextItemWidth(m_IconSize);
+    ImGui::SetNextItemWidth((float)m_IconSize);
     if(file.GetType() == Rush::FileType::Directory){
         Rush::Shared<Rush::Texture> folder = Rush::AssetManager::GetTexture("res/textures/gui/folder.png");
         if(ImGui::ImageButton((ImTextureID)(uint64_t)folder->GetID(),buttonSize,ImVec2(0,1),ImVec2(1,0)))

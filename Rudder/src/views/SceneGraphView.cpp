@@ -43,10 +43,8 @@ SceneGraphView::SceneGraphView(){
         PROPERTY_LABEL("Projection:");
         int selProj = c.camera.IsPerspective() ? 0 : 1;
         if(ImGui::Combo("##Projection", &selProj,"Perspective\0Orthographic\0\0")){
-            if(selProj == c.camera.IsPerspective()){
-                if(selProj == 0)    c.camera.SetPerspective(1024.0f/720.0f,45.0f);
-                else                c.camera.SetOrthographic(0.0f,1.0f,1.0f,0.0f);
-            }
+            if(selProj == 0)    c.camera.SetPerspective(1024.0f/720.0f,45.0f);
+            else                c.camera.SetOrthographic(0.0f,1.0f,1.0f,0.0f);
         }
 
         if(c.camera.IsPerspective()){
