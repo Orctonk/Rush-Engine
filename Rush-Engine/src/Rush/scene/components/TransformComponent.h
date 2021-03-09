@@ -8,8 +8,9 @@
 
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
+#include <entt/core/attribute.h>
 
-struct RUSH_API TransformComponent {
+struct ENTT_API TransformComponent {
 private:
     glm::vec3 m_Translation;
     glm::quat m_Rotation;

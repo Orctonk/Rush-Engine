@@ -23,12 +23,12 @@ public:
 
     ~Entity() = default;
 
-    uint32_t GetID() { return entt::to_integral(m_Entity); }
+    uint32_t GetID() { return static_cast<std::underlying_type_t<entt::entity>>(m_Entity); }
     entt::registry *GetParentRegistry(){ return m_Scene; }
 
     template<typename T>
     bool HasComponent(){
-        return m_Scene->has<T>(m_Entity);
+        return m_Scene->all_of<T>(m_Entity);
     }
 
     template<typename T, typename ... Args>

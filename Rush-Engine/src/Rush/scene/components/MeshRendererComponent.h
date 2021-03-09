@@ -7,10 +7,11 @@
 
 #include <cereal/archives/json.hpp>
 #include <cereal/types/string.hpp>
+#include <entt/core/attribute.h>
 
 // TODO: Add mesh instances to allow renderer-specific materials on same meshes
 
-struct RUSH_API MeshRendererComponent {
+struct ENTT_API MeshRendererComponent {
     Rush::Shared<Rush::RootMesh> mesh;
 
     template<typename Archive>

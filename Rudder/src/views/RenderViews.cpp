@@ -261,10 +261,10 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     
     m_SelectionBuffer->Bind();
     glm::vec4 color = glm::vec4(1.0f);
-    color.r = ((float)(entt::to_integral(entt::null) & 0x0000FF))/255.0f;
-    color.g = ((float)((entt::to_integral(entt::null) >> 8) & 0x0000FF))/255.0f;
-    color.b = ((float)((entt::to_integral(entt::null) >> 16) & 0x0000FF))/255.0f;
-    color.a = ((float)((entt::to_integral(entt::null) >> 24) & 0x0000FF))/255.0f;
+    color.r = ((float)(static_cast<std::underlying_type_t<entt::entity>>(entt::null) & 0x0000FF))/255.0f;
+    color.g = ((float)((static_cast<std::underlying_type_t<entt::entity>>(entt::null) >> 8) & 0x0000FF))/255.0f;
+    color.b = ((float)((static_cast<std::underlying_type_t<entt::entity>>(entt::null) >> 16) & 0x0000FF))/255.0f;
+    color.a = ((float)((static_cast<std::underlying_type_t<entt::entity>>(entt::null) >> 24) & 0x0000FF))/255.0f;
     Renderer::GetAPI()->SetClearColor(color);
     Renderer::GetAPI()->Clear();
     auto &cam = m_CamController.GetCamera().GetComponent<CameraComponent>();

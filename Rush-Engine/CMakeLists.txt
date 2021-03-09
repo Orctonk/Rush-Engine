@@ -72,7 +72,7 @@ endif()
 # Specify library type
 if(RUSH_BUILD_SHARED)
     add_library(Rush SHARED ${RUSH_SOURCES})
-    target_compile_definitions(Rush PRIVATE RUSH_SHARED)
+    target_compile_definitions(Rush PUBLIC RUSH_SHARED)
     set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 else()
     add_library(Rush STATIC ${RUSH_SOURCES})
@@ -154,6 +154,10 @@ endif()
 # Add EnTT as dependency
 add_subdirectory("${RUSH_DEPS_DIR}/entt")
 target_link_libraries(Rush PUBLIC EnTT::EnTT)
+if(${RUSH_BUILD_SHARED})
+    target_compile_definitions (Rush PRIVATE ENTT_API_EXPORT)
+    target_compile_definitions (Rush INTERFACE ENTT_API_IMPORT)
+endif()
 
 # Add Window manager and renderer implementation as dependency
 if(RUSH_OPENGL)

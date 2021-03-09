@@ -8,14 +8,15 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
 #include <cereal/types/string.hpp>
+#include <entt/core/attribute.h>
 
-enum class RUSH_API LightType {
+enum class ENTT_API LightType {
     DIRECTIONAL,
     POINT,
     SPOTLIGHT
 };
 
-struct RUSH_API LightComponent {
+struct ENTT_API LightComponent {
     LightType type      {LightType::POINT};
     bool manualAtten    {false};
     float range         {7.0f};

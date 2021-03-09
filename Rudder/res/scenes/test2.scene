@@ -1,0 +1,50 @@
+{
+    "value0": 1,
+    "value1": 0,
+    "value2": 1048575,
+    "value3": 1,
+    "value4": 0,
+    "value5": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value6": 1,
+    "value7": 0,
+    "value8": {
+        "main": false,
+        "clear": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+        },
+        "type": "perspective",
+        "frustum": {
+            "near": 0.10000000149011612,
+            "far": 100.0,
+            "fov": 90.0
+        },
+        "skybox": "res/skybox"
+    },
+    "value9": 1,
+    "value10": 0,
+    "value11": {
+        "name": "Editor Camera"
+    },
+    "value12": 0,
+    "value13": 0
+}

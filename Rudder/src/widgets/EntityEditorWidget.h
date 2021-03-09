@@ -29,7 +29,7 @@ public:
         d.drawWidget = draw;
         d.create = [](Rush::Entity &e){e.AddComponent<Comp>();};
         d.remove = [](Rush::Entity &e){e.RemoveComponent<Comp>();};
-        m_CompMap.emplace(entt::type_info<Comp>::id(), d );
+        m_CompMap.emplace(entt::type_hash<Comp>::value(), d);
     }    
 
     void Render(Rush::Entity e, bool *shown);

@@ -5,8 +5,9 @@
 
 #include <cereal/archives/json.hpp>
 #include <cereal/types/string.hpp>
+#include <entt/core/attribute.h>
 
-struct RUSH_API TagComponent {
+struct ENTT_API TagComponent {
     std::string tag;
 
     template<typename Archive>

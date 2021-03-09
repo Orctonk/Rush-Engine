@@ -10,8 +10,9 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
 #include <cereal/types/string.hpp>
+#include <entt/core/attribute.h>
 
-struct RUSH_API CameraComponent {
+struct ENTT_API CameraComponent {
     bool main;
     glm::vec4 clearColor;
     Rush::Shared<Rush::Cubemap> skybox;

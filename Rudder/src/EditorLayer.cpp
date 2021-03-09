@@ -10,7 +10,7 @@
 #include <misc/cpp/imgui_stdlib.h>
 
 EditorLayer::EditorLayer()
-: m_ScenePath("res/scenes/test.scene") {}
+: m_ScenePath("res/scenes/test2.scene") {}
 
 EditorLayer::~EditorLayer() {}
 
@@ -19,6 +19,10 @@ void EditorLayer::OnAttach() {
     m_Scene.Load(m_ScenePath);
 
     auto *reg = m_Scene.GetRegistry();
+    if (reg->view<CameraComponent>().empty()) {
+        Rush::Entity e1 = m_Scene.NewEntity("Editor Camera");
+        e1.AddComponent<CameraComponent>();
+    }
     for(auto e : reg->view<CameraComponent>()){
         m_RenderViews.Init({reg,e});
     }
