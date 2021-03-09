@@ -29,7 +29,7 @@ void RenderViews::Init(Rush::Entity cameraEntity){
 
     m_CamController.SetControlledCamera(cameraEntity);
 
-    cameraEntity.GetComponent<CameraComponent>().skybox = AssetManager::GetCubemap("res/skybox");
+    //cameraEntity.GetComponent<CameraComponent>().skybox = AssetManager::GetCubemap("res/skybox");
 
     m_SpotlightTexture = AssetManager::GetTexture("res/textures/lightbulb.png");
     m_DirlightTexture = AssetManager::GetTexture("res/textures/directional.png");

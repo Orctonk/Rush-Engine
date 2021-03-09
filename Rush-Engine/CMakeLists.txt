@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 # Rush options
 option(RUSH_OPENGL "Use OpenGL for rendering" ON)
-option(RUSH_BUILD_SHARED "Build Rush as a shared library" ON)
+option(RUSH_BUILD_SHARED "Build Rush as a shared library" OFF)
 option(RUSH_BUILD_ASSIMP "Build Assimp from source" ON)
 
 project(Rush VERSION 1.0)
@@ -13,6 +13,10 @@ set(RUSH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(RUSH_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Libraries")
 set(RUSH_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake-config")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/lib")
+
 # Set Rush implementation independent sources
 set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Logger.cpp
@@ -22,6 +26,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Time.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Input.cpp
                     ${RUSH_SOURCE_DIR}/Rush/core/Random.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/core/Settings.cpp
                     ${RUSH_SOURCE_DIR}/Rush/events/EventQueue.cpp
                     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.cpp
                     ${RUSH_SOURCE_DIR}/Rush/graphics/Shader.cpp

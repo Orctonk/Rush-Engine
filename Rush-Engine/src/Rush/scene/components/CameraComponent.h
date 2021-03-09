@@ -19,10 +19,26 @@ struct ENTT_API CameraComponent {
     Rush::Camera camera;
 
     CameraComponent() 
-        : main(false), clearColor(0.0f,0.0f,0.0f,1.0f), skybox(nullptr), camera(1024.0f/720.0f,45.0f) { }
+        : main(false), clearColor(0.0f,0.0f,0.0f,1.0f), camera(1024.0f/720.0f,45.0f) { }
 
     CameraComponent(bool main, Rush::Camera cam) 
-        : main(main), clearColor(0.0f,0.0f,0.0f,1.0f), skybox(nullptr), camera(cam) { }
+        : main(main), clearColor(0.0f,0.0f,0.0f,1.0f), camera(cam) { }
+
+    /*CameraComponent(CameraComponent&& other) 
+    : camera(1024.0f / 720.0f, 45.0f){
+        camera = other.camera;
+        main = other.main;
+        clearColor = other.clearColor;
+        skybox = other.skybox;
+    }
+
+    CameraComponent& operator=(CameraComponent&& other) {
+        main = other.main;
+        clearColor = other.clearColor;
+        skybox = other.skybox;
+        camera = other.camera;
+        return *this;
+    }*/
 
     template<typename Archive>
     void save(Archive &archive) const{

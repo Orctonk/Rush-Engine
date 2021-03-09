@@ -83,6 +83,21 @@ public:
 
 		m_Trans = {glm::vec3(0.0f,1.0f,3.0f) , glm::vec3(90.0f,20.0f,0.0f), glm::vec3(1.0f)};
 
+		Rush::Shared<Sandbox> a = nullptr;
+		Rush::Shared<Sandbox> b = std::move(a);
+
+		Settings::SetRushSetting("Test1", "a");
+		Settings::SetRushSetting("Test2", 1);
+		Settings::SetRushSetting("Test3", 1.0f);
+		Settings::SetRushSetting("Test4", 2.0);
+
+		std::string t1 = Settings::GetRushSetting<std::string>("Test1");
+		int t2 = Settings::GetRushSetting<int>("Test2");
+		float t3 = Settings::GetRushSetting<float>("Test3");
+		double t4 = Settings::GetRushSetting<double>("Test4");
+
+		RUSH_LOG_INFO(t1 + ", " + std::to_string(t2)+ ", " + std::to_string(t3) + ", " + std::to_string(t4));
+
 		m_Shader = Shader::Create("res/test.glsl");
 
 		m_VA = VertexArray::Create();

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.17)
 
 project(Rudder VERSION 1.0)
 
@@ -44,8 +44,15 @@ endif()
 
 target_link_libraries(Rudder PRIVATE Rush)
 
-add_custom_command(TARGET Rudder POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_CURRENT_SOURCE_DIR}/res $<TARGET_FILE_DIR:Rudder>/res)
+add_custom_command(TARGET Rudder POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/res 
+    ${CMAKE_CURRENT_BINARY_DIR}/res)
+
+add_custom_command(TARGET Rudder POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Rush>
+    $<TARGET_FILE_DIR:Rudder>)
 
 install(TARGETS Rudder
     LIBRARY DESTINATION lib

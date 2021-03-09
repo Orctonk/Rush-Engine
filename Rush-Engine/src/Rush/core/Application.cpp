@@ -4,6 +4,7 @@
 #include "Time.h"
 #include "Input.h"
 #include "Random.h"
+#include "Settings.h"
 #include "Rush/resources/AssetManager.h"
 #include "Rush/graphics/Renderer.h"
 #include "Rush/graphics/LineRenderer.h"
@@ -17,6 +18,7 @@ Application *Application::s_Instance;
 
 Application::Application(){ 
     s_Instance = this;
+    Settings::Init();
     Random::Init();
     Time::Init();
     Profiler::Init();

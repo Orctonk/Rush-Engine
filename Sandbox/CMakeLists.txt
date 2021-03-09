@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.17)
 
 project(Sandbox VERSION 1.0)
 
@@ -22,3 +22,8 @@ else()
 endif()
 
 target_link_libraries(Sandbox PUBLIC Rush)
+
+add_custom_command(TARGET Sandbox POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Rush>
+    $<TARGET_FILE_DIR:Sandbox>)
