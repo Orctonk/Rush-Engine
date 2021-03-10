@@ -1,14 +1,55 @@
 {
-    "value0": 1,
+    "value0": 4,
     "value1": 0,
-    "value2": 1048575,
-    "value3": 1,
-    "value4": 0,
-    "value5": {
+    "value2": 1,
+    "value3": 2,
+    "value4": 3,
+    "value5": 1048575,
+    "value6": 4,
+    "value7": 1,
+    "value8": {
         "position": {
             "x": 0.0,
             "y": 0.0,
             "z": 0.0
+        },
+        "orientation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value9": 0,
+    "value10": {
+        "position": {
+            "x": -0.2118707001209259,
+            "y": 1.9829753637313843,
+            "z": 4.084503650665283
+        },
+        "orientation": {
+            "x": -0.2798263430595398,
+            "y": 0.004188994411379099,
+            "z": 0.0012209805427119136,
+            "w": 0.9600406885147095
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value11": 2,
+    "value12": {
+        "position": {
+            "x": 1.822619915008545,
+            "y": 0.9969795942306519,
+            "z": 0.9638768434524536
         },
         "orientation": {
             "x": 0.0,
@@ -22,10 +63,29 @@
             "z": 1.0
         }
     },
-    "value6": 1,
-    "value7": 0,
-    "value8": {
-        "main": false,
+    "value13": 3,
+    "value14": {
+        "position": {
+            "x": -3.2349977493286135,
+            "y": 1.1639448404312134,
+            "z": 0.0
+        },
+        "orientation": {
+            "x": 0.7104527354240418,
+            "y": 0.0720212534070015,
+            "z": 0.287994921207428,
+            "w": 0.6380664110183716
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value15": 1,
+    "value16": 0,
+    "value17": {
+        "main": true,
         "clear": {
             "r": 0.0,
             "g": 0.0,
@@ -38,13 +98,81 @@
             "far": 100.0,
             "fov": 90.0
         },
-        "skybox": "res/skybox"
+        "skybox": "res\\skybox"
     },
-    "value9": 1,
-    "value10": 0,
-    "value11": {
+    "value18": 4,
+    "value19": 0,
+    "value20": {
         "name": "Editor Camera"
     },
-    "value12": 0,
-    "value13": 0
+    "value21": 1,
+    "value22": {
+        "name": "Test Model"
+    },
+    "value23": 2,
+    "value24": {
+        "name": "Test Point Light"
+    },
+    "value25": 3,
+    "value26": {
+        "name": "Test Dir Light"
+    },
+    "value27": 2,
+    "value28": 2,
+    "value29": {
+        "type": "point",
+        "range": 25.0,
+        "manualAttenuation": false,
+        "constant": 1.0,
+        "linear": 0.18000000715255738,
+        "quadratic": 0.11999999731779099,
+        "cutoff": 35.0,
+        "outerCutoff": 45.0,
+        "ambientColor": {
+            "r": 0.10000000149011612,
+            "g": 0.10000000149011612,
+            "b": 0.10000000149011612
+        },
+        "diffuseColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        },
+        "specularColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        }
+    },
+    "value30": 3,
+    "value31": {
+        "type": "directional",
+        "range": 7.0,
+        "manualAttenuation": false,
+        "constant": 1.0,
+        "linear": 0.699999988079071,
+        "quadratic": 1.7999999523162842,
+        "cutoff": 35.0,
+        "outerCutoff": 45.0,
+        "ambientColor": {
+            "r": 0.10000000149011612,
+            "g": 0.10000000149011612,
+            "b": 0.10000000149011612
+        },
+        "diffuseColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        },
+        "specularColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        }
+    },
+    "value32": 1,
+    "value33": 1,
+    "value34": {
+        "mesh": "res\\models\\backpack\\backpack.obj"
+    }
 }

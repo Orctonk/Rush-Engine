@@ -1,22 +1,23 @@
 {
     "value0": 4,
-    "value1": 1048578,
-    "value2": 1,
-    "value3": 2097151,
+    "value1": 0,
+    "value2": 2097151,
+    "value3": 2,
     "value4": 3,
-    "value5": 2,
+    "value5": 1,
     "value6": 3,
-    "value7": {
+    "value7": 3,
+    "value8": {
         "position": {
-            "x": 0.0,
+            "x": -4.0,
             "y": 2.0,
-            "z": 3.0
+            "z": 2.0
         },
         "orientation": {
-            "x": -0.34202009439468386,
-            "y": -8.297282860780797e-9,
-            "z": 2.2796600163133008e-8,
-            "w": 0.9396926164627075
+            "x": 0.6408563256263733,
+            "y": 0.29883629083633425,
+            "z": 0.06162835657596588,
+            "w": 0.7044159770011902
         },
         "scale": {
             "x": 1.0,
@@ -24,18 +25,37 @@
             "z": 1.0
         }
     },
-    "value8": 1,
-    "value9": {
+    "value9": 0,
+    "value10": {
         "position": {
-            "x": 1.5,
-            "y": 1.5,
-            "z": 1.5
+            "x": 0.45852527022361758,
+            "y": 2.923007011413574,
+            "z": 5.068885326385498
+        },
+        "orientation": {
+            "x": -0.40273135900497439,
+            "y": 0.007987497374415398,
+            "z": 0.0035145834553986789,
+            "w": 0.9152765870094299
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        }
+    },
+    "value11": 2,
+    "value12": {
+        "position": {
+            "x": 2.0,
+            "y": 2.0,
+            "z": 2.0
         },
         "orientation": {
             "x": 0.0,
             "y": 0.0,
             "z": 0.0,
-            "w": 0.0
+            "w": 1.0
         },
         "scale": {
             "x": 1.0,
@@ -43,10 +63,10 @@
             "z": 1.0
         }
     },
-    "value10": 1,
-    "value11": 3,
-    "value12": {
-        "main": false,
+    "value13": 1,
+    "value14": 0,
+    "value15": {
+        "main": true,
         "clear": {
             "r": 0.0,
             "g": 0.0,
@@ -59,32 +79,36 @@
             "far": 100.0,
             "fov": 90.0
         },
-        "skybox": "res/skybox"
+        "skybox": "res\\skybox"
     },
-    "value13": 2,
-    "value14": 3,
-    "value15": {
+    "value16": 3,
+    "value17": 0,
+    "value18": {
         "name": "Editor Camera"
     },
-    "value16": 1,
-    "value17": {
-        "name": "Point Light"
-    },
-    "value18": 1,
-    "value19": 1,
+    "value19": 3,
     "value20": {
+        "name": "Test Dir Light"
+    },
+    "value21": 2,
+    "value22": {
+        "name": "Test Point Light"
+    },
+    "value23": 2,
+    "value24": 2,
+    "value25": {
         "type": "point",
-        "range": 7.0,
+        "range": 65.0,
         "manualAttenuation": false,
         "constant": 1.0,
-        "linear": 0.699999988079071,
-        "quadratic": 1.7999999523162842,
+        "linear": 0.06923077255487442,
+        "quadratic": 0.017751479521393777,
         "cutoff": 35.0,
         "outerCutoff": 45.0,
         "ambientColor": {
-            "r": 0.1,
-            "g": 0.1,
-            "b": 0.1
+            "r": 0.10000000149011612,
+            "g": 0.10000000149011612,
+            "b": 0.10000000149011612
         },
         "diffuseColor": {
             "r": 1.0,
@@ -97,5 +121,31 @@
             "b": 1.0
         }
     },
-    "value21": 0
+    "value26": 3,
+    "value27": {
+        "type": "directional",
+        "range": 7.0,
+        "manualAttenuation": false,
+        "constant": 1.0,
+        "linear": 0.699999988079071,
+        "quadratic": 1.7999999523162842,
+        "cutoff": 35.0,
+        "outerCutoff": 45.0,
+        "ambientColor": {
+            "r": 0.10000000149011612,
+            "g": 0.10000000149011612,
+            "b": 0.10000000149011612
+        },
+        "diffuseColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        },
+        "specularColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+        }
+    },
+    "value28": 0
 }
