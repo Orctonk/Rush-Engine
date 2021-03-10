@@ -2,8 +2,8 @@
 #define __CUBEMAP_H__
 
 #include "Rush/core/Core.h"
+#include "Rush/Resources/Path.h"
 
-#include <string>
 #include <stdint.h>
 
 namespace Rush {
@@ -31,7 +31,7 @@ public:
     virtual void Bind(uint8_t textureSlot) = 0;
     virtual uint32_t GetID() = 0;
 
-    static Shared<Cubemap> Create(std::string filepath);
+    static Shared<Cubemap> Create(Path filepath);
 
     std::string GetDebugPath() { return m_DebugPath; }
     CubemapProperties GetProperties(){ return m_Props; }

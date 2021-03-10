@@ -13,7 +13,7 @@ Cubemap::Cubemap(std::string filepath) : m_DebugPath(filepath) {}
 
 Cubemap::~Cubemap() {}
 
-Shared<Cubemap> Cubemap::Create(std::string filepath){
+Shared<Cubemap> Cubemap::Create(Path filepath){
     return CreateShared<OGLCubemap>(filepath);
 }
 

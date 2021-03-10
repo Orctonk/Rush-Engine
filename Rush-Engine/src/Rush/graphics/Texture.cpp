@@ -13,7 +13,7 @@ Texture::Texture(std::string filepath) : m_DebugPath(filepath) {}
 
 Texture::~Texture() {}
 
-Shared<Texture> Texture::Create(std::string filepath){
+Shared<Texture> Texture::Create(Path filepath){
     return CreateShared<OGLTexture>(filepath);
 }
 

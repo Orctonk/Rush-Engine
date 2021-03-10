@@ -1,6 +1,7 @@
 #ifndef __ASSETMANAGER_H__
 #define __ASSETMANAGER_H__
 
+#include "Path.h"
 #include "RootMesh.h"
 #include "Material.h"
 #include "Rush/core/Core.h"
@@ -32,19 +33,19 @@ public:
     static void Init();
     static void Shutdown();
 
-    static Shared<RootMesh> GetMesh(const std::string &path);
-    static Shared<Material> GetMaterial(const std::string &path);
-    static Shared<Texture> GetTexture(const std::string &path);
-    static Shared<Cubemap> GetCubemap(const std::string &path);
-    static Shared<Shader> GetShader(const std::string &path);
+    static Shared<RootMesh> GetMesh(const Path &path);
+    static Shared<Material> GetMaterial(const Path &path);
+    static Shared<Texture> GetTexture(const Path &path);
+    static Shared<Cubemap> GetCubemap(const Path &path);
+    static Shared<Shader> GetShader(const Path &path);
 
     static void PutMaterial(const std::string &path, Shared<Material> mat);
 
-    static bool HasMesh(const std::string &path);
-    static bool HasMaterial(const std::string &path);
-    static bool HasTexture(const std::string &path);
-    static bool HasCubemap(const std::string &path);
-    static bool HasShader(const std::string &path);
+    static bool HasMesh(const Path &path);
+    static bool HasMaterial(const Path &path);
+    static bool HasTexture(const Path &path);
+    static bool HasCubemap(const Path &path);
+    static bool HasShader(const Path &path);
 
     static std::vector<std::string> GetMeshKeys();
     static std::vector<std::string> GetMaterialKeys();

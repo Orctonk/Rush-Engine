@@ -2,6 +2,7 @@
 #define __TEXTURE_H__
 
 #include "Rush/core/Core.h"
+#include "Rush/resources/Path.h"
 
 #include <string>
 #include <stdint.h>
@@ -34,7 +35,7 @@ public:
     virtual void GetTextureData(unsigned char *buffer, unsigned int bufsize) = 0;
 
 
-    static Shared<Texture> Create(std::string filepath);
+    static Shared<Texture> Create(Path filepath);
 
     std::string GetDebugPath() { return m_DebugPath; }
     TextureProperties GetProperties(){ return m_Props; }

@@ -3,6 +3,7 @@
 
 #include "RootMesh.h"
 #include "Material.h"
+#include "Path.h"
 #include "Rush/core/Core.h"
 #include "Rush/graphics/VertexArray.h"
 
@@ -21,7 +22,7 @@ struct Vertex {
     
 class RUSH_API ModelLoader{
 private:
-    static std::string s_CurDirectory;
+    static Path s_CurDirectory;
     static Shared<Texture> s_DefaultColorTexture;
     static Shared<Texture> s_DefaultNormalTexture;
 
@@ -32,7 +33,7 @@ public:
     ModelLoader() = delete;
     ~ModelLoader();
 
-    static RootMesh LoadModel(const std::string &path);
+    static RootMesh LoadModel(const Path &filepath);
 };
 
 } // namespace Rush

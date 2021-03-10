@@ -46,6 +46,10 @@ Path Path::ToAbsolute() const {
     return GetCWD().m_Raw + m_Raw;
 }
 
+Path Path::AppendFile(const std::string& filename) {
+    return Path(m_Raw + PATH_DELIM + filename);
+}
+
 std::string Path::GetFileName() const{
     std::string filename = GetFullFileName();
     return filename.substr(0,filename.find_last_of('.'));
@@ -67,5 +71,4 @@ void Path::SetCWD(Path newCWD) {
 Path Path::GetCWD() { 
     return s_CWD; 
 };
-
 }

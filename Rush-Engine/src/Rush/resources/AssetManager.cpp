@@ -26,56 +26,56 @@ void AssetManager::Shutdown(){
     
 }
 
-Shared<RootMesh> AssetManager::GetMesh(const std::string &path) {
+Shared<RootMesh> AssetManager::GetMesh(const Path &path) {
     RUSH_PROFILE_FUNCTION();
-    auto cached = s_Meshes.find(path);
+    auto cached = s_Meshes.find(path.GetRawPath());
     if(cached == s_Meshes.end())
-        s_Meshes.emplace(path,CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
+        s_Meshes.emplace(path.GetRawPath(),CreateShared<RootMesh>(ModelLoader::LoadModel(path)));
 
-    return s_Meshes[path]; 
+    return s_Meshes[path.GetRawPath()]; 
 }
 
-Shared<Material> AssetManager::GetMaterial(const std::string &path) { 
+Shared<Material> AssetManager::GetMaterial(const Path &path) { 
     RUSH_PROFILE_FUNCTION();
-    auto cached = s_Materials.find(path);
+    auto cached = s_Materials.find(path.GetRawPath());
     if(cached == s_Materials.end())
-        s_Materials.emplace(path,Material::Load(path));
+        s_Materials.emplace(path.GetRawPath(),Material::Load(path));
 
-    return s_Materials[path]; 
+    return s_Materials[path.GetRawPath()]; 
 }
 
-Shared<Texture> AssetManager::GetTexture(const std::string &path){
+Shared<Texture> AssetManager::GetTexture(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    auto cachedTex = s_Textures.find(path);
+    auto cachedTex = s_Textures.find(path.GetRawPath());
     if(cachedTex != s_Textures.end()){
         return cachedTex->second;
     } else {
         Shared<Texture> tex = Texture::Create(path);
-        s_Textures.emplace(path,tex);
+        s_Textures.emplace(path.GetRawPath(),tex);
         return tex;
     }
 }
 
-Shared<Cubemap> AssetManager::GetCubemap(const std::string &path){
+Shared<Cubemap> AssetManager::GetCubemap(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    auto cachedCM = s_Cubemaps.find(path);
+    auto cachedCM = s_Cubemaps.find(path.GetRawPath());
     if(cachedCM != s_Cubemaps.end()){
         return cachedCM->second;
     } else {
         Shared<Cubemap> cubemap = Cubemap::Create(path);
-        s_Cubemaps.emplace(path,cubemap);
+        s_Cubemaps.emplace(path.GetRawPath(),cubemap);
         return cubemap;
     }
 }
 
-Shared<Shader> AssetManager::GetShader(const std::string &path){
+Shared<Shader> AssetManager::GetShader(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    auto cachedShader = s_Shaders.find(path);
+    auto cachedShader = s_Shaders.find(path.GetRawPath());
     if(cachedShader != s_Shaders.end()){
         return cachedShader->second;
     } else {
         Shared<Shader> shader = Shader::Create(path);
-        s_Shaders.emplace(path,shader);
+        s_Shaders.emplace(path.GetRawPath(),shader);
         return shader;
     }
 }
@@ -85,29 +85,29 @@ void AssetManager::PutMaterial(const std::string &path, Shared<Material> mat) {
     s_Materials[path] = mat;
 }
 
-bool AssetManager::HasMesh(const std::string &path){
+bool AssetManager::HasMesh(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    return s_Meshes.find(path) != s_Meshes.end();
+    return s_Meshes.find(path.GetRawPath()) != s_Meshes.end();
 }
 
-bool AssetManager::HasMaterial(const std::string &path){
+bool AssetManager::HasMaterial(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    return s_Materials.find(path) != s_Materials.end();
+    return s_Materials.find(path.GetRawPath()) != s_Materials.end();
 }
 
-bool AssetManager::HasTexture(const std::string &path){
+bool AssetManager::HasTexture(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    return s_Textures.find(path) != s_Textures.end();
+    return s_Textures.find(path.GetRawPath()) != s_Textures.end();
 }
 
-bool AssetManager::HasCubemap(const std::string &path){
+bool AssetManager::HasCubemap(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    return s_Cubemaps.find(path) != s_Cubemaps.end();
+    return s_Cubemaps.find(path.GetRawPath()) != s_Cubemaps.end();
 }
 
-bool AssetManager::HasShader(const std::string &path){
+bool AssetManager::HasShader(const Path &path){
     RUSH_PROFILE_FUNCTION();
-    return s_Shaders.find(path) != s_Shaders.end();
+    return s_Shaders.find(path.GetRawPath()) != s_Shaders.end();
 }
 
 std::vector<std::string> AssetManager::GetMeshKeys(){

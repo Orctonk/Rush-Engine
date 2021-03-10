@@ -13,7 +13,7 @@ Shader::Shader(std::string shaderPath) : m_DebugPath(shaderPath) { }
 
 Shader::~Shader() { }
 
-Shared<Shader> Shader::Create(std::string shaderPath) {
+Shared<Shader> Shader::Create(Path shaderPath) {
     return CreateShared<OGLShader>(shaderPath);
 }
 

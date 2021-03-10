@@ -8,27 +8,27 @@
 
 namespace Rush {
 
-std::string ModelLoader::s_CurDirectory;
+Path ModelLoader::s_CurDirectory;
 Shared<Texture> ModelLoader::s_DefaultColorTexture;
 Shared<Texture> ModelLoader::s_DefaultNormalTexture;
 
-RootMesh ModelLoader::LoadModel(const std::string &path){
+RootMesh ModelLoader::LoadModel(const Path &filepath){
     RUSH_PROFILE_FUNCTION();
     if(!s_DefaultColorTexture) s_DefaultColorTexture = AssetManager::GetTexture("res/textures/white.png");
     if(!s_DefaultNormalTexture) s_DefaultNormalTexture = AssetManager::GetTexture("res/textures/blue.png");
 
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph | aiProcess_OptimizeMeshes);
+    const aiScene *scene = importer.ReadFile(filepath.GetRawPath(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph | aiProcess_OptimizeMeshes);
     
     RootMesh rm;
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-        RUSH_LOG_ERROR("Failed to load model '" + path + "'");
+        RUSH_LOG_ERROR("Failed to load model '" + filepath.GetRawPath() + "'");
         return rm;
     }
 
-    s_CurDirectory = path.substr(0,path.find_last_of("/")+1);
+    s_CurDirectory = filepath.GetParentDirectory();
 
-    rm.name = path;
+    rm.name = filepath.GetRawPath();
 
     ProcessNode(rm, scene->mRootNode, scene);
     return rm;
@@ -102,32 +102,32 @@ SubMesh ModelLoader::ProcessMesh(const aiMesh *mesh, const aiScene *scene){
 Shared<Material> ModelLoader::ProcessMaterial(const aiMaterial *material, const aiScene *scene, const std::string &parentMesh){
     RUSH_PROFILE_FUNCTION();
     aiString str;
-    std::string matName;
+    Path matPath;
     if(material->Get(AI_MATKEY_NAME,str) != AI_SUCCESS){
-        matName = s_CurDirectory + parentMesh + ".mat";
+        matPath = s_CurDirectory.AppendFile(parentMesh + ".mat");
     } else 
-        matName = s_CurDirectory + str.C_Str() + ".mat";
-    Shared<Material> mat = AssetManager::GetMaterial(matName);
+        matPath = s_CurDirectory.AppendFile(std::string(str.C_Str()) + ".mat");
+    Shared<Material> mat = AssetManager::GetMaterial(matPath);
     if(mat != nullptr)
         return mat;
 
     mat = CreateShared<Material>();
     mat->materialShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
     auto ret = material->GetTexture(aiTextureType_DIFFUSE,0,&str);
-    if(ret != AI_FAILURE)   mat->diffuseTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    if(ret != AI_FAILURE)   mat->diffuseTexture = AssetManager::GetTexture(s_CurDirectory.AppendFile(str.C_Str()));
     else                    mat->diffuseTexture = s_DefaultColorTexture;
     ret = material->GetTexture(aiTextureType_SPECULAR,0,&str);
-    if(ret != AI_FAILURE)   mat->specularTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    if(ret != AI_FAILURE)   mat->specularTexture = AssetManager::GetTexture(s_CurDirectory.AppendFile(str.C_Str()));
     else                    mat->specularTexture = s_DefaultColorTexture;
     ret = material->GetTexture(aiTextureType_NORMALS,0,&str);
-    if(ret != AI_FAILURE)   mat->normalTexture = AssetManager::GetTexture(s_CurDirectory + str.C_Str());
+    if(ret != AI_FAILURE)   mat->normalTexture = AssetManager::GetTexture(s_CurDirectory.AppendFile(str.C_Str()));
     else                    mat->normalTexture = s_DefaultNormalTexture;
     ret = aiGetMaterialFloat(material,AI_MATKEY_SHININESS,&mat->shininess);
     if(ret == AI_FAILURE || mat->shininess <= 0.0f)
         mat->shininess = 20.0f;
 
-    Material::Write(mat,Path(matName));
-    AssetManager::PutMaterial(matName,mat);
+    Material::Write(mat,Path(matPath));
+    AssetManager::PutMaterial(matPath,mat);
 
     return mat;
 }

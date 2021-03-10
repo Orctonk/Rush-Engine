@@ -61,12 +61,12 @@ Shared<Material> Material::Load(Path matPath){
         mat->color.a = j["color"][3];
     }
     if(j.contains("shininess")) mat->shininess = j["shininess"];
-    if(j.contains("diffuse")) 
-        mat->diffuseTexture = AssetManager::GetTexture(j["diffuse"]);
+    if (j.contains("diffuse"))
+        mat->diffuseTexture = AssetManager::GetTexture(Path(j["diffuse"]));
     if(j.contains("specular")) 
-        mat->specularTexture = AssetManager::GetTexture(j["specular"]);
+        mat->specularTexture = AssetManager::GetTexture(Path(j["specular"]));
     if(j.contains("normal")) 
-        mat->normalTexture = AssetManager::GetTexture(j["normal"]);
+        mat->normalTexture = AssetManager::GetTexture(Path(j["normal"]));
 
     if(j.contains("rendermode")){
         if(j["rendermode"] == "opaque")

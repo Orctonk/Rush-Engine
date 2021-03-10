@@ -2,6 +2,7 @@
 #define __SHADER_H__
 
 #include "Rush/core/Core.h"
+#include "Rush/Resources/Path.h"
 
 #include <string>
 #include <stdint.h>
@@ -48,7 +49,7 @@ public:
     virtual void SetUniform(std::string name, glm::mat3 val) = 0;
     virtual void SetUniform(std::string name, glm::mat4 val) = 0;
 
-    static Shared<Shader> Create(std::string shaderPath);
+    static Shared<Shader> Create(Path shaderPath);
 };
     
 } // namespace Rush
