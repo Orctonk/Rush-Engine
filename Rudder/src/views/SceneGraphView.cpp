@@ -118,21 +118,23 @@ SceneGraphView::SceneGraphView(){
                 mi.mesh = AssetManager::GetMesh((const char *)meshPath->Data);
             ImGui::EndDragDropTarget();
         }
-        for(auto &mesh : mi.mesh->submeshes){
-            if(ImGui::TreeNode(mesh.meshName.c_str())){
-                ImGui::Text("Material:  ");
-                ImGui::SameLine();
-                if(mesh.material == nullptr)
-                    ImGui::Button("None");
-                else
-                    ImGui::Button( mesh.material->GetName().c_str());
-                if(ImGui::BeginDragDropTarget()){
-                    const ImGuiPayload *matPath = ImGui::AcceptDragDropPayload("material");
-                    if(matPath != NULL)
-                        mesh.material = AssetManager::GetMaterial((const char *)matPath->Data);
-                    ImGui::EndDragDropTarget();
+        if (mi.mesh) {
+            for(auto &mesh : mi.mesh->submeshes){
+                if(ImGui::TreeNode(mesh.meshName.c_str())){
+                    ImGui::Text("Material:  ");
+                    ImGui::SameLine();
+                    if(mesh.material == nullptr)
+                        ImGui::Button("None");
+                    else
+                        ImGui::Button( mesh.material->GetName().c_str());
+                    if(ImGui::BeginDragDropTarget()){
+                        const ImGuiPayload *matPath = ImGui::AcceptDragDropPayload("material");
+                        if(matPath != NULL)
+                            mesh.material = AssetManager::GetMaterial((const char *)matPath->Data);
+                        ImGui::EndDragDropTarget();
+                    }
+                    ImGui::TreePop();
                 }
-                ImGui::TreePop();
             }
         }
     });
@@ -207,6 +209,7 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene){
         return;
     
     ImGui::Begin("Scene graph",&enabled);
+    m_Focused = ImGui::IsWindowFocused();
     float width = ImGui::GetWindowWidth();
     ImGui::SameLine(width - 50.0f);
     if(ImGui::Button("+")) scene.NewEntity();
@@ -328,18 +331,21 @@ void SceneGraphView::RenderMaterial(Rush::Material &mat) {
 }
 
 bool SceneGraphView::KeyPressHandle(Rush::KeyboardPressEvent &e){
-    // if(e.keycode == RUSH_KEY_DELETE && m_SelectedEnt != entt::null){
-    //     reg.destroy(m_SelectedEnt);
-    //     m_SelectedEnt = entt::null;
-    //     return true;
-    // }
-    // else if(e.keycode == RUSH_KEY_F2 && m_SelectedEnt != entt::null){
-    //     m_Renaming = true;
-    //     return true;
-    // }
-    // else if(e.keycode == RUSH_KEY_ENTER && m_Renaming){
-    //     m_Renaming = false;
-    //     return true;
-    // }
+    if (!m_Focused) return false;
+    Rush::Entity selection = GlobalEntitySelection::GetSelection();
+    if(e.keycode == RUSH_KEY_DELETE && ((entt::entity)selection) != entt::null){
+        //TODO: A bit hacky
+        selection.GetParentRegistry()->destroy(selection);
+        GlobalEntitySelection::ClearSelection();
+        return true;
+    }
+    else if(e.keycode == RUSH_KEY_F2 && ((entt::entity)selection) != entt::null){
+        m_Renaming = true;
+        return true;
+    }
+    else if(e.keycode == RUSH_KEY_ENTER && m_Renaming){
+        m_Renaming = false;
+        return true;
+    }
     return false;
 }

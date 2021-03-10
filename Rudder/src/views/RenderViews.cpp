@@ -115,6 +115,7 @@ void RenderViews::OnImguiRender(){
             }
             RenderImguiView(resize);
         }
+        m_Focused = ImGui::IsWindowFocused();
         ImGui::End();
     }
     
@@ -144,8 +145,10 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
         auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
-        for(auto &sm : mesh.mesh->submeshes){
-            Renderer::Submit(sm.material,sm.vertices,model);
+        if (mesh.mesh) {
+            for(auto &sm : mesh.mesh->submeshes){
+                Renderer::Submit(sm.material,sm.vertices,model);
+            }
         }
     }
 

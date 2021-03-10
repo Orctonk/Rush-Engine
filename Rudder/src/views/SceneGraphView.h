@@ -9,6 +9,7 @@ private:
     EntityEditor m_EE;
     bool m_Renaming;
     bool m_EEVisible;
+    bool m_Focused;
 
     void RenderEntity(const Rush::Entity e);
     bool KeyPressHandle(Rush::KeyboardPressEvent &e);
