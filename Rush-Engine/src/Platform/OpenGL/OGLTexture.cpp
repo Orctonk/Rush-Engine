@@ -6,22 +6,47 @@
 
 namespace Rush {
 
-OGLTexture::OGLTexture(uint32_t width, uint32_t height, uint8_t precision)
-: Texture("Created texture") {
+OGLTexture::OGLTexture(uint32_t width, uint32_t height, TextureFormat format, uint8_t* data, std::string name)
+: Texture(name) {
     RUSH_PROFILE_FUNCTION();
     glGenTextures(1,&m_Texture);
     glBindTexture(GL_TEXTURE_2D,m_Texture);
     m_Props.width = width;
     m_Props.height = height;
-    m_Props.channels = 4;
-    m_Props.bpp = precision;
-    uint32_t format, type;
-    switch(precision){
-        case 8: format = GL_RGBA; type = GL_UNSIGNED_BYTE; break;
-        case 16: format = GL_RGBA16F; type = GL_FLOAT; break;
+    m_Props.format = format;
+    uint32_t glformat, intformat, type;
+    switch(format){
+        case TextureFormat::RGBA8: 
+            glformat = GL_RGBA; 
+            intformat = GL_RGBA;
+            type = GL_UNSIGNED_BYTE; 
+            m_Props.channels = 4;
+            m_Props.bpp = 8;
+            break;
+        case TextureFormat::RGBA16F: 
+            glformat = GL_RGBA16F; 
+            intformat = GL_RGBA;
+            type = GL_FLOAT; 
+            m_Props.channels = 4;
+            m_Props.bpp = 16;
+            break;
+        case TextureFormat::DEPTH32: 
+            glformat = GL_DEPTH_COMPONENT32; 
+            intformat = GL_DEPTH_COMPONENT;
+            type = GL_FLOAT; 
+            m_Props.channels = 1;
+            m_Props.bpp = 32;
+            break;
+        case TextureFormat::DEPTH24STENCIL8: 
+            glformat = GL_DEPTH24_STENCIL8; 
+            intformat = GL_DEPTH_STENCIL;
+            type = GL_UNSIGNED_INT_24_8; 
+            m_Props.channels = 2;
+            m_Props.bpp = 16;
+            break;
         default: RUSH_ASSERT(false);
     }
-    glTexImage2D(GL_TEXTURE_2D,0,format,m_Props.width,m_Props.height,0,GL_RGBA,type,NULL);
+    glTexImage2D(GL_TEXTURE_2D,0,glformat,m_Props.width,m_Props.height,0,intformat,type,data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }

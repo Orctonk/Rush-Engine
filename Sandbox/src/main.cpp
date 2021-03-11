@@ -9,71 +9,69 @@
 using namespace Rush;
 
 float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+        // positions          // normals          // Tangents       // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+												  
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+												 
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
 };
 unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 2, 3, 4, 5,    // Back face
-	6, 7, 8, 9, 10, 11,    // Left face
-	12, 13, 14, 15, 16, 17,    // Back face
-	18, 19, 20, 21, 22, 23,    // Top face
-	24, 25, 26, 27, 28, 29,    // Bottom face
-	30, 31, 32, 33, 34, 35    // Front face
+	0, 1, 2, 3, 4, 5,		// Back face
+	6, 7, 8, 9, 10, 11,		// Front face
+	12, 13, 14, 15, 16, 17, // Left face
+	18, 19, 20, 21, 22, 23, // Right face
+	24, 25, 26, 27, 28, 29, // Bottom face
+	30, 31, 32, 33, 34, 35  // Top face
 }; 
 
 class Sandbox : public Application{
 private: 
-	Shared<VertexArray> m_VA;
-	Camera m_Cam;
-	TransformComponent m_Trans;
-	Shared<Shader> m_Shader;
-	Shared<Texture> m_Texture;
-	LightComponent m_Light;
+	Scene m_Scene;
+	Entity m_Box;
+	Entity m_Camera;
+	Entity m_Light;
 
 	float a,b;
 
 public:
-	Sandbox() : m_Cam(1024.f /768.0f, 90.0f) {}
+	Sandbox(){}
 	~Sandbox(){}
 	void Init() override {
 		Logger::Info(	"Rush Version: " 
@@ -81,50 +79,38 @@ public:
 					+ 	"." 
 					+ 	std::to_string(RUSH_VERSION_MINOR));	
 
-		m_Trans = {glm::vec3(0.0f,1.0f,3.0f) , glm::vec3(90.0f,20.0f,0.0f), glm::vec3(1.0f)};
+		m_Camera = m_Scene.NewEntity("Camera");
+		m_Camera.GetComponent<TransformComponent>().Translate({ 0.0f,1.0f,3.0f });
+		m_Camera.GetComponent<TransformComponent>().Rotate(glm::toQuat(glm::eulerAngleXYZ(90.0f,0.0f,0.0f )));
+		Camera c((float)GetWindow()->GetWidth() / GetWindow()->GetHeight(), 90.0f);
+		m_Camera.AddComponent<CameraComponent>(true, c);
 
-		Rush::Shared<Sandbox> a = nullptr;
-		Rush::Shared<Sandbox> b = std::move(a);
-
-		Settings::SetRushSetting("Test1", "a");
-		Settings::SetRushSetting("Test2", 1);
-		Settings::SetRushSetting("Test3", 1.0f);
-		Settings::SetRushSetting("Test4", 2.0);
-
-		std::string t1 = Settings::GetRushSetting<std::string>("Test1");
-		int t2 = Settings::GetRushSetting<int>("Test2");
-		float t3 = Settings::GetRushSetting<float>("Test3");
-		double t4 = Settings::GetRushSetting<double>("Test4");
-
-		RUSH_LOG_INFO(t1 + ", " + std::to_string(t2)+ ", " + std::to_string(t3) + ", " + std::to_string(t4));
-
-		m_Shader = Shader::Create("res/test.glsl");
-
-		m_VA = VertexArray::Create();
+		m_Box = m_Scene.NewEntity("Test Entity");
+		SubMesh sm;
+		sm.vertices = VertexArray::Create();
 		Shared<VertexBuffer> vb = VertexBuffer::Create(vertices,sizeof(vertices));
-		vb->SetInterleavedLayout({ShaderData::FLOAT3,ShaderData::FLOAT3,ShaderData::FLOAT2});
+		vb->SetInterleavedLayout({ShaderData::FLOAT3,ShaderData::FLOAT3,ShaderData::FLOAT3,ShaderData::FLOAT2});
 		Shared<IndexBuffer> ib = IndexBuffer::Create(indices,36);
-		m_VA->AddVertexBuffer(vb);
-		m_VA->SetIndexBuffer(ib);
+		sm.vertices->AddVertexBuffer(vb);
+		sm.vertices->SetIndexBuffer(ib);
+		sm.meshName = "Box";
+		sm.material = CreateShared<Material>();
+		sm.material->materialShader = Shader::Create("res/shaders/materialShader.glsl");
+		sm.material->diffuseTexture = Texture::Create("res/container.jpg");
+		Shared<RootMesh> rm = CreateShared<RootMesh>();
+		rm->name = "box";
+		rm->submeshes = { sm };
+		m_Box.AddComponent<MeshRendererComponent>(rm);
 
-		m_Texture = Texture::Create("res/container.jpg");
+		m_Light = m_Scene.NewEntity("Light");
+		LightComponent &l = m_Light.AddComponent<LightComponent>();
+		l.ambient = glm::vec3(0.1f);
+		l.diffuse = glm::vec3(1.0f);
+		l.specular = glm::vec3(1.0f);
 
-		m_Light.ambient = glm::vec3(0.1f);
-		m_Light.diffuse = glm::vec3(1.0f);
-		m_Light.specular = glm::vec3(1.0f);
-
-		m_Light.constant = 1.0f;
-		m_Light.linear = .09f;
-		m_Light.quadratic = .032f;
-
-		bool active = true;
-		m_Shader->SetUniform("u_PLights[0].activated",ShaderData::BOOL, &active);
-		m_Shader->SetUniform("u_PLights[0].constant",ShaderData::FLOAT, &m_Light.constant);
-		m_Shader->SetUniform("u_PLights[0].linear",ShaderData::FLOAT, &m_Light.linear);
-		m_Shader->SetUniform("u_PLights[0].quadratic",ShaderData::FLOAT, &m_Light.quadratic);
-		m_Shader->SetUniform("u_PLights[0].ambient",ShaderData::FLOAT3, glm::value_ptr(m_Light.ambient));
-		m_Shader->SetUniform("u_PLights[0].diffuse",ShaderData::FLOAT3, glm::value_ptr(m_Light.diffuse));
-		m_Shader->SetUniform("u_PLights[0].specular",ShaderData::FLOAT3, glm::value_ptr(m_Light.specular));
+		l.constant = 1.0f;
+		l.linear = .09f;
+		l.quadratic = .032f;
 
 		PushOverlay(new ImguiLayer());
 	}
@@ -134,11 +120,11 @@ public:
 	}
 
 	void Update() override{
-		glm::mat4 model = m_Trans.GetModelMatrix();
-		Renderer::BeginScene(m_Cam,model);
-		Renderer::Submit(m_Shader,m_VA,glm::mat4(1.0f));
-		Renderer::EndScene();
-		
+		float time = Time::ProgramTimeMillis() / 1000.0f;
+		auto& t = m_Camera.GetComponent<TransformComponent>();
+		t.SetTranslation({ sin(time) * 3.0f,0.0f,cos(time) * 3.0f });
+		t.SetRotation(glm::toQuat(glm::eulerAngleY(time)));
+		m_Scene.Render();
 	}
 };
 

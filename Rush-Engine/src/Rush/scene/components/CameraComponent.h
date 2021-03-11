@@ -24,25 +24,9 @@ struct ENTT_API CameraComponent {
     CameraComponent(bool main, Rush::Camera cam) 
         : main(main), clearColor(0.0f,0.0f,0.0f,1.0f), camera(cam) { }
 
-    /*CameraComponent(CameraComponent&& other) 
-    : camera(1024.0f / 720.0f, 45.0f){
-        camera = other.camera;
-        main = other.main;
-        clearColor = other.clearColor;
-        skybox = other.skybox;
-    }
-
-    CameraComponent& operator=(CameraComponent&& other) {
-        main = other.main;
-        clearColor = other.clearColor;
-        skybox = other.skybox;
-        camera = other.camera;
-        return *this;
-    }*/
-
     template<typename Archive>
     void save(Archive &archive) const{
-        std::string sbp = skybox == nullptr ? "none" : skybox->GetDebugPath();
+        std::string sbp = skybox == nullptr ? "none" : skybox->GetDebugName();
         archive(
             cereal::make_nvp("main", main),
             cereal::make_nvp("clear", std::array{

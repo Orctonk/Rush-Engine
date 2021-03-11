@@ -9,7 +9,7 @@
 
 namespace Rush {
 
-Shader::Shader(std::string shaderPath) : m_DebugPath(shaderPath) { }
+Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) { }
 
 Shader::~Shader() { }
 

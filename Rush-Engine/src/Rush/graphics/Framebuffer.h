@@ -11,7 +11,7 @@ namespace Rush {
 
 struct RUSH_API FramebufferOptions {
     uint32_t width,height;
-    std::vector<uint8_t> texturePrecisions;
+    std::vector<TextureFormat> textureFormats;
 };
 
 class RUSH_API Framebuffer {

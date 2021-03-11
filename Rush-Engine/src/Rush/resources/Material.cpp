@@ -8,14 +8,42 @@
 
 namespace Rush{
 
+static Shared<Texture> s_White = nullptr;
+static Shared<Texture> s_Blue = nullptr;
+
+uint8_t white[] = { 255,255,255,255 };
+uint8_t blue[] = { 128,128,128,128 };
+
 void Material::Bind() {
     materialShader->Bind();
+
     materialShader->SetUniform("u_Material.diffuse",0);
-    diffuseTexture->Bind(0);
+    if(diffuseTexture)
+        diffuseTexture->Bind(0);
+    else {
+        if (!s_White)
+            s_White = Texture::Create(1, 1, TextureFormat::RGBA8, white);
+        s_White->Bind(0);
+    }
+
     materialShader->SetUniform("u_Material.specular",1);
-    specularTexture->Bind(1);
+    if (specularTexture)
+        specularTexture->Bind(1);
+    else {
+        if (!s_White)
+            s_White = Texture::Create(1, 1, TextureFormat::RGBA8, white);
+        s_White->Bind(1);
+    }
+
     materialShader->SetUniform("u_Material.normal",2);
-    normalTexture->Bind(2);
+    if (normalTexture)
+        normalTexture->Bind(2);
+    else {
+        if (!s_Blue)
+            s_Blue = Texture::Create(1, 1, TextureFormat::RGBA8, blue);
+        s_Blue->Bind(2);
+    }
+
     materialShader->SetUniform("u_Material.shininess",shininess);
     materialShader->SetUniform("u_Material.color",color);
 }
@@ -30,11 +58,11 @@ void Material::Write(Shared<Material> mat, Path matPath){
     j["color"] = {mat->color.r,mat->color.g,mat->color.b,mat->color.a};
     j["shininess"] = mat->shininess;
     if(mat->diffuseTexture != nullptr)
-        j["diffuse"] = mat->diffuseTexture->GetDebugPath();
+        j["diffuse"] = mat->diffuseTexture->GetDebugName();
     if(mat->specularTexture != nullptr)
-        j["specular"] = mat->specularTexture->GetDebugPath();
+        j["specular"] = mat->specularTexture->GetDebugName();
     if(mat->normalTexture != nullptr)
-        j["normal"] = mat->normalTexture->GetDebugPath();
+        j["normal"] = mat->normalTexture->GetDebugName();
     File matFile(matPath);
     std::fstream matStream = matFile.OpenFile(OpenMode::Write);
     matStream << j.dump(4);

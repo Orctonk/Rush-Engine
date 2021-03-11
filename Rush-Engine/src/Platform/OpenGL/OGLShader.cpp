@@ -228,7 +228,7 @@ int OGLShader::GetUniformLocation(std::string name){
     if(m_UniformCache.find(name) == m_UniformCache.end()){
         auto loc = glGetUniformLocation(m_Shader,name.c_str());
         m_UniformCache[name] = loc;
-        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugPath + "'!");
+        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugName + "'!");
     }
     return m_UniformCache[name];
 }

@@ -281,7 +281,7 @@ void SceneGraphView::RenderMaterial(Rush::Material &mat) {
         if(mat.diffuseTexture == nullptr)
             ImGui::Button("None");
         else
-            ImGui::Button( mat.diffuseTexture->GetDebugPath().c_str());
+            ImGui::Button( mat.diffuseTexture->GetDebugName().c_str());
 
         static FileBrowser diffDialog;
         if(ImGui::IsItemClicked()){
@@ -298,7 +298,7 @@ void SceneGraphView::RenderMaterial(Rush::Material &mat) {
         if(mat.specularTexture == nullptr)
             ImGui::Button("None");
         else
-            ImGui::Button(mat.specularTexture->GetDebugPath().c_str());
+            ImGui::Button(mat.specularTexture->GetDebugName().c_str());
 
         static FileBrowser specDialog;
         if(ImGui::IsItemClicked()){
@@ -315,7 +315,7 @@ void SceneGraphView::RenderMaterial(Rush::Material &mat) {
         if(mat.normalTexture == nullptr)
             ImGui::Button("None");
         else
-            ImGui::Button(mat.normalTexture->GetDebugPath().c_str());
+            ImGui::Button(mat.normalTexture->GetDebugName().c_str());
 
         static FileBrowser normDialog;
         if(ImGui::IsItemClicked()){

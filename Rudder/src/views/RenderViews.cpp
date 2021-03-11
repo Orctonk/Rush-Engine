@@ -58,13 +58,13 @@ void RenderViews::Init(Rush::Entity cameraEntity){
     m_RenderView = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
         Application::GetInstance().GetWindow()->GetHeight(),
-        {16}
+        {TextureFormat::RGBA16F}
     });
 
     m_SelectionBuffer = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
         Application::GetInstance().GetWindow()->GetHeight(),
-        {8}
+        {TextureFormat::RGBA8}
     });
 
     // Trigger resize on reinit

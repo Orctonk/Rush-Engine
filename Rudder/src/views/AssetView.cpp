@@ -104,7 +104,7 @@ void AssetView::OnImguiRender(){
             if(mat->diffuseTexture == nullptr)
                 ImGui::Button("None");
             else
-                ImGui::Button(mat->diffuseTexture->GetDebugPath().c_str());
+                ImGui::Button(mat->diffuseTexture->GetDebugName().c_str());
             if(ImGui::BeginDragDropTarget()){
                 const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
                 if(texPath != NULL){
@@ -118,7 +118,7 @@ void AssetView::OnImguiRender(){
             if(mat->specularTexture == nullptr)
                 ImGui::Button("None");
             else
-                ImGui::Button(mat->specularTexture->GetDebugPath().c_str());
+                ImGui::Button(mat->specularTexture->GetDebugName().c_str());
             if(ImGui::BeginDragDropTarget()){
                 const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
                 if(texPath != NULL){
@@ -135,7 +135,7 @@ void AssetView::OnImguiRender(){
             if(mat->normalTexture == nullptr)
                 ImGui::Button("None");
             else
-                ImGui::Button(mat->normalTexture->GetDebugPath().c_str());
+                ImGui::Button(mat->normalTexture->GetDebugName().c_str());
             if(ImGui::BeginDragDropTarget()){
                 const ImGuiPayload *texPath = ImGui::AcceptDragDropPayload("texture");
                 if(texPath != NULL){
@@ -198,7 +198,7 @@ void AssetView::RenderMaterialPreview(const std::string &path){
     Rush::FramebufferOptions fboptions;
     fboptions.width = 512;
     fboptions.height = 512;
-    fboptions.texturePrecisions = {8};
+    fboptions.textureFormats = {Rush::TextureFormat::RGBA8};
     Rush::Unique<Rush::Framebuffer> FBO = Rush::Framebuffer::Create(fboptions);
 
     FBO->Bind();

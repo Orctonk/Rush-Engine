@@ -9,7 +9,7 @@
 
 namespace Rush {
 
-Cubemap::Cubemap(std::string filepath) : m_DebugPath(filepath) {}
+Cubemap::Cubemap(std::string filepath) : m_DebugName(filepath) {}
 
 Cubemap::~Cubemap() {}
 

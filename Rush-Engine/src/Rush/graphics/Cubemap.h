@@ -16,7 +16,7 @@ struct RUSH_API CubemapProperties {
 
 class RUSH_API Cubemap {
 private:
-    std::string m_DebugPath;
+    std::string m_DebugName;
 protected:
     CubemapProperties m_Props;
 
@@ -33,7 +33,7 @@ public:
 
     static Shared<Cubemap> Create(Path filepath);
 
-    std::string GetDebugPath() { return m_DebugPath; }
+    std::string GetDebugName() { return m_DebugName; }
     CubemapProperties GetProperties(){ return m_Props; }
 };
     

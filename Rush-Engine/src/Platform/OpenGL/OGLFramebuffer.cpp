@@ -13,8 +13,8 @@ OGLFramebuffer::OGLFramebuffer(FramebufferOptions options)
     glGenFramebuffers(1,&m_FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
     std::vector<uint32_t> atts;
-    for(int i = 0; i < options.texturePrecisions.size(); i++){
-        Shared<OGLTexture> tex = CreateShared<OGLTexture>(options.width,options.height,options.texturePrecisions.at(i));
+    for(int i = 0; i < options.textureFormats.size(); i++){
+        Shared<OGLTexture> tex = CreateShared<OGLTexture>(options.width,options.height,options.textureFormats.at(i));
         m_Textures.push_back(tex);
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+i,GL_TEXTURE_2D,tex->GetID(),0);
         atts.push_back(GL_COLOR_ATTACHMENT0+i);
@@ -56,8 +56,8 @@ void OGLFramebuffer::Resize(uint32_t width, uint32_t height){
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
     m_Textures.clear();
     std::vector<uint32_t> atts;
-    for(int i = 0; i < m_Options.texturePrecisions.size(); i++){
-        Shared<OGLTexture> tex = CreateShared<OGLTexture>(width,height,m_Options.texturePrecisions.at(i));
+    for(int i = 0; i < m_Options.textureFormats.size(); i++){
+        Shared<OGLTexture> tex = CreateShared<OGLTexture>(width,height,m_Options.textureFormats.at(i));
         m_Textures.push_back(tex);
         glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+i,GL_TEXTURE_2D,tex->GetID(),0);
         atts.push_back(GL_COLOR_ATTACHMENT0+i);

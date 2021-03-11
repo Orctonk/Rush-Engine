@@ -12,7 +12,7 @@ private:
     uint32_t m_Texture;
 
 public:
-    OGLTexture(uint32_t width, uint32_t height, uint8_t precision);
+    OGLTexture(uint32_t width, uint32_t height, TextureFormat format, uint8_t* data = nullptr, std::string name = "Created texture");
     OGLTexture(std::string filepath);
     ~OGLTexture();
     OGLTexture(OGLTexture &) = delete;

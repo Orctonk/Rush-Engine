@@ -12,7 +12,7 @@ void SceneView::Init(){
     m_SceneBuffer = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
         Application::GetInstance().GetWindow()->GetHeight(),
-        {16}
+        {TextureFormat::RGBA16F}
     });
 }
 

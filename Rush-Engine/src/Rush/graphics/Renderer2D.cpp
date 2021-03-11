@@ -56,8 +56,9 @@ void Renderer2D::Init(){
 
     s_Data.quadCount = 0;
     s_Data.nextTexture = 1;
-
-    s_Data.whiteTexture = AssetManager::GetTexture("res/textures/white.png");
+        
+    uint8_t white[] = { 255,255,255,255 };
+    s_Data.whiteTexture = Texture::Create(1, 1, TextureFormat::RGBA8, white, "White Texture");
     s_Data.textures[0] = s_Data.whiteTexture;
     s_Data.textureShader = AssetManager::GetShader("res/shaders/textureShader2D.glsl");
 
