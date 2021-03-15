@@ -8,4 +8,8 @@
 #include "components/TagComponent.h"
 #include "components/MeshRendererComponent.h"
 
+#include "Rush/physics/SphereCollider.h"
+#include "Rush/physics/AABBCollider.h"
+#include "Rush/physics/Rigidbody.h"
+
 #endif // __COMPONENTS_H__

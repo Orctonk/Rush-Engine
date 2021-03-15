@@ -44,3 +44,6 @@
 #include "Rush/events/Keycodes.h"
 #include "Rush/events/Mousecodes.h"
 
+#include "Rush/physics/CollisionDetection.h"
+#include "Rush/physics/PhysicsSystem.h"
+
