@@ -25,6 +25,10 @@ void Time::Shutdown() { }
 
 void Time::Update() {
     steady_clock::time_point now = steady_clock::now();
+#ifdef RUSH_DEBUG
+    if (duration_cast<duration<double>>(now - s_LastUpdate).count() > 1.0)
+        s_LastUpdate = (now - duration_cast<steady_clock::duration>(duration<double>(1.0 / 60.0)));
+#endif
     s_DeltaTime = duration_cast<duration<double>>(now-s_LastUpdate).count() * s_TimeScale;
     s_LastUpdate = now;
 }
