@@ -61,6 +61,7 @@ void Application::Run(){
 #ifdef RUSH_DEBUG
     PushOverlay(new DebugLayer());
 #endif
+    Time::Update();
     m_Running = true;
     while(m_Running){
         RUSH_PROFILE_SCOPE("Main loop");
