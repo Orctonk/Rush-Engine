@@ -13,7 +13,7 @@ namespace Rush {
 class RUSH_API Scene{
 private:
     entt::registry m_SceneRegistry;
-    Shared<Shader> m_SceneShader;
+    Shared<Shader> m_SceneShader;   // TODO: Move render functionality into seperate Scene renderer system
     Shared<Shader> m_SkyboxShader;
 
     void SetLightData(Shared<Shader> shader);
