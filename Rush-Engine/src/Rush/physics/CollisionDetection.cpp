@@ -12,9 +12,9 @@ std::vector<Collision> CollisionDetection::DetectCollisions(Scene& scene) {
 	for (auto it = sphereGroup.begin(); it != sphereGroup.end(); it++) {
 		colliders.push_back({ *it,&sphereGroup.get<SphereCollider>(*it) });
 	}
-	auto aabbGroup = reg->view<AABBCollider>();
+	auto aabbGroup = reg->view<BoxCollider>();
 	for (auto it = aabbGroup.begin(); it != aabbGroup.end(); it++) {
-		colliders.push_back({ *it,&aabbGroup.get<AABBCollider>(*it) });
+		colliders.push_back({ *it,&aabbGroup.get<BoxCollider>(*it) });
 	}
 
 	Manifold m;

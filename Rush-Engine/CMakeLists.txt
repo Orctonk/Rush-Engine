@@ -55,7 +55,7 @@ set(RUSH_SOURCES    ${RUSH_SOURCE_DIR}/Rush/core/Application.cpp
                     ${RUSH_SOURCE_DIR}/Rush/physics/CollisionDetection.cpp
                     ${RUSH_SOURCE_DIR}/Rush/physics/PhysicsSystem.cpp
                     ${RUSH_SOURCE_DIR}/Rush/physics/SphereCollider.cpp
-                    ${RUSH_SOURCE_DIR}/Rush/physics/AABBCollider.cpp
+                    ${RUSH_SOURCE_DIR}/Rush/physics/BoxCollider.cpp
                     ${RUSH_SOURCE_DIR}/Rush/debug/DebugLayer.cpp
                     )
 

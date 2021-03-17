@@ -9,13 +9,15 @@
 // This means that there is n^2 collision functions and most are duplicated. 
 // Example: Sphere checks Sphere vs AABB and AABB checks AABB vs Sphere even though these are cleary the same function.
 
+// Data about collision, always relative to the invoking collision shape
 struct RUSH_API Manifold {
 	glm::vec3 collisionNormal;
+	glm::vec3 pointOfImpact;
 	float penetrationDepth;
 };
 
 enum class RUSH_API ColliderType {
-	AABBCollider,
+	BoxCollider,
 	SphereCollider
 };
 
