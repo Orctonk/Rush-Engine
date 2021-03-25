@@ -49,7 +49,7 @@
 #endif
 
 #ifdef RUSH_ENABLE_ASSERT
-	#define RUSH_ASSERT(x) { if(!x) { RUSH_BREAK(); } }
+	#define RUSH_ASSERT(x) { if(!(x)) { RUSH_BREAK(); } }
 #else
 	#define RUSH_ASSERT(x) 
 #endif
