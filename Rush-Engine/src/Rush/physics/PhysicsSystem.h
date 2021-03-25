@@ -13,6 +13,7 @@ private:
 	~PhysicsSystem() = delete;
 
 	static float s_Gravity;
+	static int s_SolverIterations;
 	static std::vector<Collision> s_Collisions;
 public:
 	static void StepPhysics(Scene& scene);
