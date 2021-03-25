@@ -6,6 +6,7 @@ set(SANDBOX_SOURCE_DIR "src")
 
 set(SANDBOX_SOURCES 
     ${SANDBOX_SOURCE_DIR}/main.cpp
+    ${SANDBOX_SOURCE_DIR}/CameraController.cpp
     ${SANDBOX_SOURCE_DIR}/SandboxLayer.cpp)
 
 add_executable(Sandbox ${SANDBOX_SOURCES})
