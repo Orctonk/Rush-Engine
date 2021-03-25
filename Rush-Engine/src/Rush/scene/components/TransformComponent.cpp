@@ -5,7 +5,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-void TransformComponent::RecalcTransform(){
+void TransformComponent::RecalcTransform() const {
     m_Model = glm::toMat4(m_Rotation);
     m_Model = glm::translate(glm::mat4(1.0f),m_Translation) * m_Model;
     m_Model = glm::scale(m_Model,m_Scale);
@@ -17,9 +17,22 @@ TransformComponent::TransformComponent(glm::vec3 translation, glm::vec3 rotation
     RecalcTransform();
 }
 
-glm::mat4 TransformComponent::GetModelMatrix(){ 
+glm::mat4 TransformComponent::GetModelMatrix() const {  
     if(m_Dirty) RecalcTransform();
     return m_Model;
+}
+
+glm::vec3 TransformComponent::GetRight() const { 
+    if (m_Dirty) RecalcTransform();
+    return glm::normalize(glm::vec3(m_Model[0])); 
+}
+glm::vec3 TransformComponent::GetUp() const { 
+    if(m_Dirty) RecalcTransform();
+    return glm::normalize(glm::vec3(m_Model[1])); 
+}
+glm::vec3 TransformComponent::GetBack() const { 
+    if(m_Dirty) RecalcTransform();
+    return glm::normalize(glm::vec3(m_Model[2])); 
 }
 
 void TransformComponent::SetTranslation(const glm::vec3 &translation) { 

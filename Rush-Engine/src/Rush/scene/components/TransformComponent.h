@@ -15,21 +15,26 @@ private:
     glm::vec3 m_Translation;
     glm::quat m_Rotation;
     glm::vec3 m_Scale;
-    glm::mat4 m_Model;
-    bool m_Dirty;
 
-    void RecalcTransform();
+    // Mutable to allow for deferred calculation of model matrix, even when model matrix is used by const instances
+    mutable glm::mat4 m_Model;
+    mutable bool m_Dirty;
+
+    void RecalcTransform() const;
 
 public:
     TransformComponent()
-    : m_Translation(0.0f), m_Rotation(), m_Scale(1.0f), m_Model(1.0f), m_Dirty(true) {}
+    : m_Translation(0.0f), m_Rotation(1.0f,0.0f,0.0f,0.0f), m_Scale(1.0f), m_Model(1.0f), m_Dirty(true) {}
 
     TransformComponent(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale);
 
-    glm::mat4 GetModelMatrix();
+    glm::mat4 GetModelMatrix()  const;
     glm::vec3 GetTranslation()  const { return m_Translation; }
     glm::quat GetRotation()     const { return m_Rotation; }
     glm::vec3 GetScale()        const { return m_Scale; }
+    glm::vec3 GetRight()        const;
+    glm::vec3 GetUp()           const;
+    glm::vec3 GetBack()         const;
     void SetTranslation(const glm::vec3 &translation);
     void SetRotation(const glm::quat &rotation);
     void SetScale(const glm::vec3 &scale);
