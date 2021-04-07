@@ -123,7 +123,9 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	glm::mat3 rot1 = glm::toMat3(t1.GetRotation());
 	glm::mat3 rot2 = glm::toMat3(t2.GetRotation());
 
-	glm::mat3 rotr = rot2 * rot1;
+	glm::mat3 orthTest = rot1 * glm::transpose(rot1);
+	
+	glm::mat3 rotr = glm::transpose(rot1) * rot2;
 	glm::mat3 absrotr;
 	absrotr[0] = glm::abs(rotr[0]);
 	absrotr[1] = glm::abs(rotr[1]);
@@ -170,7 +172,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	glm::vec3 prrot2 = pr * rot2;
 
 	// B2 X axis separation test
-	pen = glm::abs(prrot2.x) - (ex2.x + glm::dot(ex1, glm::row(absrotr,0)));
+	pen = glm::abs(prrot2.x) - (ex2.x + glm::dot(ex1, glm::row(absrotr, 0)));
 	if (pen > 0.0f) return false; 
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -199,6 +201,8 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 		face = 6;
 	}
 
+	rotr = glm::transpose(rotr);
+	absrotr = glm::transpose(absrotr);
 	absrotr += 1.0e-5f;
 
 	glm::vec3 edgeNormal;
@@ -458,7 +462,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 		}
 	}
 
-	RUSH_ASSERT(numContacts >= 1);
+	if (numContacts < 1) return false;
 
 	if (numContacts <= 4) {
 		for (int i = 0; i < numContacts; i++) {
