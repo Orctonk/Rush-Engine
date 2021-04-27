@@ -24,7 +24,7 @@ std::vector<Collision> CollisionDetection::DetectCollisions(Scene& scene) {
 			auto &t2 = reg->get<TransformComponent>(it2->first);
 			if (it1->second->CheckCollision(*it2->second, t1, t2, &m))
 				detectedCollisions.push_back({
-					{reg,it1->first},
+					{ reg,it1->first },
 					{ reg,it2->first },
 					m }
 				);
