@@ -140,7 +140,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	bool invNormal = false;
 
 	// B1 X axis separation test
-	pen = glm::abs(prrot.x) - (ex1.x + glm::dot(ex2, absrotr[0]));
+	pen = glm::abs(prrot.x) - (ex1.x + glm::dot(ex2, glm::row(absrotr, 0)));
 	if (pen > 0.0f) return false; 
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -150,7 +150,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	}
 
 	// B1 Y axis separation test
-	pen = glm::abs(prrot.y) - (ex1.y + glm::dot(ex2, absrotr[1]));
+	pen = glm::abs(prrot.y) - (ex1.y + glm::dot(ex2, glm::row(absrotr, 1)));
 	if (pen > 0.0f) return false; 
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -160,7 +160,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	}
 
 	// B1 Z axis separation test
-	pen = glm::abs(prrot.z) - (ex1.z + glm::dot(ex2, absrotr[2]));
+	pen = glm::abs(prrot.z) - (ex1.z + glm::dot(ex2, glm::row(absrotr, 2)));
 	if (pen > 0.0f) return false; 
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -172,7 +172,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	glm::vec3 prrot2 = pr * rot2;
 
 	// B2 X axis separation test
-	pen = glm::abs(prrot2.x) - (ex2.x + glm::dot(ex1, glm::row(absrotr, 0)));
+	pen = glm::abs(prrot2.x) - (ex2.x + glm::dot(ex1, absrotr[0]));
 	if (pen > 0.0f) return false; 
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -182,7 +182,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	}
 
 	// B2 Y axis separation test
-	pen = glm::abs(prrot2.y) - (ex2.y + glm::dot(ex1, glm::row(absrotr, 1)));
+	pen = glm::abs(prrot2.y) - (ex2.y + glm::dot(ex1, absrotr[1]));
 	if (pen > 0.0f) return false;
 	if (pen > leastPen) {
 		leastPen = pen;
@@ -192,7 +192,7 @@ bool BoxBoxCollision(const BaseCollider& c1, const BaseCollider& c2, const Trans
 	}
 
 	// B2 Z axis separation test
-	pen = glm::abs(prrot2.z) - (ex2.z + glm::dot(ex1, glm::row(absrotr, 2)));
+	pen = glm::abs(prrot2.z) - (ex2.z + glm::dot(ex1, absrotr[2]));
 	if (pen > 0.0f) return false;
 	if (pen > leastPen) {
 		leastPen = pen;
