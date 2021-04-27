@@ -8,6 +8,8 @@
 struct RUSH_API Contact {
 	glm::vec3 position;
 	float depth;
+	float total_impulse = 0.0f;
+	float total_friction = 0.0f;
 };
 
 // Data about collision, always relative to the invoking collision shape
