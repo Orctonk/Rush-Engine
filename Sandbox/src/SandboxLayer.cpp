@@ -57,7 +57,7 @@ void SandboxLayer::OnAttach() {
 	b2.AddComponent<Rigidbody>(0.0f, 0.8f);
 	auto& btc2 = b2.GetComponent<TransformComponent>();
 	btc2.Translate({ 0.0f,0.0f,0.0f });
-	btc2.Rotate(glm::toQuat(glm::eulerAngleYX(0.785f, 0.785f)));
+	btc2.Rotate(glm::toQuat(glm::eulerAngleYX(0.1f, 0.785f)));
 
 	Entity b5 = m_Scene.NewEntity("Box 5");
 	b5.AddComponent<MeshRendererComponent>(AssetManager::GetMesh("res/models/cube.obj"));
