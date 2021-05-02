@@ -135,6 +135,15 @@ target_link_libraries(Rush PRIVATE nlohmann_json::nlohmann_json)
 # Add Cereal as dependency for serialization
 target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/cereal/include)
 
+# Add shaderc as dependency for shader compilation into SPIR-V
+set(SHADERC_SKIP_INSTALL ON CACHE INTERNAL "")
+set(SHADERC_SKIP_TESTS ON CACHE INTERNAL "")
+set(SHADERC_SKIP_EXAMPLES ON CACHE INTERNAL "")
+set(SHADERC_THIRD_PARTY_ROOT_DIR ${RUSH_DEPS_DIR}/shaderc-deps CACHE INTERNAL "")
+add_subdirectory(${RUSH_DEPS_DIR}/shaderc)
+set(SHADERC_ENABLE_SHARED_CRT ON CACHE INTERNAL "")
+target_link_libraries(Rush PRIVATE shaderc)
+
 # Build or add Assimp library as dependency
 if(RUSH_BUILD_ASSIMP)
     message(STATUS "Building assimp")

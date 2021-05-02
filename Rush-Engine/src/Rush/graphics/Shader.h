@@ -25,6 +25,10 @@ enum class RUSH_API ShaderData{
 };
 
 class RUSH_API Shader {
+private: 
+    void CompileSPIRV() {
+
+    }
 protected:
     std::string m_DebugName;
     Shader(std::string shaderPath);

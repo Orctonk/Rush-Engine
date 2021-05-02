@@ -22,3 +22,15 @@
 [submodule "Rush-Engine/Libraries/cereal"]
 	path = Rush-Engine/Libraries/cereal
 	url = git@github.com:USCiLab/cereal.git
+[submodule "Rush-Engine\\Libraries\\shaderc"]
+	path = Rush-Engine\\Libraries\\shaderc
+	url = https://github.com/google/shaderc.git
+[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-tools"]
+	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-tools
+	url = git@github.com:KhronosGroup/SPIRV-Tools.git
+[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-headers"]
+	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-headers
+	url = git@github.com:KhronosGroup/SPIRV-Headers.git
+[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\glslang"]
+	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\glslang
+	url = git@github.com:KhronosGroup/glslang.git

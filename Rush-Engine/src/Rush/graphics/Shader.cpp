@@ -9,7 +9,14 @@
 
 namespace Rush {
 
-Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) { }
+Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) { 
+    // Is SPIR-V binary cached?
+        // If yes load cached binary
+        // Else compile from source
+    
+            // Cache compiled Binary
+    // Reflect on SPIR-V binary
+}
 
 Shader::~Shader() { }
 
