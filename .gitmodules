@@ -34,3 +34,6 @@
 [submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\glslang"]
 	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\glslang
 	url = git@github.com:KhronosGroup/glslang.git
+[submodule ".\\Rush-Engine\\Libraries\\spirv-cross"]
+	path = .\\Rush-Engine\\Libraries\\spirv-cross
+	url = git@github.com:KhronosGroup/SPIRV-Cross.git
