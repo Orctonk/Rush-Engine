@@ -99,7 +99,6 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/AssetManager.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/File.cpp
-    ${RUSH_SOURCE_DIR}/Rush/resources/File.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/Material.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/Path.cpp
@@ -140,6 +139,18 @@ if(RUSH_OPENGL)
     )
 else()
     message(FATAL_ERROR "No window manager provided!")
+endif()
+
+if(WIN32)
+    list(APPEND RUSH_SOURCES 
+        ${RUSH_SOURCE_DIR}/Rush/resources/FileWindows.cpp
+    )
+elseif(UNIX AND NOT APPLE)
+    list(APPEND RUSH_SOURCES 
+        ${RUSH_SOURCE_DIR}/Rush/resources/FileLinux.cpp
+    )
+else()
+    message(FATAL_ERROR "OSX is not yet supported")
 endif()
 
 list(APPEND RUSH_SOURCES ${RUSH_HEADERS})
