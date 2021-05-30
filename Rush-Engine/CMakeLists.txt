@@ -141,18 +141,6 @@ else()
     message(FATAL_ERROR "No window manager provided!")
 endif()
 
-if(WIN32)
-    list(APPEND RUSH_SOURCES 
-        ${RUSH_SOURCE_DIR}/Rush/resources/FileWindows.cpp
-    )
-elseif(UNIX AND NOT APPLE)
-    list(APPEND RUSH_SOURCES 
-        ${RUSH_SOURCE_DIR}/Rush/resources/FileLinux.cpp
-    )
-else()
-    message(FATAL_ERROR "OSX is not yet supported")
-endif()
-
 list(APPEND RUSH_SOURCES ${RUSH_HEADERS})
 
 # Specify library type
