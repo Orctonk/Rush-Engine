@@ -22,7 +22,7 @@ RootMesh ModelLoader::LoadModel(const Path &filepath){
     
     RootMesh rm;
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-        RUSH_LOG_ERROR("Failed to load model '" + filepath.GetRawPath() + "'");
+        RUSH_LOG_ERROR("Failed to load model '{}'", filepath.GetRawPath());
         return rm;
     }
 

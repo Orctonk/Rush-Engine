@@ -12,7 +12,7 @@ namespace Rush{
 
 static void glfwErrorCallback(int errorCode, const char * message){
     RUSH_PROFILE_FUNCTION();
-    RUSH_LOG_ERROR("(" + std::to_string(errorCode) + ") " + message);
+    RUSH_LOG_ERROR("({}) {}", errorCode, message);
 }
 
 static void APIENTRY glDebugOutput(  GLenum source, 

@@ -71,7 +71,7 @@ void Material::Write(Shared<Material> mat, Path matPath){
 Shared<Material> Material::Load(Path matPath){
     File matFile(matPath);
     if(!matFile.Exists() || matFile.GetType() != FileType::Regular){
-        RUSH_LOG_WARNING("Material file " + matPath.GetRawPath() + " does not exist!");
+        RUSH_LOG_WARNING("Material file {} does not exist!", matPath.GetRawPath());
         return nullptr;
     }
     Shared<Material> mat = CreateShared<Material>();

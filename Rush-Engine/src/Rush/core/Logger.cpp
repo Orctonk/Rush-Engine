@@ -52,33 +52,6 @@ Logger::Logger()
     Log("Logger started!","Logger",LogLevel::Info);
 }
 
-void Logger::Log(std::string message, std::string sender, LogLevel level){
-    using namespace std::chrono;
-    if(level < m_Threshold)
-        return;
-
-    LogMessage m;
-    m.level = level;
-    m.message = message;
-    std::stringstream ss;
-    if(sender.empty()){
-        auto id = std::this_thread::get_id();
-        try{
-            ss << m_AliasMap.at(id);
-        } catch (std::out_of_range e){
-            ss << id;
-        }
-    }
-    else
-        ss << sender;
-    m.sender = ss.str();
-    std::unique_lock<std::mutex> guard(m_QueueLock);
-    m.timestamp = duration_cast<milliseconds>(system_clock::now() - m_LoggerStart).count();
-    m_LogQueue.push(m);
-    m_Logged.notify_all();
-}
-
-
 std::string getLevelString(LogLevel level){
     switch(level){
     case LogLevel::Trace:     return "TRACE";
@@ -133,28 +106,6 @@ void Logger::Destroy(){
     s_close = true;
     getInstance().m_Logged.notify_all();
     getInstance().m_LoggerThread.join();
-}
-
-void Logger::Trace(std::string message, std::string sender){
-    getInstance().Log(message,sender, LogLevel::Trace);
-}
-void Logger::Debug(std::string message, std::string sender){
-#ifdef  RUSH_BUILD_DEBUG
-    getInstance().Log(message,sender, LogLevel::Debug);
-#endif
-}
-void Logger::Info(std::string message, std::string sender){
-    getInstance().Log(message,sender, LogLevel::Info);
-}
-void Logger::Warning(std::string message, std::string sender){
-    getInstance().Log(message,sender, LogLevel::Warning);
-}
-void Logger::Error(std::string message, std::string sender){
-    getInstance().Log(message,sender, LogLevel::Error);
-}
-
-void Logger::SetThreshold(LogLevel level){
-    getInstance().m_Threshold = level;
 }
 
 void Logger::SetAlias(std::string alias,std::thread::id id){

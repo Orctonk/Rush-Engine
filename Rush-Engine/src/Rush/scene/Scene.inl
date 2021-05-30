@@ -12,16 +12,16 @@ template<typename ...Components>
 void Scene::Save(const Path &scenePath){
     File sf(scenePath);
     if(sf.Exists()){
-        RUSH_LOG_WARNING("'" + scenePath.GetRawPath() + "' already exists, overwriting.");
+        RUSH_LOG_WARNING("'{}' already exists, overwriting.", scenePath.GetRawPath());
         if(sf.GetType() != FileType::Regular){
-            RUSH_LOG_ERROR("Failed to write scene '" + scenePath.GetRawPath() + "': File is not regular file!");
+            RUSH_LOG_ERROR("Failed to write scene '{}': File is not regular file!", scenePath.GetRawPath());
             return;
         }
     }
 
     auto fs = sf.OpenFile(OpenMode::Write);
     if(!fs.is_open()){
-        RUSH_LOG_ERROR("Failed to open scene file '" + scenePath.GetRawPath() + "'!");
+        RUSH_LOG_ERROR("Failed to open scene file '{}'!", scenePath.GetRawPath());
         return;
     }
     
@@ -35,17 +35,17 @@ template<typename ...Components>
 void Scene::Load(const Path &scenePath){
     File sf(scenePath);
     if(!sf.Exists()){
-        RUSH_LOG_ERROR("'" + scenePath.GetRawPath() + "' doesn't exist!");
+        RUSH_LOG_ERROR("'{}' doesn't exist!", scenePath.GetRawPath());
         return;
     }
     if(sf.GetType() != FileType::Regular){
-        RUSH_LOG_ERROR("Failed to load scene '" + scenePath.GetRawPath() + "': File is not regular file!");
+        RUSH_LOG_ERROR("Failed to load scene '{}': File is not regular file!", scenePath.GetRawPath());
         return;
     }
 
     auto fs = sf.OpenFile(OpenMode::Read);
     if(!fs.is_open()){
-        RUSH_LOG_ERROR("Failed to open scene file '" + scenePath.GetRawPath() + "'!");
+        RUSH_LOG_ERROR("Failed to open scene file '{}'!", scenePath.GetRawPath());
         return;
     }
     

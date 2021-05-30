@@ -195,6 +195,10 @@ target_include_directories(Rush PRIVATE ${RUSH_DEPS_DIR}/stb_image)
 # Add ImGui as dependency
 target_include_directories(Rush PUBLIC ${RUSH_DEPS_DIR}/imgui)
 
+# Add fmt as a dependency
+add_subdirectory(${RUSH_DEPS_DIR}/fmt)
+target_link_libraries(Rush PUBLIC fmt::fmt)
+
 # Add nlohmann/json parser as dependency
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(BUILD_TESTING OFF CACHE INTERNAL "")

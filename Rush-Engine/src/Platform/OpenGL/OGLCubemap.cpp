@@ -55,7 +55,7 @@ OGLCubemap::OGLCubemap(std::string filepath)
             m_Props.size = width;
         }
         if(width != height || width != m_Props.size || channels != m_Props.channels)
-            RUSH_LOG_WARNING("Cubemap '" + filepath + "' is not consistent across textures!");
+            RUSH_LOG_WARNING("Cubemap '{}' is not consistent across textures!", filepath);
 
         if(data){
             if(channels == 3)

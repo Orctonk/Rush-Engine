@@ -1,5 +1,5 @@
-#ifndef __RUSH_LOGGER_H__
-#define __RUSH_LOGGER_H__
+#ifndef __LOGGER_H__
+#define __LOGGER_H__
 
 #include "Core.h"
 
@@ -7,6 +7,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <fmt/core.h>
 
 namespace Rush {
 
@@ -57,7 +58,8 @@ class RUSH_API Logger{
         LogLevel m_Threshold;
 
         Logger();
-        void Log(std::string message, std::string sender, LogLevel level);
+        template<typename... Args>
+        void Log(std::string message, std::string sender, LogLevel level, Args ... args);
         static void LogPump();
 
     public:
@@ -71,22 +73,84 @@ class RUSH_API Logger{
             return s_Instance;
         }
         
-        static void Trace(std::string message, std::string sender = "");
-        static void Debug(std::string message, std::string sender = "");
-        static void Info(std::string message, std::string sender = "");
-        static void Warning(std::string message, std::string sender = "");
-        static void Error(std::string message, std::string sender = "");
+        template<typename... Args>
+        static void Trace(std::string message, std::string sender = "", Args... args);
+        template<typename... Args>
+        static void Debug(std::string message, std::string sender = "", Args... args);
+        template<typename... Args>
+        static void Info(std::string message, std::string sender = "", Args... args);
+        template<typename... Args>
+        static void Warning(std::string message, std::string sender = "", Args... args);
+        template<typename... Args>
+        static void Error(std::string message, std::string sender = "", Args... args);
 
         static void SetThreshold(LogLevel level);
 
         static void SetAlias(std::string alias, std::thread::id id = std::thread::id());
 };
+
+template<typename... Args>
+void Logger::Trace(std::string message, std::string sender, Args ... args){
+    getInstance().Log(message,sender, LogLevel::Trace, args...);
 }
 
-#define RUSH_LOG_TRACE(x) Rush::Logger::getInstance().Trace(x)
-#define RUSH_LOG_DEBUG(x) Rush::Logger::getInstance().Debug(x)
-#define RUSH_LOG_INFO(x) Rush::Logger::getInstance().Info(x)
-#define RUSH_LOG_WARNING(x) Rush::Logger::getInstance().Warning(x)
-#define RUSH_LOG_ERROR(x) Rush::Logger::getInstance().Error(x)
+template<typename... Args>
+void Logger::Debug(std::string message, std::string sender, Args ... args){
+    getInstance().Log(message,sender, LogLevel::Debug, args...);
+}
 
-#endif  // __RUSH_LOGGER_H__
+template<typename... Args>
+void Logger::Info(std::string message, std::string sender, Args ... args){
+    getInstance().Log(message,sender, LogLevel::Info, args...);
+}
+
+template<typename... Args>
+void Logger::Warning(std::string message, std::string sender, Args ... args){
+    getInstance().Log(message,sender, LogLevel::Warning, args...);
+}
+
+template<typename... Args>
+void Logger::Error(std::string message, std::string sender, Args ... args){
+    getInstance().Log(message,sender, LogLevel::Error, args...);
+}
+
+template<typename... Args>
+void Logger::Log(std::string message, std::string sender, LogLevel level, Args... args){
+    using namespace std::chrono;
+    if(level < m_Threshold)
+        return;
+
+    LogMessage m;
+    m.level = level;
+    m.message = fmt::format(message,args...);
+    std::stringstream ss;
+    if(sender.empty()){
+        auto id = std::this_thread::get_id();
+        try{
+            ss << m_AliasMap.at(id);
+        } catch (std::out_of_range e){
+            ss << id;
+        }
+    }
+    else
+        ss << sender;
+    m.sender = ss.str();
+    std::unique_lock<std::mutex> guard(m_QueueLock);
+    m.timestamp = duration_cast<milliseconds>(system_clock::now() - m_LoggerStart).count();
+    m_LogQueue.push(m);
+    m_Logged.notify_all();
+}
+
+}
+
+#define RUSH_LOG_TRACE(x, ...) Rush::Logger::getInstance().Trace(x,"", __VA_ARGS__)
+#ifdef RUSH_DEBUG
+    #define RUSH_LOG_DEBUG(x, ...) Rush::Logger::getInstance().Debug(x,"", __VA_ARGS__)
+#else
+    #define RUSH_LOG_DEBUG(x, ...) do {} while()
+#endif
+#define RUSH_LOG_INFO(x, ...) Rush::Logger::getInstance().Info(x,"", __VA_ARGS__)
+#define RUSH_LOG_WARNING(x, ...) Rush::Logger::getInstance().Warning(x,"", __VA_ARGS__)
+#define RUSH_LOG_ERROR(x, ...) Rush::Logger::getInstance().Error(x,"", __VA_ARGS__)
+
+#endif // __LOGGER_H__
