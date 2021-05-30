@@ -37,3 +37,6 @@
 [submodule ".\\Rush-Engine\\Libraries\\spirv-cross"]
 	path = .\\Rush-Engine\\Libraries\\spirv-cross
 	url = git@github.com:KhronosGroup/SPIRV-Cross.git
+[submodule ".\\Rush-Engine\\Libraries\\fmt"]
+	path = .\\Rush-Engine\\Libraries\\fmt
+	url = git@github.com:fmtlib/fmt.git
