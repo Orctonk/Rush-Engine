@@ -14,6 +14,7 @@
 #include <iterator>
 #include <algorithm>
 #include <array>
+#include <filesystem>
 
 #include <Rush/core/Core.h>
 #include <Rush/core/Logger.h>

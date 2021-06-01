@@ -56,6 +56,7 @@ set(RUSH_HEADERS
     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.h
     ${RUSH_SOURCE_DIR}/Rush/resources/AssetManager.h
     ${RUSH_SOURCE_DIR}/Rush/resources/File.h
+    ${RUSH_SOURCE_DIR}/Rush/resources/FileCacher.h
     ${RUSH_SOURCE_DIR}/Rush/resources/Material.h
     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.h
     ${RUSH_SOURCE_DIR}/Rush/resources/Path.h
@@ -99,6 +100,7 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/profiling/Profiler.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/AssetManager.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/File.cpp
+    ${RUSH_SOURCE_DIR}/Rush/resources/FileCacher.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/Material.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/Path.cpp

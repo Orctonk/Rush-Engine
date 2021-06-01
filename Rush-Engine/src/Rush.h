@@ -28,6 +28,7 @@
 #include "Rush/resources/AssetManager.h"
 #include "Rush/resources/Path.h"
 #include "Rush/resources/File.h"
+#include "Rush/resources/FileCacher.h"
 #include "Rush/resources/Material.h"
 #include "Rush/resources/RootMesh.h"
 

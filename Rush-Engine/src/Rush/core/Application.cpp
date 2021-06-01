@@ -6,6 +6,7 @@
 #include "Random.h"
 #include "Settings.h"
 #include "Rush/resources/AssetManager.h"
+#include "Rush/resources/FileCacher.h"
 #include "Rush/graphics/Renderer.h"
 #include "Rush/graphics/LineRenderer.h"
 #include "Rush/graphics/Renderer2D.h"
@@ -19,6 +20,7 @@ Application *Application::s_Instance;
 Application::Application(){ 
     s_Instance = this;
     Settings::Init();
+    FileCache::Init();
     Random::Init();
     Time::Init();
     Profiler::Init();
