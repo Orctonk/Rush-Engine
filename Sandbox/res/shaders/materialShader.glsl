@@ -1,38 +1,52 @@
 #type vertex
-#version 330 core
+#version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec2 aTexCoord;
 
-struct SceneData {
-    mat4 model;
+struct VS_OUT {
+    mat3 TBN;
+    vec3 FragPos;
+    vec3 camPos;
+    vec2 TexCoord;
+};
+
+layout (location = 0) out VS_OUT vs_out;
+
+layout (std140,binding = 0) uniform SceneData {
     mat4 viewProjection;
     vec3 camPos;
-};  
+} u_Scene;  
 
-out VS_OUT {
-    vec3 FragPos;
-    vec2 TexCoord;
-    mat3 TBN;
-    vec3 camPos;
-} vs_out;
-
-uniform SceneData u_Scene;
+layout (push_constant) uniform ObjectData {
+    mat4 model;
+} u_Object;
 
 void main() {
     vs_out.TexCoord = aTexCoord;
-    vec3 T = normalize(vec3(u_Scene.model * vec4(aTangent,0.0)));
-    vec3 N = normalize(vec3(u_Scene.model * vec4(aNormal,0.0)));
+    vec3 T = normalize(vec3(u_Object.model * vec4(aTangent,0.0)));
+    vec3 N = normalize(vec3(u_Object.model * vec4(aNormal,0.0)));
     vec3 B = cross(N,T);
     vs_out.TBN = mat3(T,B,N);
-    vs_out.FragPos = vec3(u_Scene.model * vec4(aPos,1.0));
+    vs_out.FragPos = vec3(u_Object.model * vec4(aPos,1.0));
     vs_out.camPos = u_Scene.camPos;
-    gl_Position = u_Scene.viewProjection * u_Scene.model * vec4(aPos,1.0);
+    gl_Position = u_Scene.viewProjection * u_Object.model * vec4(aPos,1.0);
 }
 
 #type fragment
-#version 330 core
+#version 450 core
+
+struct FS_IN {
+    mat3 TBN;
+    vec3 FragPos;
+    vec3 camPos;
+    vec2 TexCoord;
+};
+
+layout (location = 0) in FS_IN fs_in;
+
+layout (location = 0) out vec4 FragColor;  
 
 #define MAX_LIGHTS 30
 
@@ -44,33 +58,26 @@ struct PackedLight {
     vec4 specular_quadratic;
 };
 
-struct Material {
-    vec4 color;
-    sampler2D diffuse;
-    sampler2D specular;
-    sampler2D normal;
-    float shininess;
+layout (std140,binding = 0) uniform Lights {
+    PackedLight u_Lights[MAX_LIGHTS];
+    int u_LightCount;
+    int u_DLightCount;
 };
 
-in VS_OUT {
-    vec3 FragPos;
-    vec2 TexCoord;
-    mat3 TBN;
-    vec3 camPos;
-} fs_in;
+layout (std140,binding = 1) uniform Material {
+    vec4 color;
+    float shininess;
+} u_Material;
 
-out vec4 FragColor;  
-
-uniform PackedLight u_Lights[MAX_LIGHTS];
-uniform int u_DLightCount;
-uniform int u_LightCount;
-uniform Material u_Material;
+layout (binding = 2) uniform sampler2D diffuseTexture;
+layout (binding = 3) uniform sampler2D specularTexture;
+layout (binding = 4) uniform sampler2D normalTexture;
 
 vec3 CalcDirLight(PackedLight light, vec3 normal, vec3 viewDir);
 vec3 CalcOtherLight(PackedLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {   
-    vec3 normal = texture(u_Material.normal,fs_in.TexCoord).rgb;
+    vec3 normal = texture(normalTexture,fs_in.TexCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0);
     normal = normalize(fs_in.TBN * normal);
     vec3 result = vec3(0.0);
@@ -92,9 +99,9 @@ vec3 CalcDirLight(PackedLight light, vec3 normal, vec3 viewDir){
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
     // combine results
-    vec3 ambient = light.ambient_constant.rgb * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 diffuse = light.diffuse_linear.rgb * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 specular = light.specular_quadratic.rgb * spec * vec3(texture(u_Material.specular, fs_in.TexCoord).r);
+    vec3 ambient = light.ambient_constant.rgb * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 diffuse = light.diffuse_linear.rgb * diff * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 specular = light.specular_quadratic.rgb * spec * vec3(texture(specularTexture, fs_in.TexCoord).r);
     return (ambient + diffuse + specular);
 }
 
@@ -118,9 +125,9 @@ vec3 CalcOtherLight(PackedLight light, vec3 normal, vec3 fragPos, vec3 viewDir){
         intensity = clamp((theta - light.direction_cutoffOuter.a) / epsilon, 0.0, 1.0);
     }
     // combine results
-    vec3 ambient = light.ambient_constant.rgb * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 diffuse = light.diffuse_linear.rgb * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 specular = light.specular_quadratic.rgb * spec * vec3(texture(u_Material.specular, fs_in.TexCoord).r);
+    vec3 ambient = light.ambient_constant.rgb * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 diffuse = light.diffuse_linear.rgb * diff * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 specular = light.specular_quadratic.rgb * spec * vec3(texture(specularTexture, fs_in.TexCoord).r);
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;

@@ -1,24 +1,24 @@
 #type vertex
-#version 330 core
+#version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec2 aTexCoord;
 
-struct SceneData {
+struct VS_OUT {
+    mat3 TBN;
+    vec3 FragPos;
+    vec3 camPos;
+    vec2 TexCoord;
+};
+
+layout (location = 0) out VS_OUT vs_out;
+
+layout (std140,binding = 0) uniform SceneData {
     mat4 model;
     mat4 viewProjection;
     vec3 camPos;
-};  
-
-out VS_OUT {
-    vec3 FragPos;
-    vec2 TexCoord;
-    mat3 TBN;
-    vec3 camPos;
-} vs_out;
-
-uniform SceneData u_Scene;
+} u_Scene;  
 
 void main() {
     vs_out.TexCoord = aTexCoord;
@@ -32,7 +32,18 @@ void main() {
 }
 
 #type fragment
-#version 330 core
+#version 450 core
+
+struct FS_IN {
+    mat3 TBN;
+    vec3 FragPos;
+    vec3 camPos;
+    vec2 TexCoord;
+};
+
+layout (location = 0) in FS_IN fs_in;
+
+layout (location = 0) out vec4 FragColor;  
 
 #define DLIGHT_COUNT 5
 
@@ -44,30 +55,23 @@ struct DirectionalLight {
     vec3 specular;
 };
 
-struct Material {
-    vec4 color;
-    sampler2D diffuse;
-    sampler2D specular;
-    sampler2D normal;
-    float shininess;
+layout (std140,binding = 0) uniform Lights {
+    DirectionalLight u_DLights[DLIGHT_COUNT];
 };
 
-in VS_OUT {
-    vec3 FragPos;
-    vec2 TexCoord;
-    mat3 TBN;
-    vec3 camPos;
-} fs_in;
+layout (std140,binding = 1) uniform Material {
+    vec4 color;
+    float shininess;
+} u_Material;
 
-out vec4 FragColor;  
-
-uniform DirectionalLight u_DLights[DLIGHT_COUNT];
-uniform Material u_Material;
+layout (binding = 2) uniform sampler2D diffuseTexture;
+layout (binding = 3) uniform sampler2D specularTexture;
+layout (binding = 4) uniform sampler2D normalTexture;
 
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 
 void main() {   
-    vec3 normal = texture(u_Material.normal,fs_in.TexCoord).rgb;
+    vec3 normal = texture(normalTexture,fs_in.TexCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0);
     normal = normalize(fs_in.TBN * normal);
     vec3 result = vec3(0.0);
@@ -87,8 +91,8 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir){
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), u_Material.shininess);
     // combine results
-    vec3 ambient = light.ambient * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 diffuse = light.diffuse * diff * vec3(texture(u_Material.diffuse, fs_in.TexCoord).rgb);
-    vec3 specular = light.specular * spec * vec3(texture(u_Material.specular, fs_in.TexCoord).r);
+    vec3 ambient = light.ambient * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(diffuseTexture, fs_in.TexCoord).rgb);
+    vec3 specular = light.specular * spec * vec3(texture(specularTexture, fs_in.TexCoord).r);
     return (ambient + diffuse + specular);
 }

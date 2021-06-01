@@ -1,17 +1,21 @@
 #type vertex
-#version 330 core
+#version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aTexCoord;
 layout (location = 3) in float aTexIndex;
 
-out VS_OUT {
-    vec2 TexCoord;
+struct VS_OUT {
     vec4 Color;
+    vec2 TexCoord;
     float TexIndex;
-} vs_out;
+};
 
-uniform mat4 u_ViewProj;
+layout (location = 0) out VS_OUT vs_out;
+
+layout (binding = 0) uniform Camera {
+    mat4 u_ViewProj;
+};
 
 void main() {
     vs_out.TexCoord = aTexCoord;
@@ -21,17 +25,19 @@ void main() {
 }
 
 #type fragment
-#version 330 core
+#version 450 core
 
-in VS_OUT {
-    vec2 TexCoord;
+struct FS_IN {
     vec4 Color;
+    vec2 TexCoord;
     float TexIndex;
-} fs_in;
+};
 
-uniform sampler2D u_Textures[32];
+layout (location = 0) in FS_IN fs_in;
 
-out vec4 FragColor;  
+layout (binding = 0) uniform sampler2D u_Textures[32];
+
+layout (location = 0) out vec4 FragColor;  
 
 void main() {
     vec4 col = fs_in.Color;

@@ -1,22 +1,22 @@
 #type vertex
-#version 330 core
+#version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangent;
 layout (location = 3) in vec2 aTexCoord;
 
-struct SceneData {
+struct VS_OUT {
+    vec2 TexCoord;
+    mat3 TBN;
+};
+
+layout (location = 0) out VS_OUT vs_out;
+
+layout (std140,binding = 0) uniform SceneData {
     mat4 model;
     mat4 viewProjection;
     vec3 camPos;
-};  
-
-out VS_OUT {
-    vec2 TexCoord;
-    mat3 TBN;
-} vs_out;
-
-uniform SceneData u_Scene;
+} u_Scene;  
 
 void main() {
     vs_out.TexCoord = aTexCoord;
@@ -28,26 +28,27 @@ void main() {
 }
 
 #type fragment
-#version 330 core
+#version 450 core
 
-struct Material {
-    sampler2D diffuse;
-    sampler2D specular;
-    sampler2D normal;
-    float shininess;
-};
-
-in VS_OUT {
+struct FS_IN {
     vec2 TexCoord;
     mat3 TBN;
-} fs_in;
+};
 
-out vec4 FragColor;  
+layout (location = 0) in FS_IN fs_in;
 
-uniform Material u_Material;
+layout (std140,binding = 1) uniform Material {
+    float shininess;
+} u_Material;
+
+layout (binding = 2) uniform sampler2D diffuseTexture;
+layout (binding = 3) uniform sampler2D specularTexture;
+layout (binding = 4) uniform sampler2D normalTexture;
+
+layout (location = 0) out vec4 FragColor; 
 
 void main(){
-    vec3 normal = texture(u_Material.normal,fs_in.TexCoord).rgb;
+    vec3 normal = texture(normalTexture,fs_in.TexCoord).rgb;
     normal = normalize(normal * 2.0 - 1.0);
     normal = normalize(fs_in.TBN * normal);
     FragColor = vec4(normal,1.0f);

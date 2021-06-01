@@ -1,16 +1,14 @@
 #type vertex
-#version 330 core
+#version 450 core
 layout (location = 0) in vec3 aPos;
 
-out vec3 TexCoord;
+layout (location = 0) out vec3 TexCoord;
 
-struct SceneData {
+layout (std140,binding = 0) uniform SceneData {
     mat4 model;
     mat4 viewProjection;
     vec3 camPos;
-};  
-
-uniform SceneData u_Scene;
+} u_Scene;
 
 void main(){
     TexCoord = aPos;
@@ -19,13 +17,13 @@ void main(){
 }
 
 #type fragment
-#version 330 core
+#version 450 core
 
-in vec3 TexCoord;
+layout (location = 0) in vec3 TexCoord;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
 
-uniform samplerCube u_Skybox;
+layout (binding = 0) uniform samplerCube u_Skybox;
 
 void main(){
     FragColor = texture(u_Skybox,TexCoord);
