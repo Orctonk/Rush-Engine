@@ -12,40 +12,44 @@ static Shared<Texture> s_White = nullptr;
 static Shared<Texture> s_Blue = nullptr;
 
 uint8_t white[] = { 255,255,255,255 };
-uint8_t blue[] = { 128,128,128,128 };
+uint8_t blue[] = { 128,128,255,255 };
+
+Material::Material(){
+    m_MaterialUniformBuffer = UniformBuffer::Create(sizeof(MaterialBuffer),2);
+}
+
+Material::~Material(){
+
+}
 
 void Material::Bind() {
     materialShader->Bind();
-
-    materialShader->SetUniform("u_Material.diffuse",0);
     if(diffuseTexture)
-        diffuseTexture->Bind(0);
+        diffuseTexture->Bind(3);
     else {
         if (!s_White)
             s_White = Texture::Create(1, 1, TextureFormat::RGBA8, white);
-        s_White->Bind(0);
+        s_White->Bind(3);
     }
-
-    materialShader->SetUniform("u_Material.specular",1);
     if (specularTexture)
-        specularTexture->Bind(1);
+        specularTexture->Bind(4);
     else {
         if (!s_White)
             s_White = Texture::Create(1, 1, TextureFormat::RGBA8, white);
-        s_White->Bind(1);
+        s_White->Bind(4);
     }
-
-    materialShader->SetUniform("u_Material.normal",2);
     if (normalTexture)
-        normalTexture->Bind(2);
+        normalTexture->Bind(5);
     else {
         if (!s_Blue)
             s_Blue = Texture::Create(1, 1, TextureFormat::RGBA8, blue);
-        s_Blue->Bind(2);
+        s_Blue->Bind(5);
     }
 
-    materialShader->SetUniform("u_Material.shininess",shininess);
-    materialShader->SetUniform("u_Material.color",color);
+    m_MaterialBuffer.color = color;
+    m_MaterialBuffer.shininess = shininess;
+    m_MaterialUniformBuffer->SetData(&m_MaterialBuffer,sizeof(MaterialBuffer));
+    m_MaterialUniformBuffer->Bind(2);
 }
 
 void Material::Write(Shared<Material> mat, Path matPath){
@@ -98,11 +102,11 @@ Shared<Material> Material::Load(Path matPath){
 
     if(j.contains("rendermode")){
         if(j["rendermode"] == "opaque")
-            mat->mode == RenderingMode::Opaque;
+            mat->mode = RenderingMode::Opaque;
         if(j["rendermode"] == "transparent")
-            mat->mode == RenderingMode::Transparent;
+            mat->mode = RenderingMode::Transparent;
         if(j["rendermode"] == "cutoff")
-            mat->mode == RenderingMode::Cutoff;
+            mat->mode = RenderingMode::Cutoff;
     }
     return mat;
 }

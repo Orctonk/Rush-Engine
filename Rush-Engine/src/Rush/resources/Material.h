@@ -4,6 +4,7 @@
 #include "Rush/core/Core.h"
 #include "Rush/graphics/Texture.h"
 #include "Rush/graphics/Shader.h"
+#include "Rush/graphics/UniformBuffer.h"
 #include "Path.h"
 
 #include <glm/glm.hpp>
@@ -18,7 +19,14 @@ enum class RUSH_API RenderingMode{
 
 class RUSH_API Material {
 private:
+    struct MaterialBuffer {
+        glm::vec4 color;
+        float shininess;
+    };
+
     std::string m_Name;
+    MaterialBuffer m_MaterialBuffer;
+    Shared<UniformBuffer> m_MaterialUniformBuffer;
 public:
     Shared<Shader> materialShader;
     RenderingMode mode              {RenderingMode::Opaque};
@@ -29,6 +37,9 @@ public:
     Shared<Texture> normalTexture   {nullptr};
     
     float shininess                 {25.0f};
+
+    Material();
+    ~Material();
 
     std::string GetName(){ return m_Name; }
     void Bind();
