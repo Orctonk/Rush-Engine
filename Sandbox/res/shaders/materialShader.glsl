@@ -48,7 +48,7 @@ layout (location = 0) in FS_IN fs_in;
 
 layout (location = 0) out vec4 FragColor;  
 
-#define MAX_LIGHTS 30
+#define MAX_LIGHTS 15
 
 struct PackedLight {
     vec4 position_cutoff;
@@ -58,20 +58,20 @@ struct PackedLight {
     vec4 specular_quadratic;
 };
 
-layout (std140,binding = 0) uniform Lights {
+layout (std140,binding = 1) uniform Lights {
     PackedLight u_Lights[MAX_LIGHTS];
     int u_LightCount;
     int u_DLightCount;
 };
 
-layout (std140,binding = 1) uniform Material {
+layout (std140, binding = 2) uniform Material {
     vec4 color;
     float shininess;
 } u_Material;
 
-layout (binding = 2) uniform sampler2D diffuseTexture;
-layout (binding = 3) uniform sampler2D specularTexture;
-layout (binding = 4) uniform sampler2D normalTexture;
+layout (binding = 3) uniform sampler2D diffuseTexture;
+layout (binding = 4) uniform sampler2D specularTexture;
+layout (binding = 5) uniform sampler2D normalTexture;
 
 vec3 CalcDirLight(PackedLight light, vec3 normal, vec3 viewDir);
 vec3 CalcOtherLight(PackedLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
