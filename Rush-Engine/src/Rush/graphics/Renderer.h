@@ -5,6 +5,7 @@
 #include "Rush/scene/Camera.h"
 #include "Rush/core/Core.h"
 #include "RenderingAPI.h"
+#include "UniformBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
 
@@ -34,8 +35,12 @@ private:
     };
 
     struct RenderData{
-        glm::mat4 sceneVP;
-        glm::vec3 cameraPos;
+        struct SceneData {
+            glm::mat4 sceneVP;
+            glm::vec3 cameraPos;
+        };
+        SceneData sceneData;
+        Shared<UniformBuffer> sceneUniformBuffer;
         Shared<Shader> shaderOverride;
 
         std::vector<Renderable> submittedRenderables;

@@ -12,6 +12,7 @@ RenderStats Renderer::s_Stats = RenderStats();
 void Renderer::Init(){
     s_API = RenderingAPI::Create();
     s_API->Init();
+    s_Data.sceneUniformBuffer = UniformBuffer::Create(sizeof(RenderData::SceneData), 0);
 }
 
 void Renderer::Shutdown(){
@@ -24,8 +25,9 @@ void Renderer::OnResize(uint32_t width, uint32_t height){
 
 void Renderer::BeginScene(Camera &camera, glm::mat4 &view, Shared<Shader> shaderOverride){
     RUSH_PROFILE_FUNCTION();
-    s_Data.sceneVP = camera.GetProjection() * glm::inverse(view);
-    s_Data.cameraPos = glm::vec3(view * glm::vec4(0.0f,0.0f,0.0f,1.0f));
+    s_Data.sceneData.sceneVP = camera.GetProjection() * glm::inverse(view);
+    s_Data.sceneData.cameraPos = glm::vec3(view * glm::vec4(0.0f,0.0f,0.0f,1.0f));
+    s_Data.sceneUniformBuffer->SetData(&s_Data.sceneData, sizeof(RenderData::SceneData));
     s_Data.shaderOverride = shaderOverride;
 }
 
@@ -59,11 +61,10 @@ void Renderer::EndScene(){
         }
         if(s_Data.shaderOverride == nullptr){
             material->Bind();
-            material->materialShader->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_Data.sceneVP));
-            material->materialShader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
-            material->materialShader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_Data.cameraPos));
+            material->materialShader->SetUniform("u_Object.model", ShaderData::MAT4, glm::value_ptr(model));
         } else {
             s_Data.shaderOverride->Bind();
+            s_Data.shaderOverride->SetUniform("u_Object.model", ShaderData::MAT4, glm::value_ptr(model));
             s_Data.shaderOverride->SetUniform("u_Material.diffuse",0);
             material->diffuseTexture->Bind(0);
             s_Data.shaderOverride->SetUniform("u_Material.specular",1);
@@ -72,9 +73,6 @@ void Renderer::EndScene(){
             material->normalTexture->Bind(2);
             s_Data.shaderOverride->SetUniform("u_Material.shininess",material->shininess);
             s_Data.shaderOverride->SetUniform("u_Material.color",material->color);
-            s_Data.shaderOverride->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_Data.sceneVP));
-            s_Data.shaderOverride->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
-            s_Data.shaderOverride->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_Data.cameraPos));
         }
 
         s_API->DrawIndexed(va);
@@ -96,9 +94,7 @@ void Renderer::ResetRenderStats(){
 void Renderer::Submit(const Shared<Shader> &shader, const Shared<VertexArray> &va,const glm::mat4 &model) {
     RUSH_PROFILE_FUNCTION();
     shader->Bind();
-    shader->SetUniform("u_Scene.viewProjection", ShaderData::MAT4, glm::value_ptr(s_Data.sceneVP));
-    shader->SetUniform("u_Scene.model", ShaderData::MAT4, glm::value_ptr(model));
-    shader->SetUniform("u_Scene.camPos", ShaderData::FLOAT3, glm::value_ptr(s_Data.cameraPos));
+    shader->SetUniform("u_Object.model", ShaderData::MAT4, glm::value_ptr(model));
     s_API->SetOption(PolygonMode::Fill);
     s_API->SetOption(CullFace::None);
     s_API->SetOption(DepthTest::LessOrEqual);
@@ -116,7 +112,7 @@ void Renderer::Submit(Shared<Material> material, const Shared<VertexArray> &va,c
     RUSH_PROFILE_FUNCTION();
     s_Data.submittedRenderables.push_back({model,material,va});
     uint64_t sortParam = material->mode == RenderingMode::Opaque ? 0 : (1UL << 63);
-    float distance = glm::distance(glm::vec3(model[3]),s_Data.cameraPos);
+    float distance = glm::distance(glm::vec3(model[3]),s_Data.sceneData.cameraPos);
     sortParam |= ((uint64_t)(distance * 100) & 0x7FFFFFFFFFFFFFFF);
     s_Data.keys.push_back({
         sortParam,
