@@ -105,6 +105,7 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/resources/ModelLoader.cpp
     ${RUSH_SOURCE_DIR}/Rush/resources/Path.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/components/TransformComponent.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scene/components/LightComponent.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/Scene.cpp
 )

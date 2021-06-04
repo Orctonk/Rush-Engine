@@ -4,7 +4,10 @@ project(Sandbox VERSION 1.0)
 
 set(SANDBOX_SOURCE_DIR "src")
 
-set(SANDBOX_SOURCES ${SANDBOX_SOURCE_DIR}/main.cpp)
+set(SANDBOX_SOURCES 
+    ${SANDBOX_SOURCE_DIR}/main.cpp
+    ${SANDBOX_SOURCE_DIR}/SandboxLayer.cpp
+)
 
 add_executable(Sandbox ${SANDBOX_SOURCES})
 

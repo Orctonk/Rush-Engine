@@ -13,7 +13,7 @@
 namespace Rush {
 
 Scene::Scene(){
-
+    m_LightUniformBuffer = UniformBuffer::Create(sizeof(LightBuffer),1);
 }
 
 Scene::~Scene(){
@@ -97,54 +97,23 @@ void Scene::Render(){
 }
 
 void Scene::SetLightData(Shared<Shader> shader){
-    glm::vec4 plv;
-    int lightCount = 0;
+    m_LightBuffer.lightCount = 0;
     for(auto e : m_SceneRegistry.view<LightComponent>()){
         auto &l = m_SceneRegistry.get<LightComponent>(e);
         if(l.type == LightType::DIRECTIONAL){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
-            glm::vec3 trans = t.GetTranslation();
-            glm::quat rot = t.GetRotation();
-            plv = glm::vec4(trans,l.cutOff);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::rotate(rot,glm::vec4(0.0f,0.0f,1.0f,0.0f));
-            plv.w = l.outerCutOff;
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.ambient,l.constant);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.diffuse,l.linear);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.specular,l.quadratic);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
-            lightCount++;
+            m_LightBuffer.lights[m_LightBuffer.lightCount++] = l.Pack(t);
         }
     }
-    shader->SetUniform("u_DLightCount",lightCount);
+    m_LightBuffer.dirLightCount = m_LightBuffer.lightCount;
     for(auto e : m_SceneRegistry.view<LightComponent>()){
         auto &l = m_SceneRegistry.get<LightComponent>(e);
         if(l.type != LightType::DIRECTIONAL){
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
-            glm::vec3 trans = t.GetTranslation();
-            glm::quat rot = t.GetRotation();
-            plv = glm::vec4(trans,glm::cos(glm::radians(l.cutOff)));
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].position_cutoff",ShaderData::FLOAT4,glm::value_ptr(plv));
-            if(l.type == LightType::POINT)
-                plv = glm::vec4(0.0f,0.0f,0.0f,glm::cos(glm::radians(l.outerCutOff)));
-            else {
-                plv = glm::rotate(rot, glm::vec4(1.0f,0.0f,0.0f,0.0f));
-                plv.w = glm::cos(glm::radians(l.outerCutOff));
-            }
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].direction_cutoffOuter",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.ambient,l.constant);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].ambient_constant",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.diffuse,l.linear);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].diffuse_linear",ShaderData::FLOAT4,glm::value_ptr(plv));
-            plv = glm::vec4(l.specular,l.quadratic);
-            shader->SetUniform("u_Lights[" + std::to_string(lightCount) + "].specular_quadratic",ShaderData::FLOAT4,glm::value_ptr(plv));
-            lightCount++;
+            m_LightBuffer.lights[m_LightBuffer.lightCount++] = l.Pack(t);
         }
     }
-    shader->SetUniform("u_LightCount",lightCount);
+    m_LightUniformBuffer->SetData(&m_LightBuffer, sizeof(LightBuffer));
 }
 
 }

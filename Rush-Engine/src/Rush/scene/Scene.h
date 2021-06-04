@@ -4,17 +4,26 @@
 #include "Rush/core/Core.h"
 #include "Rush/resources/Path.h"
 #include "Rush/graphics/Shader.h"
+#include "Rush/graphics/UniformBuffer.h"
+#include "components/LightComponent.h"
 #include "Entity.h"
 
 #include <entt/entity/registry.hpp>
-
 namespace Rush {
     
 class RUSH_API Scene{
 private:
+    struct LightBuffer {
+        std::array<PackedLight,15> lights;
+        int32_t lightCount;
+        int32_t dirLightCount;
+    };
+
+    LightBuffer m_LightBuffer;
     entt::registry m_SceneRegistry;
     Shared<Shader> m_SceneShader;
     Shared<Shader> m_SkyboxShader;
+    Shared<UniformBuffer> m_LightUniformBuffer;
 
     void SetLightData(Shared<Shader> shader);
 public:

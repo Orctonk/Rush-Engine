@@ -2,6 +2,7 @@
 #define __LIGHTCOMPONENT_H__
 
 #include "Rush/core/Core.h"
+#include "TransformComponent.h"
 
 #include <string>
 #include <glm/glm.hpp>
@@ -14,6 +15,14 @@ enum class ENTT_API LightType {
     DIRECTIONAL,
     POINT,
     SPOTLIGHT
+};
+
+struct PackedLight {
+    glm::vec4 position_cutoff;
+    glm::vec4 direction_cutoffOuter;
+    glm::vec4 ambient_constant;
+    glm::vec4 diffuse_linear;
+    glm::vec4 specular_quadratic;
 };
 
 struct ENTT_API LightComponent {
@@ -30,6 +39,8 @@ struct ENTT_API LightComponent {
     glm::vec3 ambient   {0.1f,0.1f,0.1f};
     glm::vec3 diffuse   {1.0f,1.0f,1.0f};
     glm::vec3 specular  {1.0f,1.0f,1.0f};
+
+    PackedLight Pack(const TransformComponent &t) const;
 
     template<typename Archive>
     void save(Archive &archive) const{
