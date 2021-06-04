@@ -13,8 +13,13 @@ class OGLShader : public Shader {
 private:
     uint32_t m_Shader;
     std::unordered_map<std::string,int> m_UniformCache;
+    std::unordered_map<ShaderType, std::vector<uint32_t>> m_OpenGLBinaries;
+    std::unordered_map<ShaderType, std::string> m_OpenGLSources;
 
     int GetUniformLocation(std::string name);
+    int GetGLShaderEnum(ShaderType type);
+    void LoadOpenGLBinaries();
+    void LinkProgram();
 public:
     OGLShader(std::string shaderPath);
     ~OGLShader();

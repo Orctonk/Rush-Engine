@@ -6,7 +6,9 @@
 
 #include <string>
 #include <stdint.h>
+#include <filesystem> 
 #include <glm/glm.hpp>
+#include <shaderc/shaderc.hpp>
 
 namespace Rush {
 
@@ -24,14 +26,30 @@ enum class RUSH_API ShaderData{
     MAT4
 };
 
+enum class RUSH_API ShaderType {
+    Vertex,
+    Geometry,
+    Fragment,
+    None
+};
+
 class RUSH_API Shader {
 private: 
-    void CompileSPIRV() {
+    using SourceMap = std::unordered_map<ShaderType, std::string>;
 
-    }
+
+    SourceMap LoadSource(Path shaderPath);
+    void CompileSPIRV(SourceMap sources);
+    void Reflect();
+
 protected:
     std::string m_DebugName;
+    std::filesystem::file_time_type m_SourceModTime;
+    std::unordered_map<ShaderType, std::vector<uint32_t>> m_SPIRVBinaries;
+
     Shader(std::string shaderPath);
+    shaderc_shader_kind TypeToShaderc(ShaderType type);
+    std::string TypeToString(ShaderType type);
 public:
     virtual ~Shader();
     Shader(Shader &) = delete;

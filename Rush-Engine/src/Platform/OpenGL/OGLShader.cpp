@@ -1,114 +1,20 @@
 #include "Rushpch.h"
 #include "OGLShader.h"
+#include "Rush/resources/FileCacher.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <spirv_glsl.hpp>
+#include <shaderc/shaderc.hpp>
 
 namespace Rush {
-
-#define VERTEX_SHADER 0
-#define GEOMETRY_SHADER 1
-#define FRAGMENT_SHADER 2
-#define SHADER_TYPE_COUNT 3
-
-uint32_t createShader(int8_t type, std::string source){
-    RUSH_PROFILE_FUNCTION();
-    GLenum shaderType;
-    switch(type){
-        case VERTEX_SHADER:     shaderType = GL_VERTEX_SHADER;      break;
-        case GEOMETRY_SHADER:   shaderType = GL_GEOMETRY_SHADER;    break;
-        case FRAGMENT_SHADER:   shaderType = GL_FRAGMENT_SHADER;    break;
-        default: RUSH_ASSERT(false); 
-    }
-
-    uint32_t shader = glCreateShader(shaderType);
-    const char *csource = source.c_str();
-    glShaderSource(shader,1,&csource,nullptr);
-    glCompileShader(shader);
-
-    int success;
-    char log[512];
-    
-    glGetShaderiv(shader,GL_COMPILE_STATUS,&success);
-    if(!success){
-        glGetShaderInfoLog(shader,512,nullptr,log);
-        RUSH_LOG_ERROR("Failed to compile shader with error: " + std::string(log));
-        glDeleteShader(shader);
-        return 0;
-    }
-
-    return shader;
-}
 
 OGLShader::OGLShader(std::string shaderPath)
     :   Shader(shaderPath) {
     RUSH_PROFILE_FUNCTION();
     m_Shader = glCreateProgram();
-    std::ifstream fs;
-    fs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    uint32_t shaders[SHADER_TYPE_COUNT] = {0,0,0};
-    try{
-        fs.open(shaderPath);
-        if (fs.is_open()) {
-            std::stringstream ss;
-            std::string line;
-            int8_t currentType = -1;
-            while(!fs.eof()){
-                ss = std::stringstream();
-                getline(fs,line);
-                while(!fs.eof() && line.substr(0,5) != "#type"){
-                    if(currentType == -1)
-                        RUSH_LOG_WARNING("No '#type' read! Discarding shader line '" + line + "'");
-                    else
-                        ss << line << "\n";
-                    getline(fs,line);
-                }
-                if(fs.eof())
-                    ss << line << "\n";
-
-                if(currentType != -1)
-                    shaders[currentType] = createShader(currentType,ss.str());
-
-                if(line.substr(0,5) == "#type"){
-                    if(line.substr(6,6) == "vertex")
-                        currentType = VERTEX_SHADER;
-                    else if (line.substr(6,8) == "geometry")
-                        currentType = GEOMETRY_SHADER;
-                    else if (line.substr(6,8) == "fragment")
-                        currentType = FRAGMENT_SHADER;
-                    else
-                        RUSH_ASSERT(false);
-                }
-            }
-
-            for(int i = 0; i < SHADER_TYPE_COUNT; i++)
-                if(shaders[i] != 0)
-                    glAttachShader(m_Shader,shaders[i]);
-
-            glLinkProgram(m_Shader);
-
-            int success;
-            char log[512];
-        
-            glGetProgramiv(m_Shader,GL_LINK_STATUS,&success);
-            if(!success){
-                glGetProgramInfoLog(m_Shader,512,nullptr,log);
-                RUSH_LOG_ERROR("Failed to link shader '" + shaderPath + "' with error: " + std::string(log));
-                glDeleteShader(m_Shader);
-            }
-
-            for(int i = 0; i < SHADER_TYPE_COUNT; i++)
-                if(shaders[i] != 0)
-                    glDeleteShader(shaders[i]);
-                
-            fs.close();
-        } else {
-            RUSH_LOG_ERROR("Failed to open file" + shaderPath);
-        }
-
-    } catch(std::ifstream::failure e){
-        RUSH_LOG_ERROR("Failed to load shader '" + shaderPath + "' with error: " + strerror(errno));
-    }
+    LoadOpenGLBinaries();
+    LinkProgram();
 }
 
 OGLShader::~OGLShader() {
@@ -228,9 +134,98 @@ int OGLShader::GetUniformLocation(std::string name){
     if(m_UniformCache.find(name) == m_UniformCache.end()){
         auto loc = glGetUniformLocation(m_Shader,name.c_str());
         m_UniformCache[name] = loc;
-        if(loc == -1) RUSH_LOG_WARNING("Uniform '" + name + "' not found in shader '" + m_DebugName + "'!");
+        if(loc == -1) RUSH_LOG_WARNING("Uniform '{}' not found in shader '{}'!", name, m_DebugName);
     }
     return m_UniformCache[name];
+}
+
+int OGLShader::GetGLShaderEnum(ShaderType type) {
+    switch (type) {
+    case ShaderType::Vertex:
+        return GL_VERTEX_SHADER;
+    case ShaderType::Geometry:
+        return GL_GEOMETRY_SHADER;
+    case ShaderType::Fragment:
+        return GL_FRAGMENT_SHADER;
+    default:
+        RUSH_ASSERT(false);
+        return -1;
+    }
+}
+
+void OGLShader::LoadOpenGLBinaries() {
+    shaderc::Compiler compiler;
+    shaderc::CompileOptions options;
+    options.SetTargetEnvironment(shaderc_target_env_opengl, shaderc_env_version_opengl_4_5);
+
+    m_OpenGLSources.clear();
+    m_OpenGLBinaries.clear();
+
+    int pushCIndex = 0;
+
+    for (auto&& [type, binary] : m_SPIRVBinaries) {
+        Path cachedBinaryPath = Path(m_DebugName).GetFileName() + ".glsl." + TypeToString(type);
+
+        if(!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(),m_OpenGLBinaries[type],m_SourceModTime)){
+            spirv_cross::CompilerGLSL glslCompiler(binary);
+            spirv_cross::ShaderResources res = glslCompiler.get_shader_resources();
+            for(const auto& pushC : res.push_constant_buffers){
+                glslCompiler.set_decoration(pushC.id,spv::DecorationLocation, pushCIndex++);
+            }
+            m_OpenGLSources[type] = glslCompiler.compile();
+            
+            Path cachedSourcePath = Path(m_DebugName).GetFileName() + ".glslsource." + TypeToString(type);
+            FileCache::CacheTextFile(cachedSourcePath.GetFullFileName(),m_OpenGLSources[type]);
+
+            shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(m_OpenGLSources[type], TypeToShaderc(type), m_DebugName.c_str(), options);
+            if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
+                RUSH_LOG_ERROR("({}) {}", TypeToString(type), module.GetErrorMessage());
+                RUSH_ASSERT(false);
+            }
+
+            m_OpenGLBinaries[type] = std::vector<uint32_t>(module.cbegin(), module.cend());
+
+            FileCache::CacheBinaryFile(cachedBinaryPath.GetFullFileName(),m_OpenGLBinaries[type]);
+        }
+    }
+}
+
+void OGLShader::LinkProgram() {
+    RUSH_PROFILE_FUNCTION();
+
+    std::vector<GLuint> shaderIDs;
+    for (auto&& [type, binary] : m_OpenGLBinaries) {
+        GLuint shaderID = shaderIDs.emplace_back(glCreateShader(GetGLShaderEnum(type)));
+        glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, binary.data(), binary.size() * sizeof(uint32_t));
+        if (glSpecializeShader)
+            glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
+        else if (glSpecializeShaderARB)
+            glSpecializeShaderARB(shaderID, "main", 0, nullptr, nullptr);
+        else {
+            RUSH_LOG_ERROR("Cannot load binary shaders!");
+            RUSH_ASSERT(false);
+        }
+        glAttachShader(m_Shader, shaderID);
+    }
+
+    glLinkProgram(m_Shader);
+
+    GLint linkStatus;
+    glGetProgramiv(m_Shader, GL_LINK_STATUS, &linkStatus);
+    if (linkStatus == GL_FALSE) {
+        GLint logLength;
+        glGetProgramiv(m_Shader, GL_INFO_LOG_LENGTH, &logLength);
+
+        char *log = new char[logLength];
+        glGetProgramInfoLog(m_Shader, logLength, &logLength, log);
+        RUSH_LOG_ERROR("Failed to link shader '{}' with error: {}", m_DebugName, log); 
+        glDeleteProgram(m_Shader);
+    }
+
+    for (auto id : shaderIDs) {
+        glDetachShader(m_Shader, id);
+        glDeleteShader(id);
+    }
 }
 
 }
