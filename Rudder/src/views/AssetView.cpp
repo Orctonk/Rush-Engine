@@ -16,6 +16,24 @@ AssetView::AssetView()
     m_DirTree = BuildDirTree(m_CurrentDir);
     m_Dirty = false;
     m_IconSize = 75;
+
+    m_LightBuffer = Rush::UniformBuffer::Create(sizeof(LightData),1);
+    LightData ld;
+    LightComponent l; 
+    
+    ld.dirLightCount = 0;
+    ld.lightCount = 1;
+
+    l.ambient = glm::vec3(0.75f,0.75f,0.75f);
+    l.diffuse = glm::vec3(1.0f,1.0f,1.0f);
+    l.specular = glm::vec3(1.0f,1.0f,1.0f);
+    l.constant = 1.0f;
+    l.linear = 0.35f;
+    l.quadratic = 0.44f;
+
+    ld.lights[0] = l.Pack(TransformComponent({-1.0f,1.0f,1.5f},glm::vec3(0.0f),glm::vec3(1.0f)));
+
+    m_LightBuffer->SetData(&ld,sizeof(LightData));
 }
 
 AssetView::~AssetView(){
@@ -198,28 +216,20 @@ void AssetView::RenderMaterialPreview(const std::string &path){
     Rush::FramebufferOptions fboptions;
     fboptions.width = 512;
     fboptions.height = 512;
-    fboptions.textureFormats = {Rush::TextureFormat::RGBA8};
+    fboptions.textureFormats = {
+        Rush::TextureFormat::RGBA16F   
+    };
+    Rush::Camera cam = Rush::Camera(1.0f,45.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,2.6f));
+    Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterial(path);
     Rush::Unique<Rush::Framebuffer> FBO = Rush::Framebuffer::Create(fboptions);
 
     FBO->Bind();
-    Rush::Camera cam = Rush::Camera(1.0f,45.0f);
-    glm::mat4 view = glm::inverse(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-2.6f)));
+    Rush::Renderer::GetAPI()->SetClearColor({0.0f,0.0f,0.0f,1.0f});
+    Rush::Renderer::GetAPI()->Clear();
     Rush::Renderer::BeginScene(cam,view);
-    Rush::Shared<Rush::Material> mat = Rush::AssetManager::GetMaterial(path);
-    mat->Bind();
-    mat->materialShader->SetUniform("u_DLightCount", 0);
-    mat->materialShader->SetUniform("u_LightCount", 1);
-    glm::vec3 trans = glm::vec3(-1.0f,1.0f,1.5f);
-    glm::vec4 plv = glm::vec4(trans,0.0f);
-    mat->materialShader->SetUniform("u_Lights[0].position_cutoff",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
-    plv = glm::vec4(0.0f,0.0f,0.0f,0.0f);
-    mat->materialShader->SetUniform("u_Lights[0].direction_cutoffOuter",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
-    plv = glm::vec4(0.75f,0.75f,0.75f,1.0f);
-    mat->materialShader->SetUniform("u_Lights[0].ambient_constant",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
-    plv = glm::vec4(1.0f,1.0f,1.0f,0.35f);
-    mat->materialShader->SetUniform("u_Lights[0].diffuse_linear",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
-    plv = glm::vec4(1.0f,1.0f,1.0f,0.44f);
-    mat->materialShader->SetUniform("u_Lights[0].specular_quadratic",Rush::ShaderData::FLOAT4,glm::value_ptr(plv));
+    m_LightBuffer->Bind(1);
+    
     for(auto &sm : mesh->submeshes)
         Rush::Renderer::Submit(mat,sm.vertices,glm::mat4(1.0f));
 

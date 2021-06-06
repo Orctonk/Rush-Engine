@@ -7,6 +7,12 @@
 
 class AssetView {
 private:
+    struct LightData {
+        std::array<PackedLight,15> lights;
+        int32_t lightCount;
+        int32_t dirLightCount;
+    };
+
     struct DirTree {
         std::string name;
         std::vector<Rush::Shared<DirTree>> children;
@@ -27,6 +33,7 @@ private:
     Rush::Path m_CurrentDir;
     Rush::Path m_SelectedAsset;
     std::unordered_map<std::string,Rush::Shared<Rush::Texture>> m_MaterialPreviews;
+    Rush::Shared<Rush::UniformBuffer> m_LightBuffer;
 
     void RenderFile(Rush::File &file);
     void RenderMaterialPreview(const std::string &path);
