@@ -8,6 +8,6 @@
     "diffuse": "res/textures/brick_diffuse.jpg",
     "normal": "res/textures/brick_normal.jpg",
     "rendermode": "opaque",
-    "shininess": 1.0,
+    "shininess": 25.0,
     "specular": "res/textures/white.png"
 }
