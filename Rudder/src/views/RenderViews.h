@@ -21,7 +21,6 @@ private:
     Rush::Shared<Rush::Texture> m_SpotlightTexture;
     Rush::Shared<Rush::Texture> m_DirlightTexture;
     Rush::Shared<Rush::Shader> m_SelectionShader;
-    Rush::Shared<Rush::Shader> m_SkyboxShader;
     Rush::Shared<Rush::Shader> m_RenderViewShaders[RENDERVIEW_COUNT];
     Rush::Unique<Rush::Framebuffer> m_RenderView;
     Rush::Unique<Rush::Framebuffer> m_SelectionBuffer;

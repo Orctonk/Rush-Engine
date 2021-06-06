@@ -29,31 +29,15 @@ void RenderViews::Init(Rush::Entity cameraEntity){
 
     m_CamController.SetControlledCamera(cameraEntity);
 
-    //cameraEntity.GetComponent<CameraComponent>().skybox = AssetManager::GetCubemap("res/skybox");
-
     m_SpotlightTexture = AssetManager::GetTexture("res/textures/lightbulb.png");
     m_DirlightTexture = AssetManager::GetTexture("res/textures/directional.png");
     m_SelectionShader = AssetManager::GetShader("res/shaders/selectionShader.glsl");
-    m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
-    m_SkyboxShader->SetUniform("u_Skybox",0);
     m_CameraMesh = AssetManager::GetMesh("res/models/camera.obj");
 
     m_RenderViewShaders[RENDERVIEW_RENDER] = AssetManager::GetShader("res/shaders/renderviewPreview.glsl");
     m_RenderViewShaders[RENDERVIEW_NORMALS] = AssetManager::GetShader("res/shaders/renderviewNormals.glsl");
     m_RenderViewShaders[RENDERVIEW_ALBEDO] = AssetManager::GetShader("res/shaders/renderviewAlbedo.glsl");
     m_RenderViewShaders[RENDERVIEW_SPECULAR] = AssetManager::GetShader("res/shaders/renderviewSpecular.glsl");
-    
-    glm::vec3 dlightcol(1.0f);
-    glm::vec3 dlights[2];
-    dlights[0] = glm::vec3(-1.0f);
-    dlights[1] = glm::vec3(1.0f);
-    glm::vec3 one(1.0f);
-    for(int i = 0; i < 2; i++){
-        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].direction",ShaderData::FLOAT3,glm::value_ptr(dlights[i]));
-        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].ambient",ShaderData::FLOAT3,glm::value_ptr(dlightcol * 0.1f));
-        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].diffuse",ShaderData::FLOAT3,glm::value_ptr(dlightcol));
-        m_RenderViewShaders[RENDERVIEW_RENDER]->SetUniform("u_DLights[" + std::to_string(i) + "].specular",ShaderData::FLOAT3,glm::value_ptr(one));
-    }
 
     m_RenderView = Framebuffer::Create({
         Application::GetInstance().GetWindow()->GetWidth(),
@@ -131,52 +115,36 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
     Renderer::GetAPI()->Clear();
     glm::mat4 view = camTrans.GetModelMatrix();
 
-    LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
-    LineRenderer::GetAPI()->SetLineWidth(1.0f);
+    auto reg = scene.GetRegistry();
+    if(m_CurrentView == RENDERVIEW_RENDER)
+        scene.Render();
+    else {
+        Renderer::BeginScene(cam.camera,view,m_RenderViewShaders[m_CurrentView]);
+
+        for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
+            auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
+            glm::mat4 model = transform.GetModelMatrix();
+            if (mesh.mesh) {
+                for(auto &sm : mesh.mesh->submeshes){
+                    Renderer::Submit(sm.material,sm.vertices,model);
+                }
+            }
+        }
+        
+        Renderer::EndScene();   
+    }
+
+    LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(view));
+    LineRenderer::GetAPI()->SetLineWidth(2.0f);
     for(float f = -10.0f; f < 10.5f; f++){
         LineRenderer::DrawLine({f,0.0f,-11.0f},{f,0.0f,11.0f},glm::vec4(.6f));
         LineRenderer::DrawLine({-11.0f,0.0f,f},{11.0f,0.0f,f},glm::vec4(.6f));
     }
     LineRenderer::EndScene();
 
-    Renderer::BeginScene(cam.camera,view,m_RenderViewShaders[m_CurrentView]);
-    auto reg = scene.GetRegistry();
-
-    for(auto &e : reg->group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
-        auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
-        glm::mat4 model = transform.GetModelMatrix();
-        if (mesh.mesh) {
-            for(auto &sm : mesh.mesh->submeshes){
-                Renderer::Submit(sm.material,sm.vertices,model);
-            }
-        }
-    }
-
-    if(cam.skybox != nullptr){
-        cam.skybox->Bind(0);
-        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
-    }
-    if(m_CurrentView == RENDERVIEW_RENDER){
-        for(auto e: reg->view<CameraComponent>()){
-            if(e == m_CamController.GetCamera()) continue;
-            auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
-            glm::mat4 model = t.GetModelMatrix();
-            for(auto &sm : m_CameraMesh->submeshes){
-                Renderer::Submit(sm.material,sm.vertices,model);
-            }
-        }
-    }
-
-    for(auto &e : reg->view<ParticleComponent>()){
-        auto [transform, pe] = reg->get<TransformComponent,ParticleComponent>(e);
-        glm::mat4 model = transform.GetModelMatrix();
-        pe.particleSystem.Render(camTrans.GetModelMatrix(),model);
-    }
-    
-    Renderer::EndScene();
     if(m_CurrentView == RENDERVIEW_RENDER){ // TODO: Fix editor not drawing billboards that are behind transparent objects
-        Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
-        LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(camTrans.GetModelMatrix()));
+        Renderer2D::BeginScene(cam.camera.GetProjection(),glm::inverse(view));
+        LineRenderer::BeginScene(cam.camera.GetProjection(),glm::inverse(view));
         LineRenderer::GetAPI()->SetLineWidth(2.0f);
         for(auto e: reg->view<LightComponent>()){
             auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
@@ -207,13 +175,11 @@ void RenderViews::FillRenderView(Rush::Scene &scene){
 }
 
 void RenderViews::RenderImguiView(bool resized){
-    ImVec2 windowPos = ImGui::GetWindowPos();
-    ImVec2 windowSize = ImGui::GetWindowSize();
     if(!resized){
         ImGui::GetWindowDrawList()->AddImage(
             (void *)(uint64_t)m_RenderView->GetTextures().at(0)->GetID(),
-            ImVec2(windowPos.x,windowPos.y),
-            ImVec2(windowPos.x + windowSize.x, windowPos.y + windowSize.y),
+            ImVec2(m_RenderViewportPos.x,m_RenderViewportPos.y),
+            ImVec2(m_RenderViewportPos.x + m_RenderViewportSize.x, m_RenderViewportPos.y + m_RenderViewportSize.y),
             ImVec2(0,1),
             ImVec2(1,0)
         );
@@ -225,7 +191,7 @@ void RenderViews::RenderImguiView(bool resized){
         auto &c = m_CamController.GetCamera().GetComponent<CameraComponent>();
         auto &ct = m_CamController.GetCamera().GetComponent<TransformComponent>();
         auto &t = e.GetComponent<TransformComponent>();
-        ImGuizmo::SetRect(windowPos.x,windowPos.y,windowSize.x,windowSize.y);
+        ImGuizmo::SetRect(m_RenderViewportPos.x,m_RenderViewportPos.y,m_RenderViewportSize.x,m_RenderViewportSize.y);
         ImGuizmo::SetDrawlist();
         glm::mat4 model = t.GetModelMatrix();
         glm::mat4 delta;
@@ -233,7 +199,7 @@ void RenderViews::RenderImguiView(bool resized){
         m_UsingGizmo = ImGuizmo::IsOver();
         if(ImGuizmo::IsUsing()){
             glm::quat orient;
-            glm::vec3 trans,rot,scale,skew;
+            glm::vec3 trans,scale,skew;
             glm::vec4 persp;
             glm::decompose(model,scale,orient,trans,skew,persp);
             switch(m_GizmoOp){
@@ -282,7 +248,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         color.g = ((float)((entt::to_integral(e) >> 8) & 0x0000FF))/255.0f;
         color.b = ((float)((entt::to_integral(e) >> 16) & 0x0000FF))/255.0f;
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
-        m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
+        m_SelectionShader->SetUniform("u_ID.color", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [transform, mesh] = reg->get<TransformComponent,MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
         for(int i = 0; i < mesh.mesh->submeshes.size(); i++){
@@ -295,7 +261,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         color.g = ((float)((entt::to_integral(e) >> 8) & 0x0000FF))/255.0f;
         color.b = ((float)((entt::to_integral(e) >> 16) & 0x0000FF))/255.0f;
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
-        m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
+        m_SelectionShader->SetUniform("u_ID.color", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [l,t] = reg->get<LightComponent,TransformComponent>(e);
         glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(t.GetModelMatrix() * glm::vec4(0.0f,0.0f,0.0f,1.0f)));
         model = glm::scale(model,glm::vec3(0.2f));
@@ -308,7 +274,7 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
         color.g = ((float)((entt::to_integral(e) >> 8) & 0x0000FF))/255.0f;
         color.b = ((float)((entt::to_integral(e) >> 16) & 0x0000FF))/255.0f;
         color.a = ((float)((entt::to_integral(e) >> 24) & 0x0000FF))/255.0f;
-        m_SelectionShader->SetUniform("u_IDColor", ShaderData::FLOAT4, glm::value_ptr(color));
+        m_SelectionShader->SetUniform("u_ID.color", ShaderData::FLOAT4, glm::value_ptr(color));
         auto [c,t] = reg->get<CameraComponent,TransformComponent>(e);
         glm::mat4 model = t.GetModelMatrix();
         for(int i = 0; i < m_CameraMesh->submeshes.size(); i++){
@@ -323,7 +289,9 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     m_SelectionBuffer->GetTextures().at(0)->GetTextureData(buffer,size);
     unsigned char r,g,b,a;
 
+
     int index = (texClickPos.x + p.width * texClickPos.y) * p.bpp/8 * p.channels;
+    RUSH_LOG_INFO("{}/{}",index,size);
     r = buffer[index];
     g = buffer[index + 1];
     b = buffer[index + 2];
@@ -332,7 +300,11 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
     uint32_t id = (r) | (g << 8) | (b << 16) | (a << 24);
     entt::entity picked = (entt::entity)id;
 
-    GlobalEntitySelection::SetSelection({reg, picked});
+    if(scene.GetRegistry()->valid(picked))
+        GlobalEntitySelection::SetSelection({reg, picked});
+    else {
+        GlobalEntitySelection::ClearSelection();
+    }
 }
 
 bool RenderViews::MouseClickHandle(Rush::MouseReleasedEvent &e){

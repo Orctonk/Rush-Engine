@@ -13,18 +13,21 @@ struct VS_OUT {
 layout (location = 0) out VS_OUT vs_out;
 
 layout (std140,binding = 0) uniform SceneData {
-    mat4 model;
     mat4 viewProjection;
     vec3 camPos;
 } u_Scene;  
 
+layout (push_constant) uniform ObjectData {
+    mat4 model;
+} u_Object;
+
 void main() {
     vs_out.TexCoord = aTexCoord;
-    vec3 T = normalize(vec3(u_Scene.model * vec4(aTangent,0.0)));
-    vec3 N = normalize(vec3(u_Scene.model * vec4(aNormal,0.0)));
+    vec3 T = normalize(vec3(u_Object.model * vec4(aTangent,0.0)));
+    vec3 N = normalize(vec3(u_Object.model * vec4(aNormal,0.0)));
     vec3 B = cross(N,T);
     vs_out.TBN = mat3(T,B,N);
-    gl_Position = u_Scene.viewProjection * u_Scene.model * vec4(aPos,1.0);
+    gl_Position = u_Scene.viewProjection * u_Object.model * vec4(aPos,1.0);
 }
 
 #type fragment
@@ -37,13 +40,14 @@ struct FS_IN {
 
 layout (location = 0) in FS_IN fs_in;
 
-layout (std140,binding = 1) uniform Material {
+layout (std140, binding = 2) uniform Material {
+    vec4 color;
     float shininess;
 } u_Material;
 
-layout (binding = 2) uniform sampler2D diffuseTexture;
-layout (binding = 3) uniform sampler2D specularTexture;
-layout (binding = 4) uniform sampler2D normalTexture;
+layout (binding = 3) uniform sampler2D diffuseTexture;
+layout (binding = 4) uniform sampler2D specularTexture;
+layout (binding = 5) uniform sampler2D normalTexture;
 
 layout (location = 0) out vec4 FragColor; 
 
