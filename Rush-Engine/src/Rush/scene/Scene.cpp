@@ -90,7 +90,7 @@ void Scene::Render(){
     }
 
     if(mainCamera->skybox != nullptr){
-        mainCamera->skybox->Bind(0);
+        mainCamera->skybox->Bind(3);
         Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
     }
     Renderer::EndScene();
@@ -114,6 +114,7 @@ void Scene::SetLightData(Shared<Shader> shader){
         }
     }
     m_LightUniformBuffer->SetData(&m_LightBuffer, sizeof(LightBuffer));
+    m_LightUniformBuffer->Bind(1);
 }
 
 }
