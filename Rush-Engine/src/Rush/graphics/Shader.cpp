@@ -82,7 +82,7 @@ void Shader::CompileSPIRV(SourceMap sources) {
         if(!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(),m_SPIRVBinaries[type],m_SourceModTime)){
             shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, TypeToShaderc(type), m_DebugName.c_str(), options);
             if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-                RUSH_LOG_ERROR(module.GetErrorMessage());
+                RUSH_LOG_ERROR("{}", module.GetErrorMessage());
                 RUSH_ASSERT(false);
             }
 
