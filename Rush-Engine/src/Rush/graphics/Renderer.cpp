@@ -28,6 +28,7 @@ void Renderer::BeginScene(Camera &camera, glm::mat4 &view, Shared<Shader> shader
     s_Data.sceneData.sceneVP = camera.GetProjection() * glm::inverse(view);
     s_Data.sceneData.cameraPos = glm::vec3(view * glm::vec4(0.0f,0.0f,0.0f,1.0f));
     s_Data.sceneUniformBuffer->SetData(&s_Data.sceneData, sizeof(RenderData::SceneData));
+    s_Data.sceneUniformBuffer->Bind(0);
     s_Data.shaderOverride = shaderOverride;
 }
 
@@ -59,20 +60,12 @@ void Renderer::EndScene(){
             s_API->SetOption(BlendMode::Alpha);
             switched = true;
         }
+        material->Bind();
         if(s_Data.shaderOverride == nullptr){
-            material->Bind();
             material->materialShader->SetUniform("u_Object.model", ShaderData::MAT4, glm::value_ptr(model));
         } else {
             s_Data.shaderOverride->Bind();
             s_Data.shaderOverride->SetUniform("u_Object.model", ShaderData::MAT4, glm::value_ptr(model));
-            s_Data.shaderOverride->SetUniform("u_Material.diffuse",0);
-            material->diffuseTexture->Bind(0);
-            s_Data.shaderOverride->SetUniform("u_Material.specular",1);
-            material->specularTexture->Bind(1);
-            s_Data.shaderOverride->SetUniform("u_Material.normal",2);
-            material->normalTexture->Bind(2);
-            s_Data.shaderOverride->SetUniform("u_Material.shininess",material->shininess);
-            s_Data.shaderOverride->SetUniform("u_Material.color",material->color);
         }
 
         s_API->DrawIndexed(va);

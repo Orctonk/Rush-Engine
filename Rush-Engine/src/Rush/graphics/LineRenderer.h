@@ -19,7 +19,6 @@ class RUSH_API LineRenderer {
 private:
     static Unique<RenderingAPI> s_API;
     static LineRenderStats s_Stats;
-    static glm::mat4 s_SceneVP;
 
 public:
     static void Init();

@@ -21,6 +21,13 @@ struct RendererData{
     Shared<VertexBuffer> rendererVB;
     Shared<Shader> lineShader;
 
+    struct SceneData {
+        glm::mat4 sceneVP;
+        glm::vec3 cameraPos;
+    };
+    SceneData sceneData;
+    Shared<UniformBuffer> sceneUniformBuffer;
+
     std::array<Vertex,BATCH_VERTEX_COUNT> vertices;
 
     uint32_t lineSegmentCount;
@@ -30,12 +37,12 @@ static RendererData s_Data;
 
 Unique<RenderingAPI> LineRenderer::s_API;
 LineRenderStats LineRenderer::s_Stats;
-glm::mat4 LineRenderer::s_SceneVP;
 
 void LineRenderer::Init(){
     RUSH_PROFILE_FUNCTION();
     s_API = RenderingAPI::Create();
 
+    s_Data.sceneUniformBuffer = UniformBuffer::Create(sizeof(RendererData::SceneData), 0);
     s_Data.lineSegmentCount = 0;
 
     s_Data.lineShader = AssetManager::GetShader("res/shaders/lineShader.glsl");
@@ -64,7 +71,10 @@ void LineRenderer::Shutdown(){
 
 void LineRenderer::BeginScene(glm::mat4 projection, glm::mat4 view){
     RUSH_PROFILE_FUNCTION();
-    s_SceneVP = projection * view;
+    s_Data.sceneData.sceneVP = projection * view;
+    s_Data.sceneData.cameraPos = glm::vec3(glm::inverse(view) * glm::vec4(0.0f,0.0f,0.0f,1.0f));
+    s_Data.sceneUniformBuffer->SetData(&s_Data.sceneData, sizeof(RendererData::SceneData));
+    s_Data.sceneUniformBuffer->Bind(0);
 }
 
 void LineRenderer::EndScene(){
@@ -79,7 +89,6 @@ void LineRenderer::Flush(){
     s_Data.rendererVB->BufferData(&s_Data.vertices,s_Data.lineSegmentCount * 4 * sizeof(Vertex));
     s_Data.rendererVA->Bind();
     s_Data.lineShader->Bind();
-    s_Data.lineShader->SetUniform("u_ViewProj",ShaderData::MAT4, glm::value_ptr(s_SceneVP));
     s_API->SetOption(BlendMode::Alpha);
     s_API->SetOption(PolygonMode::Fill);
     s_API->SetOption(CullFace::None);
