@@ -176,7 +176,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 # Add platform dependent libraries
 if(WIN32)
-    message(WARNING "Windows has not yet been tested!")
     add_definitions(-DRUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
     target_link_libraries(Rush PRIVATE pthread)
