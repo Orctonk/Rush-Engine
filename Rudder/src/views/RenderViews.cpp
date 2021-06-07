@@ -291,7 +291,6 @@ void RenderViews::DoObjectPick(Rush::Scene &scene){
 
 
     int index = (texClickPos.x + p.width * texClickPos.y) * p.bpp/8 * p.channels;
-    RUSH_LOG_INFO("{}/{}",index,size);
     r = buffer[index];
     g = buffer[index + 1];
     b = buffer[index + 2];
