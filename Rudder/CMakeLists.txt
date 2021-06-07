@@ -34,6 +34,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 target_include_directories(Rudder PRIVATE ${RUDDER_SOURCE_DIR})
 target_include_directories(Rudder PRIVATE ${RUDDER_DEPS_DIR})
 
+file(COPY res DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 if(WINDOWS)
     add_compile_definitions(RUSH_WINDOWS)
 elseif(UNIX AND NOT APPLE)
@@ -43,11 +45,6 @@ else()
 endif()
 
 target_link_libraries(Rudder PRIVATE Rush)
-
-add_custom_command(TARGET Rudder POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_CURRENT_SOURCE_DIR}/res 
-    ${CMAKE_CURRENT_BINARY_DIR}/res)
 
 add_custom_command(TARGET Rudder POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy
