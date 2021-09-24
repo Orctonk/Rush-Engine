@@ -8,15 +8,15 @@
 namespace Rush {
 
 float PhysicsSystem::s_Gravity = 0.0f;
-int PhysicsSystem::s_SolverIterations = 4;
+int PhysicsSystem::s_SolverIterations = 8;
 std::vector<Collision> PhysicsSystem::s_Collisions;
 
 void PhysicsSystem::StepPhysics(Scene &scene) {
-	auto* reg = scene.GetRegistry();
+	auto *reg = scene.GetRegistry();
 	auto rbgroup = reg->group<Rigidbody>(entt::get<TransformComponent>);
-	glm::vec3 gravitydV = glm::vec3{ 0.0f,-s_Gravity * Time::FixedDelta(),0.0f };
+	glm::vec3 gravitydV = glm::vec3{ 0.0f, -s_Gravity * Time::FixedDelta(), 0.0f };
 	for (auto e : rbgroup) {
-		auto& rb = rbgroup.get<Rigidbody>(e);
+		auto &rb = rbgroup.get<Rigidbody>(e);
 		if (rb.mass_inv != 0.0f) {
 			rb.velocity += gravitydV;
 		}
@@ -30,8 +30,8 @@ void PhysicsSystem::StepPhysics(Scene &scene) {
 				auto &rb2 = c.e2.GetComponent<Rigidbody>();
 				if (rb1.mass_inv + rb2.mass_inv == 0.0f)
 					continue;
-				auto& t1 = c.e1.GetComponent<TransformComponent>();
-				auto& t2 = c.e2.GetComponent<TransformComponent>();
+				auto &t1 = c.e1.GetComponent<TransformComponent>();
+				auto &t2 = c.e2.GetComponent<TransformComponent>();
 
 				// TODO: Add method to change the combination of restitutions
 				float avgRest = (rb1.restitution + rb2.restitution) / 2.0f + 1.0f;
@@ -55,17 +55,16 @@ void PhysicsSystem::StepPhysics(Scene &scene) {
 
 					glm::vec3 c1Cross = rb1.inertia_inv * glm::cross(colRelC1, c.manifold.collisionNormal);
 					glm::vec3 c2Cross = rb2.inertia_inv * glm::cross(colRelC2, c.manifold.collisionNormal);
-					
-					float impulseMag = avgRest * (glm::dot(relativeVelocity, n)) / 
-						(rb1.mass_inv + rb2.mass_inv + glm::dot(glm::cross(c1Cross,colRelC1) + glm::cross(c2Cross,colRelC2),n));
-					
+
+					float impulseMag = avgRest * (glm::dot(relativeVelocity, n) + (0.8f / Time::FixedDelta() * pd)) /
+						(rb1.mass_inv + rb2.mass_inv + glm::dot(glm::cross(c1Cross, colRelC1) + glm::cross(c2Cross, colRelC2), n));
+
 					c.manifold.contactPoints[j].total_impulse -= impulseMag;
 					c.manifold.contactPoints[j].total_impulse = glm::max(0.0f, c.manifold.contactPoints[j].total_impulse);
 					impulseMag = -(c.manifold.contactPoints[j].total_impulse - preimp);
-					glm::vec3 impulse = n * impulseMag;
 
-					glm::vec3 gravAlongN = glm::dot(gravitydV, n) * n;	// Correct for gravity induced this step to allow objects to come to rest
-					rb1.velocity += (impulse) * rb1.mass_inv;
+					glm::vec3 impulse = n * impulseMag;
+					rb1.velocity += (impulse)*rb1.mass_inv;
 					rb1.angular_velocity += impulseMag * c1Cross;
 					rb2.velocity += (impulse) * -rb2.mass_inv;
 					rb2.angular_velocity -= impulseMag * c2Cross;
@@ -83,14 +82,14 @@ void PhysicsSystem::StepPhysics(Scene &scene) {
 
 					float prefric = c.manifold.contactPoints[j].total_friction;
 
-					float frictionMag = glm::dot(relativeVelocity, tangent) / 
-						(rb1.mass_inv + rb2.mass_inv + glm::dot(glm::cross(c1Cross,colRelC1)+glm::cross(c2Cross,colRelC2),tangent));
+					float frictionMag = glm::dot(relativeVelocity, tangent) /
+						(rb1.mass_inv + rb2.mass_inv + glm::dot(glm::cross(c1Cross, colRelC1) + glm::cross(c2Cross, colRelC2), tangent));
 
 					glm::vec3 frictionImpulse;
-					if (glm::abs(frictionMag) > glm::abs(impulseMag * staticFric)){
+					if (glm::abs(frictionMag) > glm::abs(impulseMag * staticFric)) {
 						frictionMag = -impulseMag * dynamicFric;
 					}
-					
+
 					c.manifold.contactPoints[j].total_friction += frictionMag;
 					c.manifold.contactPoints[j].total_friction = glm::max(0.0f, c.manifold.contactPoints[j].total_friction);
 					frictionMag = (c.manifold.contactPoints[j].total_friction - prefric);
@@ -98,22 +97,22 @@ void PhysicsSystem::StepPhysics(Scene &scene) {
 					frictionImpulse = frictionMag * tangent;
 
 					rb1.velocity += frictionImpulse * rb1.mass_inv;
-					rb1.angular_velocity += rb1.inertia_inv * glm::cross(colRelC1,frictionImpulse);
+					rb1.angular_velocity += rb1.inertia_inv * glm::cross(colRelC1, frictionImpulse);
 					rb2.velocity += frictionImpulse * -rb2.mass_inv;
 					rb2.angular_velocity -= rb2.inertia_inv * glm::cross(colRelC2, frictionImpulse);
 
-					glm::vec3 correction = n * (glm::max(pd-0.01f,0.0f) * 0.02f / (rb1.mass_inv + rb2.mass_inv));
-					t1.Translate(correction * -rb1.mass_inv);
-					t2.Translate(correction * rb2.mass_inv);
+					// glm::vec3 correction = n * (glm::max(pd - 0.2f, 0.0f) / (rb1.mass_inv + rb2.mass_inv));
+					// t1.Translate(correction * -rb1.mass_inv);
+					// t2.Translate(correction * rb2.mass_inv);
 				}
 			}
 		}
 	}
 	for (auto e : rbgroup) {
 		RUSH_ASSERT(reg->all_of<TransformComponent>(e));
-		auto& rb = rbgroup.get<Rigidbody>(e);
+		auto &rb = rbgroup.get<Rigidbody>(e);
 		if (rb.mass_inv != 0.0f) {
-			auto& t = rbgroup.get<TransformComponent>(e);
+			auto &t = rbgroup.get<TransformComponent>(e);
 			t.Translate(rb.velocity * (float)Time::FixedDelta());
 			glm::quat q0 = t.GetRotation();
 			glm::vec3 av = rb.angular_velocity * (float)Time::FixedDelta();
@@ -124,8 +123,8 @@ void PhysicsSystem::StepPhysics(Scene &scene) {
 	}
 }
 
-void PhysicsSystem::DrawDebug(Scene& scene) {
-	auto* reg = scene.GetRegistry();
+void PhysicsSystem::DrawDebug(Scene &scene) {
+	auto *reg = scene.GetRegistry();
 	LineRenderer::GetAPI()->SetOption(DepthTest::None);
 	auto camGroup = reg->view<CameraComponent, TransformComponent>();
 	for (auto e : camGroup) {
@@ -138,15 +137,15 @@ void PhysicsSystem::DrawDebug(Scene& scene) {
 			LineRenderer::BeginScene(toFront * cc.camera.GetProjection(), glm::inverse(model));
 		}
 	}
-	auto transGroup = reg->view<TransformComponent,Rigidbody>();
+	auto transGroup = reg->view<TransformComponent, Rigidbody>();
 	for (auto e : transGroup) {
-		auto& t = transGroup.get<TransformComponent>(e);
+		auto &t = transGroup.get<TransformComponent>(e);
 		glm::vec3 pos = t.GetTranslation();
-		LineRenderer::DrawLine(pos, pos + t.GetRight(), glm::vec4(1.0f,0.0f,0.0f,1.0f));
-		LineRenderer::DrawLine(pos, pos + t.GetUp(), glm::vec4(0.0f,1.0f,0.0f,1.0f));
-		LineRenderer::DrawLine(pos, pos + t.GetBack(), glm::vec4(0.0f,0.0f,1.0f,1.0f));
+		LineRenderer::DrawLine(pos, pos + t.GetRight(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		LineRenderer::DrawLine(pos, pos + t.GetUp(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		LineRenderer::DrawLine(pos, pos + t.GetBack(), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 	}
-	for (const auto& c : s_Collisions) {
+	for (const auto &c : s_Collisions) {
 		for (int i = 0; i < c.manifold.numContacts; i++) {
 			LineRenderer::DrawLine(c.manifold.contactPoints[i].position, c.manifold.contactPoints[i].position + c.manifold.collisionNormal, glm::vec4(1.0f));
 		}
