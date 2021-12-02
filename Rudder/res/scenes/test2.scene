@@ -1,4 +1,5 @@
 {
+    "version": 2,
     "value0": 4,
     "value1": 0,
     "value2": 1,
@@ -174,5 +175,6 @@
     "value33": 1,
     "value34": {
         "mesh": "res\\models\\backpack\\backpack.obj"
-    }
+    },
+    "value35": 0
 }
