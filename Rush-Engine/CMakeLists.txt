@@ -259,6 +259,14 @@ if(${RUSH_BUILD_SHARED})
     target_compile_definitions (Rush INTERFACE ENTT_API_IMPORT)
 endif()
 
+# Add Mono as dependency
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(MONO REQUIRED mono-2)
+target_compile_options(Rush PUBLIC ${MONO_CFLAGS})
+target_link_directories(Rush PUBLIC ${MONO_LIBRARY_DIRS})
+target_link_libraries(Rush PUBLIC ${MONO_LIBRARIES})
+target_include_directories(Rush PRIVATE ${MONO_INCLUDE_DIRS})
+
 # Add Window manager and renderer implementation as dependency
 if(RUSH_OPENGL)
     add_compile_definitions(RUSH_OPENGL)
