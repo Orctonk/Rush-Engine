@@ -40,3 +40,9 @@
 [submodule ".\\Rush-Engine\\Libraries\\fmt"]
 	path = .\\Rush-Engine\\Libraries\\fmt
 	url = git@github.com:fmtlib/fmt.git
+[submodule ".\\Rudder\\Libraries\\IconFontCppHeaders"]
+	path = .\\Rudder\\Libraries\\IconFontCppHeaders
+	url = https://github.com/juliettef/IconFontCppHeaders.git
+[submodule ".\\Rush-Engine\\Libraries\\pstreams"]
+	path = .\\Rush-Engine\\Libraries\\pstreams
+	url = git://git.code.sf.net/p/pstreams/code
