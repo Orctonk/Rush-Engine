@@ -18,6 +18,9 @@ private:
     SceneView m_SceneView;
     AssetView m_AssetView;
     ProfilerResultView m_PRView;
+
+    void AddImGuiFonts();
+
 public:
     EditorLayer();
     ~EditorLayer();
