@@ -71,7 +71,7 @@ void EditorLayer::OnImguiRender() {
             ImGui::MenuItem("recent_file_3.scene");
             ImGui::MenuItem("recent_file_4.scene");
             ImGui::EndMenu();
-        } 
+        }
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit")) {
@@ -92,8 +92,12 @@ void EditorLayer::OnImguiRender() {
         Rush::DebugLayer::SetShown(show);
         ImGui::EndMenu();
     }
+    if (ImGui::Button(ICON_FA_PLAY))
+        m_Scene.StartPlay();
+    if (ImGui::Button(ICON_FA_STOP))
+        m_Scene.StopPlay();
     ImGui::EndMainMenuBar();
-    
+
     if (loadScene) {
         loadBrowser.SetTitle("Open scene...");
         loadBrowser.Open();
@@ -111,7 +115,7 @@ void EditorLayer::OnImguiRender() {
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking
         | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
-        | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus 
+        | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus
         | ImGuiWindowFlags_NoTitleBar;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));

@@ -10,11 +10,11 @@
 
 #include <entt/entity/registry.hpp>
 namespace Rush {
-    
-class RUSH_API Scene{
+
+class RUSH_API Scene {
 private:
     struct LightBuffer {
-        std::array<PackedLight,15> lights;
+        std::array<PackedLight, 15> lights;
         int32_t lightCount;
         int32_t dirLightCount;
     };
@@ -35,10 +35,12 @@ public:
     Entity NewEntity(std::string name = "");
     void DeleteEntity(Entity e);
 
-    entt::registry *GetRegistry(){ return &m_SceneRegistry; }
+    entt::registry *GetRegistry() { return &m_SceneRegistry; }
 
     void OnUpdate();
     void Render();
+    void StartPlay();
+    void StopPlay();
 
     template<typename ...Components>
     void Save(const Path &scenePath);

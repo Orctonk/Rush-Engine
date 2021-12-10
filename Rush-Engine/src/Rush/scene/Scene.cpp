@@ -12,103 +12,109 @@
 
 namespace Rush {
 
-Scene::Scene(){
-    m_LightUniformBuffer = UniformBuffer::Create(sizeof(LightBuffer),1);
+Scene::Scene() {
+    m_LightUniformBuffer = UniformBuffer::Create(sizeof(LightBuffer), 1);
 }
 
-Scene::~Scene(){
+Scene::~Scene() {
     
 }
 
-Entity Scene::NewEntity(std::string name){
-    Entity e = {&m_SceneRegistry, m_SceneRegistry.create()};
+Entity Scene::NewEntity(std::string name) {
+    Entity e = { &m_SceneRegistry, m_SceneRegistry.create() };
     e.AddComponent<TransformComponent>();
     e.AddComponent<TagComponent>(name == "" ? "New entity" : name);
     return e;
 }
 
-void Scene::DeleteEntity(Entity e){
+void Scene::DeleteEntity(Entity e) {
     m_SceneRegistry.remove_all(e.m_Entity);
     m_SceneRegistry.destroy(e.m_Entity);
 }
 
-void Scene::OnUpdate(){
-    for(auto e : m_SceneRegistry.view<ParticleComponent>()){
+void Scene::OnUpdate() {
+    for (auto e : m_SceneRegistry.view<ParticleComponent>()) {
         auto &pe = m_SceneRegistry.get<ParticleComponent>(e);
         pe.particleSystem.OnUpdate();
-        if(pe.emissionRate <= 0.0f)
+        if (pe.emissionRate <= 0.0f)
             continue;
         pe.timeSinceEmission += Time::Delta();
-        for(;pe.timeSinceEmission > 1.0f/pe.emissionRate;pe.timeSinceEmission -= 1.0f/pe.emissionRate){
+        for (;pe.timeSinceEmission > 1.0f / pe.emissionRate;pe.timeSinceEmission -= 1.0f / pe.emissionRate) {
             pe.particleSystem.Emit(pe.emissionProperties);
         }
     }
 }
 
-void Scene::Render(){
-    if(!m_SceneShader)
+void Scene::Render() {
+    if (!m_SceneShader)
         m_SceneShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
-    if(!m_SkyboxShader)
+    if (!m_SkyboxShader)
         m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
     
     CameraComponent *mainCamera = nullptr;
     glm::mat4 view;
 
-    for(auto e : m_SceneRegistry.view<CameraComponent>()){
+    for (auto e : m_SceneRegistry.view<CameraComponent>()) {
         auto &c = m_SceneRegistry.get<CameraComponent>(e);
-        if(c.main){
+        if (c.main) {
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
             view = t.GetModelMatrix();
             
             mainCamera = &c;
         }
     }
-    if(!mainCamera){
-        Renderer::GetAPI()->SetClearColor(glm::vec4(0.0f,0.0f,0.0f,1.0f));
+    if (!mainCamera) {
+        Renderer::GetAPI()->SetClearColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
         Renderer::GetAPI()->Clear();
         return;
     }
     Renderer::GetAPI()->SetClearColor(mainCamera->clearColor);
     Renderer::GetAPI()->Clear();
-    Renderer::BeginScene(mainCamera->camera,view);
+    Renderer::BeginScene(mainCamera->camera, view);
     
-    for(auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshRendererComponent>())){
-        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent,MeshRendererComponent>(e);
+    for (auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshRendererComponent>())) {
+        auto [transform, mesh] = m_SceneRegistry.get<TransformComponent, MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
 
-        for(auto &sm : mesh.mesh->submeshes){
+        for (auto &sm : mesh.mesh->submeshes) {
             sm.material->Bind();
             SetLightData(sm.material->materialShader);
-            Renderer::Submit(sm.material,sm.vertices,model);
+            Renderer::Submit(sm.material, sm.vertices, model);
         }
     }
 
-    for(auto &e : m_SceneRegistry.view<ParticleComponent>()){
-        auto [transform, pe] = m_SceneRegistry.get<TransformComponent,ParticleComponent>(e);
+    for (auto &e : m_SceneRegistry.view<ParticleComponent>()) {
+        auto [transform, pe] = m_SceneRegistry.get<TransformComponent, ParticleComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
-        pe.particleSystem.Render(view,model);
+        pe.particleSystem.Render(view, model);
     }
 
-    if(mainCamera->skybox != nullptr){
+    if (mainCamera->skybox != nullptr) {
         mainCamera->skybox->Bind(3);
-        Renderer::RenderCube(m_SkyboxShader,glm::mat4(1.0f));
+        Renderer::RenderCube(m_SkyboxShader, glm::mat4(1.0f));
     }
     Renderer::EndScene();
 }
 
-void Scene::SetLightData(Shared<Shader> shader){
+void Scene::StartPlay() {
+}
+
+void Scene::StopPlay() {
+}
+
+void Scene::SetLightData(Shared<Shader> shader) {
     m_LightBuffer.lightCount = 0;
-    for(auto e : m_SceneRegistry.view<LightComponent>()){
+    for (auto e : m_SceneRegistry.view<LightComponent>()) {
         auto &l = m_SceneRegistry.get<LightComponent>(e);
-        if(l.type == LightType::DIRECTIONAL){
+        if (l.type == LightType::DIRECTIONAL) {
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
             m_LightBuffer.lights[m_LightBuffer.lightCount++] = l.Pack(t);
         }
     }
     m_LightBuffer.dirLightCount = m_LightBuffer.lightCount;
-    for(auto e : m_SceneRegistry.view<LightComponent>()){
+    for (auto e : m_SceneRegistry.view<LightComponent>()) {
         auto &l = m_SceneRegistry.get<LightComponent>(e);
-        if(l.type != LightType::DIRECTIONAL){
+        if (l.type != LightType::DIRECTIONAL) {
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
             m_LightBuffer.lights[m_LightBuffer.lightCount++] = l.Pack(t);
         }
