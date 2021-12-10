@@ -4,9 +4,9 @@
 #include "Rush/resources/FileCacher.h"
 
 #ifdef RUSH_OPENGL
-    #include "Platform/OpenGL/OGLShader.h"
+#include "Platform/OpenGL/OGLShader.h"
 #else
-    #error "No rendering API provided!"
+#error "No rendering API provided!"
 #endif
 
 #include <shaderc/shaderc.hpp>
@@ -14,13 +14,13 @@
 
 namespace Rush {
 
-Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) { 
+Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) {
     SourceMap sources = LoadSource(shaderPath);
     CompileSPIRV(sources);
     Reflect();
 }
 
-Shader::~Shader() { }
+Shader::~Shader() {}
 
 Shared<Shader> Shader::Create(Path shaderPath) {
     return CreateShared<OGLShader>(shaderPath);
@@ -53,7 +53,7 @@ Shader::SourceMap Shader::LoadSource(Path shaderPath) {
             ss << line << "\n";
 
         if (currentType != ShaderType::None)
-            sources.emplace(currentType,ss.str());
+            sources.emplace(currentType, ss.str());
 
         if (line.substr(0, 5) == "#type") {
             if (line.substr(6, 6) == "vertex")
@@ -77,9 +77,9 @@ void Shader::CompileSPIRV(SourceMap sources) {
 
     m_SPIRVBinaries.clear();
 
-    for (auto&& [type, source] : sources) {
+    for (auto &&[type, source] : sources) {
         Path cachedBinaryPath = Path(m_DebugName).GetFileName() + ".vk." + TypeToString(type);
-        if(!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(),m_SPIRVBinaries[type],m_SourceModTime)){
+        if (!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(), m_SPIRVBinaries[type], m_SourceModTime)) {
             shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, TypeToShaderc(type), m_DebugName.c_str(), options);
             if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
                 RUSH_LOG_ERROR("{}", module.GetErrorMessage());
@@ -88,35 +88,26 @@ void Shader::CompileSPIRV(SourceMap sources) {
 
             m_SPIRVBinaries[type] = std::vector<uint32_t>(module.cbegin(), module.cend());
 
-            FileCache::CacheBinaryFile(cachedBinaryPath.GetFullFileName(),m_SPIRVBinaries[type]);
+            FileCache::CacheBinaryFile(cachedBinaryPath.GetFullFileName(), m_SPIRVBinaries[type]);
         }
     }
 }
 
 void Shader::Reflect() {
-    for (auto&& [type, binary] : m_SPIRVBinaries) {
+    for (auto &&[type, binary] : m_SPIRVBinaries) {
         spirv_cross::Compiler compiler(binary);
         spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-        RUSH_LOG_INFO("Shader reflection '{}:{}'",m_DebugName,TypeToString(type));
-        RUSH_LOG_INFO("  {} Uniform buffers", resources.uniform_buffers.size());
-        for (const auto& resource : resources.uniform_buffers) {
-            const auto& bufferType = compiler.get_type(resource.base_type_id);
+        for (const auto &resource : resources.uniform_buffers) {
+            const auto &bufferType = compiler.get_type(resource.base_type_id);
             uint32_t bufferSize = compiler.get_declared_struct_size(bufferType);
             uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
             int memberCount = bufferType.member_types.size();
-
-            RUSH_LOG_INFO("    {}", resource.name);
-            RUSH_LOG_INFO("      Size = {}", bufferSize);
-            RUSH_LOG_INFO("      Binding = {}", binding);
-            RUSH_LOG_INFO("      Members = {}", memberCount);
         }
-        RUSH_LOG_INFO("  {} images", resources.sampled_images.size());
     }
 }
 
 shaderc_shader_kind Shader::TypeToShaderc(ShaderType type) {
-    switch (type)
-    {
+    switch (type)     {
     case Rush::ShaderType::Vertex:
         return shaderc_vertex_shader;
     case Rush::ShaderType::Geometry:
@@ -130,8 +121,7 @@ shaderc_shader_kind Shader::TypeToShaderc(ShaderType type) {
 }
 
 std::string Shader::TypeToString(ShaderType type) {
-    switch (type)
-    {
+    switch (type)     {
     case Rush::ShaderType::Vertex:
         return "Vertex";
     case Rush::ShaderType::Geometry:
