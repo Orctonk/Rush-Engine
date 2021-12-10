@@ -5,14 +5,14 @@
 #include <iomanip>
 
 #ifdef RUSH_WINDOWS
-    #include <Windows.h>
+#include <Windows.h>
 #endif
 
 namespace Rush {
 
 bool Logger::s_close = false;
 
-std::ostream& operator<<(std::ostream& os, Color col) {
+std::ostream &operator<<(std::ostream &os, Color col) {
 #ifndef RUSH_WINDOWS
     return os << "\e[" << col.col << "m";
 #else
@@ -45,15 +45,15 @@ std::ostream& operator<<(std::ostream& os, Color col) {
 }
 
 Logger::Logger()
-:   m_LogQueue(), m_Threshold(LogLevel::Info), m_QueueLock(), m_AliasMap(){
+    : m_LogQueue(), m_Threshold(LogLevel::Info), m_QueueLock(), m_AliasMap() {
     m_LoggerStart = std::chrono::system_clock::now();
     s_close = false;
     m_LoggerThread = std::thread(LogPump);
-    Log("Logger started!","Logger",LogLevel::Info);
+    Log("Logger started!", "Logger", LogLevel::Info);
 }
 
-std::string getLevelString(LogLevel level){
-    switch(level){
+std::string getLevelString(LogLevel level) {
+    switch (level) {
     case LogLevel::Trace:     return "TRACE";
     case LogLevel::Debug:     return "DEBUG";
     case LogLevel::Info:      return "INFO";
@@ -63,21 +63,20 @@ std::string getLevelString(LogLevel level){
     }
 }
 
-void Logger::LogPump(){
+void Logger::LogPump() {
     using namespace std::chrono;
     LogMessage m;
-    Logger& i = getInstance();
+    Logger &i = getInstance();
 
-    while(true){
+    while (true) {
         std::unique_lock<std::mutex> l(i.m_QueueLock);
-        if(i.m_LogQueue.empty()) {
-            if(s_close)
+        if (i.m_LogQueue.empty()) {
+            if (s_close)
                 break;
             i.m_Logged.wait(l);
-        }
-        else {
+        } else {
             m = i.m_LogQueue.front();
-            switch(m.level){
+            switch (m.level) {
             case LogLevel::Trace:
                 std::cout << Color(BLUE);
                 break;
@@ -91,28 +90,50 @@ void Logger::LogPump(){
                 std::cout << Color(RED);
                 break;
             }
-            std::cout << m.timestamp << ": " << std::left << std::setw(7) << getLevelString(m.level) <<  " [" << m.sender << "] " << m.message << std::endl;
+            std::cout << m.timestamp << ": " << std::left << std::setw(7) << getLevelString(m.level) << " [" << m.sender << "] " << m.message << std::endl;
             i.m_LogQueue.pop();
             std::cout << Color(WHITE);
         }
     }
 }
 
-void Logger::Init(){
+void Logger::Init() {
     getInstance();
 }
 
-void Logger::Destroy(){
+void Logger::Destroy() {
     s_close = true;
     getInstance().m_Logged.notify_all();
     getInstance().m_LoggerThread.join();
 }
 
-void Logger::SetAlias(std::string alias,std::thread::id id){
-    if(id == std::thread::id())
+void Logger::SetAlias(std::string alias, std::thread::id id) {
+    if (id == std::thread::id())
         id = std::this_thread::get_id();
-    
+
     getInstance().m_AliasMap[id] = alias;
+}
+
+std::string Logger::GetAlias(std::thread::id id) {
+    if (id == std::thread::id())
+        id = std::this_thread::get_id();
+
+    return getInstance().m_AliasMap[id];
+}
+
+Logger::ScopeAlias Logger::SetScopeAlias(std::string alias) {
+    return ScopeAlias(alias);
+}
+
+Logger::ScopeAlias::ScopeAlias(std::string alias)
+    : alias(alias),
+    previousAlias(GetAlias()) {
+    SetAlias(alias);
+}
+
+Logger::ScopeAlias::~ScopeAlias() {
+    if (GetAlias() == alias)
+        SetAlias(previousAlias);
 }
 
 }
