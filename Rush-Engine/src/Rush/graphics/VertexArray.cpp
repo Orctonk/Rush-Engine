@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "VertexArray.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLVertexArray.h"
@@ -17,4 +17,4 @@ Shared<VertexArray> VertexArray::Create() {
     return CreateShared<OGLVertexArray>();
 }
 
-}
+} // namespace Rush

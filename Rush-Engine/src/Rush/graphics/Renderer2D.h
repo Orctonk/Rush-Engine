@@ -1,8 +1,8 @@
 #ifndef __RENDERER2D_H__
 #define __RENDERER2D_H__
 
-#include "Rush/core/Core.h"
 #include "RenderingAPI.h"
+#include "Rush/core/Core.h"
 #include "Texture.h"
 
 #include <glm/glm.hpp>
@@ -51,6 +51,6 @@ public:
     static Unique<RenderingAPI> &GetAPI() { return s_API; }
 };
 
-}
+} // namespace Rush
 
 #endif // __RENDERER2D_H__

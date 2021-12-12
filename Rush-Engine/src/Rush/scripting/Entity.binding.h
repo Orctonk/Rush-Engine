@@ -4,8 +4,8 @@
 #include "BindingBase.h"
 #include "ScriptingBackend.h"
 
-#include <mono/metadata/object.h>
 #include <Rush/scene/Entity.h>
+#include <mono/metadata/object.h>
 
 namespace Rush {
 namespace Bindings {
@@ -23,7 +23,7 @@ public:
     static MonoObject *CreateEntity(Rush::Entity entity);
 };
 
-}
-}
+} // namespace Bindings
+} // namespace Rush
 
 #endif // __ENTITY_BINDING_H__

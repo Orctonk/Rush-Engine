@@ -10,11 +10,10 @@
 struct ENTT_API TagComponent {
     std::string tag;
 
-    template<typename Archive>
-    void serialize(Archive &archive){
+    template <typename Archive>
+    void serialize(Archive &archive) {
         archive(
-            cereal::make_nvp("name",tag)
-        );
+            cereal::make_nvp("name", tag));
     }
 };
 

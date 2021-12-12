@@ -1,8 +1,8 @@
 #ifndef __RUNTIMESCRIPTCOMPONENT_H__
 #define __RUNTIMESCRIPTCOMPONENT_H__
 
-#include <string>
 #include <mono/metadata/object.h>
+#include <string>
 
 struct RuntimeScriptComponent {
     MonoObject *behaviourInstance;

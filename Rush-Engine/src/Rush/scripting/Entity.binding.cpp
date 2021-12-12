@@ -1,14 +1,14 @@
 #include "Entity.binding.h"
 
-#include <Rush/scene/components/LightComponent.h>
 #include "components/LightComponent.binding.h"
+#include <Rush/scene/components/LightComponent.h>
 
 namespace Rush {
 namespace Bindings {
 
 ::LightComponent comp;
 
-void Entity::Init() {}
+void Entity::Init() { }
 
 void Entity::BindMethods() {
     mono_add_internal_call("Rush.Entity::GetComponent_LightComponent", GetLightComponent);
@@ -43,5 +43,5 @@ MonoObject *Entity::CreateEntity(Rush::Entity entity) {
     return e;
 }
 
-}
-}
+} // namespace Bindings
+} // namespace Rush

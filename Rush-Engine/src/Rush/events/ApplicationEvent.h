@@ -2,21 +2,21 @@
 #define __APPLICATIONEVENT_H__
 #include "Event.h"
 
-namespace Rush{ 
+namespace Rush {
 
-class ApplicationStartEvent : public Event{
+class ApplicationStartEvent : public Event {
 public:
-    ApplicationStartEvent() {}
+    ApplicationStartEvent() { }
     EVENT_BODY(ApplicationStart);
     virtual std::string GetString() const override { return "ApplicationStartEvent"; }
 };
 
-class ApplicationStopEvent : public Event{
+class ApplicationStopEvent : public Event {
 public:
-    ApplicationStopEvent() {}
+    ApplicationStopEvent() { }
     EVENT_BODY(ApplicationStop);
     virtual std::string GetString() const override { return "ApplicationStopEvent"; }
 };
 
-} 
+} // namespace Rush
 #endif // __APPLICATIONEVENT_H__

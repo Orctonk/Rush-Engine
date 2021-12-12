@@ -27,6 +27,6 @@ public:
     void DrawIndexed(const Shared<VertexArray> &va, uint32_t count, Primitive type = Primitive::Triangle) override;
 };
 
-}
+} // namespace Rush
 
 #endif // __OGLRENDERINGAPI_H__

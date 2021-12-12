@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 
 namespace Rush {
-    
+
 GLenum getOpenGLType(ShaderData type);
 
 uint8_t getElemCount(ShaderData type);

@@ -22,7 +22,7 @@ private:
 
 public:
     TransformComponent()
-    : m_Translation(0.0f), m_Rotation(), m_Scale(1.0f), m_Model(1.0f), m_Dirty(true) {}
+        : m_Translation(0.0f), m_Rotation(), m_Scale(1.0f), m_Model(1.0f), m_Dirty(true) { }
 
     TransformComponent(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale);
 
@@ -37,26 +37,15 @@ public:
     void Scale(const glm::vec3 &scale);
     void Rotate(const glm::quat &rotation);
 
-    template<typename Archive>
-    void serialize(Archive &archive){
+    template <typename Archive>
+    void serialize(Archive &archive) {
         archive(
-            cereal::make_nvp("position",std::array{
-                cereal::make_nvp("x", m_Translation.x),
-                cereal::make_nvp("y", m_Translation.y),
-                cereal::make_nvp("z", m_Translation.z)
-            }),
-            cereal::make_nvp("orientation",std::array{
-                cereal::make_nvp("x", m_Rotation.x),
-                cereal::make_nvp("y", m_Rotation.y),
-                cereal::make_nvp("z", m_Rotation.z),
-                cereal::make_nvp("w", m_Rotation.w)
-            }),
-            cereal::make_nvp("scale",std::array{
-                cereal::make_nvp("x", m_Scale.x),
-                cereal::make_nvp("y", m_Scale.y),
-                cereal::make_nvp("z", m_Scale.z)
-            })
-        );
+            cereal::make_nvp("position",
+                             std::array{
+                                 cereal::make_nvp("x", m_Translation.x),
+                                 cereal::make_nvp("y", m_Translation.y),
+                                 cereal::make_nvp("z", m_Translation.z) }),
+            cereal::make_nvp("orientation", std::array{ cereal::make_nvp("x", m_Rotation.x), cereal::make_nvp("y", m_Rotation.y), cereal::make_nvp("z", m_Rotation.z), cereal::make_nvp("w", m_Rotation.w) }), cereal::make_nvp("scale", std::array{ cereal::make_nvp("x", m_Scale.x), cereal::make_nvp("y", m_Scale.y), cereal::make_nvp("z", m_Scale.z) }));
     }
 };
 

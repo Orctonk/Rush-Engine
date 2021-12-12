@@ -13,7 +13,7 @@ public:
     COMPONENT_BODY(Behaviour, ScriptingBackend::BindingsBaseDir + "Behaviour.cs")
 };
 
-}
-}
+} // namespace Bindings
+} // namespace Rush
 
 #endif // __BEHAVIOUR_BINDING_H__

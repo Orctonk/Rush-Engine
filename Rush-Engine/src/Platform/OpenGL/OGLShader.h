@@ -4,15 +4,15 @@
 #include "Rush/graphics/Shader.h"
 
 #include <stdint.h>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 namespace Rush {
 
 class OGLShader : public Shader {
 private:
     uint32_t m_Shader;
-    std::unordered_map<std::string,int> m_UniformCache;
+    std::unordered_map<std::string, int> m_UniformCache;
     std::unordered_map<ShaderType, std::vector<uint32_t>> m_OpenGLBinaries;
     std::unordered_map<ShaderType, std::string> m_OpenGLSources;
 
@@ -20,6 +20,7 @@ private:
     int GetGLShaderEnum(ShaderType type);
     void LoadOpenGLBinaries();
     void LinkProgram();
+
 public:
     OGLShader(std::string shaderPath);
     ~OGLShader();
@@ -41,8 +42,7 @@ public:
     void SetUniform(std::string name, glm::mat3 val) override;
     void SetUniform(std::string name, glm::mat4 val) override;
 };
-    
-} // namespace Rush
 
+} // namespace Rush
 
 #endif // __OGLSHADER_H__

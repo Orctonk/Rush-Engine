@@ -7,7 +7,7 @@
 
 namespace Rush {
 
-enum class RUSH_API ProjectionMode{
+enum class RUSH_API ProjectionMode {
     PERSPECTIVE,
     ORTHOGRAPHIC
 };
@@ -15,14 +15,15 @@ enum class RUSH_API ProjectionMode{
 class RUSH_API Camera {
 private:
     glm::mat4 m_Projection;
-    float m_LeftOrAspect,m_RightOrFOV;
-    float m_Near,m_Far;
+    float m_LeftOrAspect, m_RightOrFOV;
+    float m_Near, m_Far;
 
     // Orthographic properties
-    float m_Top,m_Bottom;
+    float m_Top, m_Bottom;
+
 public:
     Camera(float aspect, float FOV, float near = 0.1f, float far = 100.0f);
-    Camera(float left, float right, float top, float bottom, float near= 0.1f, float far = 100.0f);
+    Camera(float left, float right, float top, float bottom, float near = 0.1f, float far = 100.0f);
     ~Camera();
 
     void SetPerspective(float aspect, float FOV, float near = 0.1f, float far = 100.0f);
@@ -46,6 +47,6 @@ public:
     glm::mat4 GetProjection() { return m_Projection; }
 };
 
-}
+} // namespace Rush
 
 #endif // __CAMERA_H__

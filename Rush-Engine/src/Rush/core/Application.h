@@ -1,9 +1,9 @@
 #ifndef __RUSH_APPLICATION_H__
 #define __RUSH_APPLICATION_H__
 
+#include "AbstractWindow.h"
 #include "Core.h"
 #include "LayerStack.h"
-#include "AbstractWindow.h"
 #include "Rush/events/WindowEvent.h"
 #include "Rush/imgui/ImguiLayer.h"
 
@@ -18,13 +18,15 @@ private:
     void PollEvents();
     bool WindowCloseHandle(WindowCloseEvent &e);
     bool WindowResizeHandle(WindowResizeEvent &e);
+
 protected:
     bool m_Running;
     Unique<AbstractWindow> m_Window;
+
 public:
     Application();
     virtual ~Application();
-    
+
     virtual void Init() = 0;
     virtual void Exit() = 0;
     virtual void Update() = 0;
@@ -34,12 +36,11 @@ public:
     void PushOverlay(Layer *layer);
     void Run();
 
-    static Application& GetInstance();
+    static Application &GetInstance();
 };
 
-Application* CreateApplication();
-    
-} // namespace Rush
+Application *CreateApplication();
 
+} // namespace Rush
 
 #endif // __RUSH_ENTRY_H__

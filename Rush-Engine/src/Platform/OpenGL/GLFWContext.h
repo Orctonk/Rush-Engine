@@ -6,10 +6,11 @@
 #include <GLFW/glfw3.h>
 
 namespace Rush {
-    
+
 class GLFWContext : public Context {
 private:
-    GLFWwindow* m_Context;
+    GLFWwindow *m_Context;
+
 public:
     GLFWContext(GLFWwindow *windowContext);
     ~GLFWContext();

@@ -2,25 +2,25 @@
 #define __INPUT_H__
 
 #include "Core.h"
-#include "Rush/events/Keycodes.h"
-#include "Rush/events/Mousecodes.h"
 #include "Rush/events/Event.h"
-#include "Rush/events/MouseEvent.h"
 #include "Rush/events/KeyboardEvent.h"
+#include "Rush/events/Keycodes.h"
+#include "Rush/events/MouseEvent.h"
+#include "Rush/events/Mousecodes.h"
 
 #include <stdint.h>
 #include <utility>
 
-namespace Rush{
+namespace Rush {
 
 class RUSH_API Input {
 private:
-    bool m_KeyStates[RUSH_KEYCODE_LAST+1];
+    bool m_KeyStates[RUSH_KEYCODE_LAST + 1];
     bool m_MouseButtonStates[RUSH_MOUSE_BUTTON_LAST + 1];
-    std::pair<int,int> m_MousePos;
+    std::pair<int, int> m_MousePos;
 
     static Input *s_Instance;
-    
+
     Input();
 
     bool MousePressHandle(MousePressedEvent &e);
@@ -28,6 +28,7 @@ private:
     bool MouseMoveHandle(MouseMoveEvent &e);
     bool KeyPressHandle(KeyboardPressEvent &e);
     bool KeyReleaseHandle(KeyboardReleaseEvent &e);
+
 public:
     static bool KeyDown(int keycode);
     static bool MousePressed(int button);
@@ -36,6 +37,6 @@ public:
     static void Update(Event &e);
 };
 
-}
+} // namespace Rush
 
 #endif // __INPUT_H__

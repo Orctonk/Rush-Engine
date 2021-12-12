@@ -1,16 +1,16 @@
-#include "Rushpch.h"
 #include "Scene.h"
+#include "Rushpch.h"
 
-#include "Rush/core/Time.h"
-#include "Rush/resources/AssetManager.h"
-#include "Rush/graphics/Renderer.h"
 #include "Components.h"
-#include "Rush/scripting/ScriptingBackend.h"
+#include "Rush/core/Time.h"
+#include "Rush/graphics/Renderer.h"
+#include "Rush/resources/AssetManager.h"
 #include "Rush/scripting/Behaviour.binding.h"
+#include "Rush/scripting/ScriptingBackend.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 namespace Rush {
 
@@ -19,7 +19,6 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-
 }
 
 Entity Scene::NewEntity(std::string name) {
@@ -38,10 +37,9 @@ void Scene::OnUpdate() {
     for (auto e : m_SceneRegistry.view<ParticleComponent>()) {
         auto &pe = m_SceneRegistry.get<ParticleComponent>(e);
         pe.particleSystem.OnUpdate();
-        if (pe.emissionRate <= 0.0f)
-            continue;
+        if (pe.emissionRate <= 0.0f) continue;
         pe.timeSinceEmission += Time::Delta();
-        for (;pe.timeSinceEmission > 1.0f / pe.emissionRate;pe.timeSinceEmission -= 1.0f / pe.emissionRate) {
+        for (; pe.timeSinceEmission > 1.0f / pe.emissionRate; pe.timeSinceEmission -= 1.0f / pe.emissionRate) {
             pe.particleSystem.Emit(pe.emissionProperties);
         }
     }
@@ -139,4 +137,4 @@ void Scene::SetLightData(Shared<Shader> shader) {
     m_LightUniformBuffer->Bind(1);
 }
 
-}
+} // namespace Rush

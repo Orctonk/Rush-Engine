@@ -4,8 +4,8 @@
 #include "Rush/core/Core.h"
 #include "SubMesh.h"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Rush {
 
@@ -14,6 +14,6 @@ struct RUSH_API RootMesh {
     std::vector<SubMesh> submeshes;
 };
 
-}
+} // namespace Rush
 
 #endif // __ROOTMESH_H__

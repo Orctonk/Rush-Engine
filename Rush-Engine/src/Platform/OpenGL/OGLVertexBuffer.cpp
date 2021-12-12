@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "OGLVertexBuffer.h"
+#include "Rushpch.h"
 
 #include "ShaderDataUtil.h"
 
@@ -7,55 +7,54 @@
 
 namespace Rush {
 
-OGLVertexBuffer::OGLVertexBuffer(uint32_t size) 
-    :   VertexBuffer(size) {
+OGLVertexBuffer::OGLVertexBuffer(uint32_t size)
+    : VertexBuffer(size) {
     RUSH_PROFILE_FUNCTION();
-    glGenBuffers(1,&m_VBO);
+    glGenBuffers(1, &m_VBO);
     RUSH_ASSERT(m_VBO);
-    glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
-    glBufferData(GL_ARRAY_BUFFER,size,nullptr,GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
 OGLVertexBuffer::OGLVertexBuffer(const float *data, uint32_t size)
-    :   VertexBuffer(data, size) {
+    : VertexBuffer(data, size) {
     RUSH_PROFILE_FUNCTION();
-    glGenBuffers(1,&m_VBO);
+    glGenBuffers(1, &m_VBO);
     RUSH_ASSERT(m_VBO);
-    glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
-    glBufferData(GL_ARRAY_BUFFER,size,data,GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 }
 
 OGLVertexBuffer::~OGLVertexBuffer() {
     RUSH_PROFILE_FUNCTION();
-    glDeleteBuffers(1,&m_VBO);
+    glDeleteBuffers(1, &m_VBO);
 }
 
 void OGLVertexBuffer::Bind() const {
     RUSH_PROFILE_FUNCTION();
-    glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 }
 
 void OGLVertexBuffer::Unbind() const {
     RUSH_PROFILE_FUNCTION();
-    glBindBuffer(GL_ARRAY_BUFFER,0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void OGLVertexBuffer::BufferData(const void *data, uint32_t size) {
     RUSH_PROFILE_FUNCTION();
-    glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
-    glBufferSubData(GL_ARRAY_BUFFER,0,size,data);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
 
 void OGLVertexBuffer::SetInterleavedLayout(std::vector<ShaderData> layout) {
     RUSH_PROFILE_FUNCTION();
     m_Layout = std::vector<LayoutElement>();
     uint32_t stride = 0;
-    for(auto d : layout)
-        stride += getSize(d);
+    for (auto d : layout) stride += getSize(d);
 
     uint32_t offset = 0;
 
-    for(auto d : layout){
+    for (auto d : layout) {
         LayoutElement le;
         le.offset = offset;
         le.stride = stride;
@@ -72,7 +71,7 @@ void OGLVertexBuffer::SetBatchedLayout(std::vector<ShaderData> layout) {
 
     uint32_t offset = 0;
 
-    for(auto d : layout){
+    for (auto d : layout) {
         LayoutElement le;
         le.offset = offset;
         le.stride = getSize(d) * layout.size();
@@ -83,4 +82,4 @@ void OGLVertexBuffer::SetBatchedLayout(std::vector<ShaderData> layout) {
     }
 }
 
-}
+} // namespace Rush

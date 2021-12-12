@@ -9,9 +9,9 @@ class BindingBase {
 public:
     virtual std::string GetFilename() = 0;
     virtual void BindMethods() = 0;
-    virtual void Init() {};
+    virtual void Init() { }
 };
 
-}
-}
+} // namespace Bindings
+} // namespace Rush
 #endif // __BINDINGBASE_H__

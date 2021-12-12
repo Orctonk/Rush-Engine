@@ -1,8 +1,8 @@
 #ifndef __CUBEMAP_H__
 #define __CUBEMAP_H__
 
-#include "Rush/core/Core.h"
 #include "Rush/Resources/Path.h"
+#include "Rush/core/Core.h"
 
 #include <stdint.h>
 
@@ -17,6 +17,7 @@ struct RUSH_API CubemapProperties {
 class RUSH_API Cubemap {
 private:
     std::string m_DebugName;
+
 protected:
     CubemapProperties m_Props;
 
@@ -34,9 +35,9 @@ public:
     static Shared<Cubemap> Create(Path filepath);
 
     std::string GetDebugName() { return m_DebugName; }
-    CubemapProperties GetProperties(){ return m_Props; }
+    CubemapProperties GetProperties() { return m_Props; }
 };
-    
+
 } // namespace Rush
 
 #endif // __CUBEMAP_H__

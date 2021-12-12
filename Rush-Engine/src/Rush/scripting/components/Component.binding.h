@@ -7,8 +7,8 @@
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
-#include <mono/metadata/object.h>
 #include <mono/metadata/debug-helpers.h>
+#include <mono/metadata/object.h>
 
 namespace Rush {
 namespace Bindings {
@@ -24,15 +24,15 @@ protected:
     static MonoObject *CreateComponent(Rush::Entity parent, void *nativePtr, const char *typeName);
 };
 
-#define COMPONENT_BODY(name, path) \
-    virtual std::string GetFilename() override { return (path); } \
-    virtual void Init() override; \
-    virtual void BindMethods() override; \
+#define COMPONENT_BODY(name, path)                                             \
+    virtual std::string GetFilename() override { return (path); }              \
+    virtual void Init() override;                                              \
+    virtual void BindMethods() override;                                       \
     static MonoObject *CreateComponent(Rush::Entity parent, void *nativePtr) { \
-        return Component::CreateComponent(parent,nativePtr, #name); \
+        return Component::CreateComponent(parent, nativePtr, #name);           \
     }
 
-}
-}
+} // namespace Bindings
+} // namespace Rush
 
 #endif // __COMPONENT_BINDING_H__

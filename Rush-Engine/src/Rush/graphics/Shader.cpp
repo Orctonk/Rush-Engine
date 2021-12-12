@@ -1,12 +1,12 @@
-#include "Rushpch.h"
 #include "Shader.h"
 #include "Rush/resources/File.h"
 #include "Rush/resources/FileCacher.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
-#include "Platform/OpenGL/OGLShader.h"
+    #include "Platform/OpenGL/OGLShader.h"
 #else
-#error "No rendering API provided!"
+    #error "No rendering API provided!"
 #endif
 
 #include <shaderc/shaderc.hpp>
@@ -20,7 +20,7 @@ Shader::Shader(std::string shaderPath) : m_DebugName(shaderPath) {
     Reflect();
 }
 
-Shader::~Shader() {}
+Shader::~Shader() { }
 
 Shared<Shader> Shader::Create(Path shaderPath) {
     return CreateShared<OGLShader>(shaderPath);
@@ -73,7 +73,7 @@ void Shader::CompileSPIRV(SourceMap sources) {
     shaderc::Compiler compiler;
     shaderc::CompileOptions options;
     options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
-    //options.SetOptimizationLevel(shaderc_optimization_level_performance);
+    // options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
     m_SPIRVBinaries.clear();
 
@@ -107,30 +107,30 @@ void Shader::Reflect() {
 }
 
 shaderc_shader_kind Shader::TypeToShaderc(ShaderType type) {
-    switch (type)     {
-    case Rush::ShaderType::Vertex:
-        return shaderc_vertex_shader;
-    case Rush::ShaderType::Geometry:
-        return shaderc_geometry_shader;
-    case Rush::ShaderType::Fragment:
-        return shaderc_fragment_shader;
-    default:
-        RUSH_ASSERT(false);
-        return (shaderc_shader_kind)0;
+    switch (type) {
+        case Rush::ShaderType::Vertex:
+            return shaderc_vertex_shader;
+        case Rush::ShaderType::Geometry:
+            return shaderc_geometry_shader;
+        case Rush::ShaderType::Fragment:
+            return shaderc_fragment_shader;
+        default:
+            RUSH_ASSERT(false);
+            return (shaderc_shader_kind)0;
     }
 }
 
 std::string Shader::TypeToString(ShaderType type) {
-    switch (type)     {
-    case Rush::ShaderType::Vertex:
-        return "Vertex";
-    case Rush::ShaderType::Geometry:
-        return "Geometry";
-    case Rush::ShaderType::Fragment:
-        return "Fragment";
-    default:
-        return "None";
+    switch (type) {
+        case Rush::ShaderType::Vertex:
+            return "Vertex";
+        case Rush::ShaderType::Geometry:
+            return "Geometry";
+        case Rush::ShaderType::Fragment:
+            return "Fragment";
+        default:
+            return "None";
     }
 }
 
-}
+} // namespace Rush

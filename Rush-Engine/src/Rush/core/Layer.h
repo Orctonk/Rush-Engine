@@ -5,7 +5,7 @@
 #include "Rush/events/Event.h"
 
 namespace Rush {
-    
+
 class RUSH_API Layer {
 public:
     Layer();

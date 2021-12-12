@@ -14,5 +14,5 @@ void Time::BindMethods() {
     mono_add_internal_call("Rush.Time::SetFixedDelta", Rush::Time::SetFixedDelta);
 }
 
-}
-}
+} // namespace Bindings
+} // namespace Rush

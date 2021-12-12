@@ -22,7 +22,7 @@ public:
     void Bind(uint8_t textureSlot) override;
     uint32_t GetID() override { return m_Cubemap; }
 };
-    
+
 } // namespace Rush
 
 #endif // __OGLTEXTURE_H__

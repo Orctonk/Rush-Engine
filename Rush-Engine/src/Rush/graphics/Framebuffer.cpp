@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "Framebuffer.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLFramebuffer.h"
@@ -10,10 +10,10 @@
 namespace Rush {
 
 Framebuffer::Framebuffer(FramebufferOptions options)
-:   m_Options(options) {}
-Framebuffer::~Framebuffer(){}
+    : m_Options(options) { }
+Framebuffer::~Framebuffer() { }
 
-Unique<Framebuffer> Framebuffer::Create(FramebufferOptions options){
+Unique<Framebuffer> Framebuffer::Create(FramebufferOptions options) {
     return CreateUnique<OGLFramebuffer>(options);
 }
 

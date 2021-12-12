@@ -14,9 +14,7 @@ public:
     virtual void BindMethods() override;
 };
 
-}
-}
-
-
+} // namespace Bindings
+} // namespace Rush
 
 #endif // __TIME_BINDING_H__

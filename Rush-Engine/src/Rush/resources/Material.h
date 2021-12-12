@@ -1,17 +1,17 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__
 
-#include "Rush/core/Core.h"
-#include "Rush/graphics/Texture.h"
-#include "Rush/graphics/Shader.h"
-#include "Rush/graphics/UniformBuffer.h"
 #include "Path.h"
+#include "Rush/core/Core.h"
+#include "Rush/graphics/Shader.h"
+#include "Rush/graphics/Texture.h"
+#include "Rush/graphics/UniformBuffer.h"
 
 #include <glm/glm.hpp>
 
-namespace Rush{
+namespace Rush {
 
-enum class RUSH_API RenderingMode{
+enum class RUSH_API RenderingMode {
     Opaque,
     Transparent,
     Cutoff
@@ -27,27 +27,28 @@ private:
     std::string m_Name;
     MaterialBuffer m_MaterialBuffer;
     Shared<UniformBuffer> m_MaterialUniformBuffer;
+
 public:
     Shared<Shader> materialShader;
-    RenderingMode mode              {RenderingMode::Opaque};
-    
-    glm::vec4 color                 {1.0f,1.0f,1.0f,1.0f};
-    Shared<Texture> diffuseTexture  {nullptr};
-    Shared<Texture> specularTexture {nullptr};
-    Shared<Texture> normalTexture   {nullptr};
-    
-    float shininess                 {25.0f};
+    RenderingMode mode{ RenderingMode::Opaque };
+
+    glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
+    Shared<Texture> diffuseTexture{ nullptr };
+    Shared<Texture> specularTexture{ nullptr };
+    Shared<Texture> normalTexture{ nullptr };
+
+    float shininess{ 25.0f };
 
     Material();
     ~Material();
 
-    std::string GetName(){ return m_Name; }
+    std::string GetName() { return m_Name; }
     void Bind();
 
     static void Write(Shared<Material> mat, Path matPath);
     static Shared<Material> Load(Path matPath);
 };
 
-}
+} // namespace Rush
 
 #endif // __MATERIAL_H__

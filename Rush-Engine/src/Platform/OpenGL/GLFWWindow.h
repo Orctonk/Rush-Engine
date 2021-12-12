@@ -1,13 +1,13 @@
 #ifndef __GLFWWINDOW_H__
 #define __GLFWWINDOW_H__
 
-#include "Rush/core/Core.h"
 #include "Rush/core/AbstractWindow.h"
 #include "Rush/core/Context.h"
+#include "Rush/core/Core.h"
 
 #include <GLFW/glfw3.h>
 
-namespace Rush{
+namespace Rush {
 
 class GLFWWindow : public AbstractWindow {
 private:
@@ -19,7 +19,7 @@ public:
     GLFWWindow(const WindowProperties &properties);
     ~GLFWWindow();
 
-    void Move(int xPos,int yPos) override;
+    void Move(int xPos, int yPos) override;
     void Resize(int width, int height) override;
     void SetWindowMode(WindowMode mode) override;
     void Update() override;
@@ -27,7 +27,6 @@ public:
     void SetMaximized(bool maximized) override;
 };
 
-}
-
+} // namespace Rush
 
 #endif // __GLFWWINDOW_H__

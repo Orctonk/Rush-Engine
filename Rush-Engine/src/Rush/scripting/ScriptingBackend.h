@@ -1,14 +1,14 @@
 #ifndef __SCRIPTINGBACKEND_H__
 #define __SCRIPTINGBACKEND_H__
 
+#include "BindingBase.h"
+#include <Rush/core/Core.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
-#include <mono/metadata/object.h>
 #include <mono/metadata/debug-helpers.h>
-#include <Rush/core/Core.h>
+#include <mono/metadata/object.h>
 #include <string>
 #include <vector>
-#include "BindingBase.h"
 
 namespace Rush {
 
@@ -22,6 +22,7 @@ class ScriptingBackend {
 
     static std::string CompileFiles(std::vector<std::string> filenames, std::string outName);
     static void AddBindings();
+
 public:
     ScriptingBackend() = delete;
 
@@ -40,6 +41,6 @@ public:
     static MonoImage *GetImage() { return s_Image; }
 };
 
-}
+} // namespace Rush
 
 #endif // __SCRIPTINGBACKEND_H__

@@ -16,6 +16,7 @@ private:
     static double s_DeltaTime;
     static double s_FixedDeltaTime;
     static double s_TimeScale;
+
 public:
     Time() = delete;
     ~Time() = delete;
@@ -30,10 +31,8 @@ public:
     static uint64_t ProgramTimeMicros();
     static void SetTimeScale(double timescale) { s_TimeScale = timescale; }
     static void SetFixedDelta(double fixeddelta) { s_FixedDeltaTime = fixeddelta; }
-
 };
 
 } // namespace Rush
-
 
 #endif // __TIME_H__

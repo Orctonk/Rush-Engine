@@ -7,11 +7,12 @@
 
 namespace Rush {
 
-class OGLFramebuffer : public Framebuffer{
+class OGLFramebuffer : public Framebuffer {
 private:
     uint32_t m_FBO;
     uint32_t m_DRO;
-public: 
+
+public:
     OGLFramebuffer(FramebufferOptions options);
     ~OGLFramebuffer();
 
@@ -21,6 +22,6 @@ public:
     void Blit(Unique<Framebuffer> &other) override;
 };
 
-}
+} // namespace Rush
 
 #endif // __OGLFRAMEBUFFER_H__

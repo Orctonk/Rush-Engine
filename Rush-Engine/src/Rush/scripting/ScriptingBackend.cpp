@@ -81,7 +81,8 @@ void ScriptingBackend::Init() {
         if (s_RootDomain) {
             RUSH_LOG_INFO("Domain Created");
             // Bind all methods
-            for (auto &b : s_Bindings) b->BindMethods();
+            for (auto &b : s_Bindings)
+                b->BindMethods();
         }
     } else {
         RUSH_LOG_WARNING("Scripting backend has already been initialized");
@@ -96,7 +97,8 @@ void ScriptingBackend::LoadAssemblies(std::vector<std::string> extra) {
         }
         // Get file list
         std::vector<std::string> files;
-        for (auto &b : s_Bindings) files.push_back(b->GetFilename());
+        for (auto &b : s_Bindings)
+            files.push_back(b->GetFilename());
         std::string filename = CompileFiles(files, "scripting.dll");
         s_AppDomain = mono_domain_create_appdomain("Scripting", NULL);
         mono_domain_set(s_AppDomain, false);
@@ -105,7 +107,8 @@ void ScriptingBackend::LoadAssemblies(std::vector<std::string> extra) {
             RUSH_LOG_INFO("Assembly Loaded");
             s_Image = mono_assembly_get_image(s_Assembly);
             // Initialize modules
-            for (auto &b : s_Bindings) b->Init();
+            for (auto &b : s_Bindings)
+                b->Init();
         } else {
             RUSH_LOG_ERROR("Failed to load assembly");
         }
@@ -139,7 +142,6 @@ void ScriptingBackend::InvokeInstanceVoid(MonoObject *instance, std::string meth
     mono_runtime_invoke(m, instance, NULL, NULL);
 }
 
-
 void ScriptingBackend::AddBindings() {
     REGISTER_BINDING(Bindings::Behaviour);
     REGISTER_BINDING(Bindings::Component);
@@ -150,4 +152,4 @@ void ScriptingBackend::AddBindings() {
     REGISTER_BINDING(Bindings::Time);
 }
 
-}
+} // namespace Rush

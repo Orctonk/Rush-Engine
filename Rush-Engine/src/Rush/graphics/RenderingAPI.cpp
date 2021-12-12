@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "RenderingAPI.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLRenderingAPI.h"
@@ -7,10 +7,10 @@
     #error "No rendering API provided!"
 #endif
 
-namespace Rush{
+namespace Rush {
 
-Unique<RenderingAPI> RenderingAPI::Create(){
+Unique<RenderingAPI> RenderingAPI::Create() {
     return CreateUnique<OGLRenderingAPI>();
 }
 
-}
+} // namespace Rush

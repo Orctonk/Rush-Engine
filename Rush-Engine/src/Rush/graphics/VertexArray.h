@@ -1,12 +1,12 @@
 #ifndef __VERTEXARRAY_H__
 #define __VERTEXARRAY_H__
 
+#include "IndexBuffer.h"
 #include "Rush/core/Core.h"
 #include "VertexBuffer.h"
-#include "IndexBuffer.h"
 
-#include <vector>
 #include <stdint.h>
+#include <vector>
 
 namespace Rush {
 
@@ -16,10 +16,11 @@ protected:
     std::vector<Shared<VertexBuffer>> m_VertexBuffers;
     uint32_t m_InstanceCount = 0;
     VertexArray();
+
 public:
     virtual ~VertexArray();
-    VertexArray(VertexArray&) = delete;
-    VertexArray(const VertexArray&) = delete;
+    VertexArray(VertexArray &) = delete;
+    VertexArray(const VertexArray &) = delete;
 
     virtual void Bind() = 0;
     virtual void Unbind() = 0;
@@ -33,7 +34,7 @@ public:
 
     static Shared<VertexArray> Create();
 };
-    
+
 } // namespace Rush
 
 #endif // __VERTEXARRAY_H__

@@ -1,18 +1,18 @@
-#include "Rushpch.h"
 #include "Application.h"
+#include "Rushpch.h"
 
-#include "Time.h"
 #include "Input.h"
 #include "Random.h"
-#include "Settings.h"
-#include "Rush/scripting/ScriptingBackend.h"
+#include "Rush/debug/DebugLayer.h"
+#include "Rush/events/EventQueue.h"
+#include "Rush/graphics/LineRenderer.h"
+#include "Rush/graphics/Renderer.h"
+#include "Rush/graphics/Renderer2D.h"
 #include "Rush/resources/AssetManager.h"
 #include "Rush/resources/FileCacher.h"
-#include "Rush/graphics/Renderer.h"
-#include "Rush/graphics/LineRenderer.h"
-#include "Rush/graphics/Renderer2D.h"
-#include "Rush/events/EventQueue.h"
-#include "Rush/debug/DebugLayer.h"
+#include "Rush/scripting/ScriptingBackend.h"
+#include "Settings.h"
+#include "Time.h"
 
 namespace Rush {
 
@@ -107,7 +107,7 @@ void Application::PollEvents() {
         e->Dispatch<WindowResizeEvent>(RUSH_BIND_FN(Application::WindowResizeHandle));
         Input::Update(*e);
         RUSH_LOG_TRACE(e->GetString());
-        for (auto it = m_LayerStack.end();it != m_LayerStack.begin(); it--) {
+        for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it--) {
             (*(it - 1))->OnEvent(*e);
             if (e->IsHandled())
                 break;
@@ -129,4 +129,4 @@ bool Application::WindowResizeHandle(WindowResizeEvent &e) {
 
 Application &Application::GetInstance() { return *s_Instance; }
 
-}
+} // namespace Rush

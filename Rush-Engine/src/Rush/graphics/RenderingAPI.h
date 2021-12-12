@@ -2,39 +2,39 @@
 #define __RENDERINGAPI_H__
 
 #include "Rush/core/Core.h"
-#include "VertexArray.h"
 #include "Shader.h"
+#include "VertexArray.h"
 
-#include <stdint.h>
 #include <glm/glm.hpp>
+#include <stdint.h>
 
 namespace Rush {
 
-enum class CullFace{
+enum class CullFace {
     None,
     Clockwise,
     CounterClockwise,
     Both
 };
 
-enum class PolygonMode{
+enum class PolygonMode {
     Fill,
     Wireframe
 };
 
-enum class BlendMode{
+enum class BlendMode {
     None,
     Add,
     Subtract,
     Alpha
 };
 
-enum class Multisampling{
+enum class Multisampling {
     On,
     Off
 };
 
-enum class DepthTest{
+enum class DepthTest {
     None,
     Always,
     Never,
@@ -44,7 +44,7 @@ enum class DepthTest{
     GreaterOrEqual
 };
 
-enum class Primitive{
+enum class Primitive {
     Point,
     Line,
     Triangle
@@ -74,6 +74,6 @@ public:
     static Unique<RenderingAPI> Create();
 };
 
-}
+} // namespace Rush
 
 #endif // __RENDERINGAPI_H__

@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "Cubemap.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLCubemap.h"
@@ -9,12 +9,12 @@
 
 namespace Rush {
 
-Cubemap::Cubemap(std::string filepath) : m_DebugName(filepath) {}
+Cubemap::Cubemap(std::string filepath) : m_DebugName(filepath) { }
 
-Cubemap::~Cubemap() {}
+Cubemap::~Cubemap() { }
 
-Shared<Cubemap> Cubemap::Create(Path filepath){
+Shared<Cubemap> Cubemap::Create(Path filepath) {
     return CreateShared<OGLCubemap>(filepath);
 }
 
-}
+} // namespace Rush

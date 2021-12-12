@@ -1,8 +1,8 @@
-#include "Rush/resources/File.h"
 #include "Components.h"
+#include "Rush/resources/File.h"
 
-#include <entt/entity/snapshot.hpp>
 #include <cereal/archives/json.hpp>
+#include <entt/entity/snapshot.hpp>
 
 #define ENGINE_COMPONENTS    ENGINE_COMPONENTS_V2
 #define ENGINE_COMPONENTS_V2 TransformComponent, CameraComponent, TagComponent, LightComponent, MeshRendererComponent, ScriptComponent
@@ -10,7 +10,7 @@
 
 namespace Rush {
 
-template<typename ...Components>
+template <typename... Components>
 void Scene::Save(const Path &scenePath) {
     File sf(scenePath);
     if (sf.Exists()) {
@@ -35,7 +35,7 @@ void Scene::Save(const Path &scenePath) {
     ss.entities(archive).component<ENGINE_COMPONENTS>(archive);
 }
 
-template<typename ...Components>
+template <typename... Components>
 void Scene::Load(const Path &scenePath) {
     File sf(scenePath);
     if (!sf.Exists()) {
@@ -69,7 +69,6 @@ void Scene::Load(const Path &scenePath) {
         sl.entities(archive).component<ENGINE_COMPONENTS_V1>(archive);
     else if (version == 2)
         sl.entities(archive).component<ENGINE_COMPONENTS_V2>(archive);
-
 }
 
-}
+} // namespace Rush

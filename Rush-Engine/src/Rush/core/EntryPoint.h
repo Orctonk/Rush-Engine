@@ -2,9 +2,9 @@
 #define __RUSH_ENTRY_H__
 #include "Application.h"
 
-extern Rush::Application* Rush::CreateApplication();
+extern Rush::Application *Rush::CreateApplication();
 
-int main(int argc, char** argv){
+int main(int argc, char **argv) {
     RUSH_PROFILE_FUNCTION();
     // TODO: Command line parsing
     Rush::Path executable(argv[0]);
@@ -16,4 +16,3 @@ int main(int argc, char** argv){
 }
 
 #endif
-

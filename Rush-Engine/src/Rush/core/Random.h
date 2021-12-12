@@ -3,8 +3,8 @@
 
 #include "Core.h"
 
-#include <stdint.h>
 #include <random>
+#include <stdint.h>
 
 namespace Rush {
 
@@ -12,6 +12,7 @@ class RUSH_API Random {
 private:
     static std::default_random_engine s_RE;
     Random();
+
 public:
     static void Init();
     static void SetSeed(uint32_t seed);
@@ -25,6 +26,6 @@ public:
     static float GetFloat(float min, float max);
 };
 
-}
+} // namespace Rush
 
 #endif // __RANDOM_H__

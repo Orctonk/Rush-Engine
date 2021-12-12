@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "Time.h"
+#include "Rushpch.h"
 
 namespace Rush {
 
@@ -25,16 +25,16 @@ void Time::Shutdown() { }
 
 void Time::Update() {
     steady_clock::time_point now = steady_clock::now();
-    s_DeltaTime = duration_cast<duration<double>>(now-s_LastUpdate).count() * s_TimeScale;
+    s_DeltaTime = duration_cast<duration<double>>(now - s_LastUpdate).count() * s_TimeScale;
     s_LastUpdate = now;
 }
 
 uint64_t Time::ProgramTimeMillis() {
-    return duration_cast<duration<uint64_t,std::milli>>(steady_clock::now() - s_Startup).count();
+    return duration_cast<duration<uint64_t, std::milli>>(steady_clock::now() - s_Startup).count();
 }
 
 uint64_t Time::ProgramTimeMicros() {
-    return duration_cast<duration<uint64_t,std::micro>>(steady_clock::now() - s_Startup).count();
+    return duration_cast<duration<uint64_t, std::micro>>(steady_clock::now() - s_Startup).count();
 }
-    
+
 } // namespace Rush

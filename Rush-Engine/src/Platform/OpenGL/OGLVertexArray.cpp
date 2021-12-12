@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "OGLVertexArray.h"
+#include "Rushpch.h"
 
 #include "ShaderDataUtil.h"
 
@@ -11,21 +11,21 @@ OGLVertexArray::OGLVertexArray() {
     RUSH_PROFILE_FUNCTION();
     m_VertexBuffers = std::vector<Shared<VertexBuffer>>();
     m_VertexIndex = 0;
-    glGenVertexArrays(1,&m_VAO);
+    glGenVertexArrays(1, &m_VAO);
     RUSH_ASSERT(m_VAO);
 }
 
-OGLVertexArray::~OGLVertexArray(){
+OGLVertexArray::~OGLVertexArray() {
     RUSH_PROFILE_FUNCTION();
-    glDeleteVertexArrays(1,&m_VAO);
+    glDeleteVertexArrays(1, &m_VAO);
 }
 
-void OGLVertexArray::Bind(){
+void OGLVertexArray::Bind() {
     RUSH_PROFILE_FUNCTION();
     glBindVertexArray(m_VAO);
 }
 
-void OGLVertexArray::Unbind(){
+void OGLVertexArray::Unbind() {
     RUSH_PROFILE_FUNCTION();
     glBindVertexArray(0);
 }
@@ -36,8 +36,8 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
 
     vb->Bind();
 
-    for(auto e: vb->GetLayout()){
-        switch(e.objType){
+    for (auto e : vb->GetLayout()) {
+        switch (e.objType) {
             case ShaderData::BOOL:
             case ShaderData::FLOAT:
             case ShaderData::FLOAT2:
@@ -54,15 +54,13 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
                     getOpenGLType(e.objType),
                     e.normalized ? GL_TRUE : GL_FALSE,
                     e.stride,
-                    (void *)(uint64_t)e.offset
-                );
-                if(vb->IsInstanced())
-                    glVertexAttribDivisor(m_VertexIndex,1);
+                    (void *)(uint64_t)e.offset);
+                if (vb->IsInstanced()) glVertexAttribDivisor(m_VertexIndex, 1);
                 m_VertexIndex++;
                 break;
             case ShaderData::MAT3:
             case ShaderData::MAT4:
-                for(int i = 0; i < getElemCount(e.objType); i++){
+                for (int i = 0; i < getElemCount(e.objType); i++) {
                     glEnableVertexAttribArray(m_VertexIndex);
                     glVertexAttribPointer(
                         m_VertexIndex,
@@ -70,15 +68,12 @@ void OGLVertexArray::AddVertexBuffer(Shared<VertexBuffer> vb) {
                         getOpenGLType(e.objType),
                         e.normalized ? GL_TRUE : GL_FALSE,
                         e.stride,
-                        (void *)(e.offset + sizeof(float) * getElemCount(e.objType) * i)
-                    );
-                    if(vb->IsInstanced())
-                        glVertexAttribDivisor(m_VertexIndex,1);
+                        (void *)(e.offset + sizeof(float) * getElemCount(e.objType) * i));
+                    if (vb->IsInstanced()) glVertexAttribDivisor(m_VertexIndex, 1);
                     m_VertexIndex++;
                 }
                 break;
         }
-
     }
     m_VertexBuffers.push_back(vb);
     Unbind();
@@ -92,4 +87,4 @@ void OGLVertexArray::SetIndexBuffer(Shared<IndexBuffer> ib) {
     glBindVertexArray(0);
 }
 
-}
+} // namespace Rush

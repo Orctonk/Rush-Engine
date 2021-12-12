@@ -2,8 +2,8 @@
 #define __MESHRENDERERCOMPONENT_H__
 
 #include "Rush/core/Core.h"
-#include "Rush/resources/RootMesh.h"
 #include "Rush/resources/AssetManager.h"
+#include "Rush/resources/RootMesh.h"
 
 #include <cereal/archives/json.hpp>
 #include <cereal/types/string.hpp>
@@ -14,19 +14,17 @@
 struct ENTT_API MeshRendererComponent {
     Rush::Shared<Rush::RootMesh> mesh;
 
-    template<typename Archive>
+    template <typename Archive>
     void save(Archive &archive) const {
         archive(
-            cereal::make_nvp("mesh",mesh->name)
-        );
+            cereal::make_nvp("mesh", mesh->name));
     }
 
-    template<typename Archive>
-    void load(Archive &archive){
+    template <typename Archive>
+    void load(Archive &archive) {
         std::string meshPath;
         archive(
-            cereal::make_nvp("mesh",meshPath)
-        );
+            cereal::make_nvp("mesh", meshPath));
         mesh = Rush::AssetManager::GetMesh(meshPath);
     }
 };

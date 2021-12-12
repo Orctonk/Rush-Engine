@@ -17,7 +17,7 @@ private:
 public:
     friend class Scene;
 
-    Entity() {}
+    Entity() { }
 
     Entity(entt::registry *scene, entt::entity entity)
         : m_Scene(scene), m_Entity(entity) {
@@ -28,22 +28,22 @@ public:
     uint32_t GetID() { return static_cast<std::underlying_type_t<entt::entity>>(m_Entity); }
     entt::registry *GetParentRegistry() { return m_Scene; }
 
-    template<typename T>
+    template <typename T>
     bool HasComponent() {
         return m_Scene->all_of<T>(m_Entity);
     }
 
-    template<typename T, typename ... Args>
-    T &AddComponent(Args&& ...args) {
-        return m_Scene->emplace<T>(m_Entity, std::forward<Args>(args) ...);
+    template <typename T, typename... Args>
+    T &AddComponent(Args &&...args) {
+        return m_Scene->emplace<T>(m_Entity, std::forward<Args>(args)...);
     }
 
-    template<typename T>
+    template <typename T>
     T &GetComponent() {
         return m_Scene->get<T>(m_Entity);
     }
 
-    template<typename T>
+    template <typename T>
     void RemoveComponent() {
         m_Scene->remove<T>(m_Entity);
     }
@@ -59,9 +59,8 @@ public:
     bool operator==(Entity &other) {
         return m_Entity == other.m_Entity;
     }
-
 };
 
-}
+} // namespace Rush
 
 #endif // __ENTITY_H__

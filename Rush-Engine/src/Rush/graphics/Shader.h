@@ -1,18 +1,18 @@
 #ifndef __SHADER_H__
 #define __SHADER_H__
 
-#include "Rush/core/Core.h"
 #include "Rush/Resources/Path.h"
+#include "Rush/core/Core.h"
 
-#include <string>
-#include <stdint.h>
-#include <filesystem> 
+#include <filesystem>
 #include <glm/glm.hpp>
 #include <shaderc/shaderc.hpp>
+#include <stdint.h>
+#include <string>
 
 namespace Rush {
 
-enum class RUSH_API ShaderData{
+enum class RUSH_API ShaderData {
     FLOAT,
     FLOAT2,
     FLOAT3,
@@ -34,9 +34,8 @@ enum class RUSH_API ShaderType {
 };
 
 class RUSH_API Shader {
-private: 
+private:
     using SourceMap = std::unordered_map<ShaderType, std::string>;
-
 
     SourceMap LoadSource(Path shaderPath);
     void CompileSPIRV(SourceMap sources);
@@ -50,6 +49,7 @@ protected:
     Shader(std::string shaderPath);
     shaderc_shader_kind TypeToShaderc(ShaderType type);
     std::string TypeToString(ShaderType type);
+
 public:
     virtual ~Shader();
     Shader(Shader &) = delete;
@@ -73,8 +73,7 @@ public:
 
     static Shared<Shader> Create(Path shaderPath);
 };
-    
-} // namespace Rush
 
+} // namespace Rush
 
 #endif // __SHADER_H__

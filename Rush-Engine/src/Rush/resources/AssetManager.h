@@ -1,35 +1,35 @@
 #ifndef __ASSETMANAGER_H__
 #define __ASSETMANAGER_H__
 
+#include "Material.h"
 #include "Path.h"
 #include "RootMesh.h"
-#include "Material.h"
 #include "Rush/core/Core.h"
-#include "Rush/graphics/VertexArray.h"
+#include "Rush/graphics/Cubemap.h"
 #include "Rush/graphics/Shader.h"
 #include "Rush/graphics/Texture.h"
-#include "Rush/graphics/Cubemap.h"
+#include "Rush/graphics/VertexArray.h"
 
 #include <stdint.h>
+#include <string>
 #include <unordered_map>
 #include <vector>
-#include <string>
 
 namespace Rush {
 
 class RUSH_API AssetManager {
 private:
-    static std::unordered_map<std::string,Shared<RootMesh>> s_Meshes;
-    static std::unordered_map<std::string,Shared<Material>> s_Materials;
-    static std::unordered_map<std::string,Shared<Texture>> s_Textures;
-    static std::unordered_map<std::string,Shared<Cubemap>> s_Cubemaps;
-    static std::unordered_map<std::string,Shared<Shader>> s_Shaders;
+    static std::unordered_map<std::string, Shared<RootMesh>> s_Meshes;
+    static std::unordered_map<std::string, Shared<Material>> s_Materials;
+    static std::unordered_map<std::string, Shared<Texture>> s_Textures;
+    static std::unordered_map<std::string, Shared<Cubemap>> s_Cubemaps;
+    static std::unordered_map<std::string, Shared<Shader>> s_Shaders;
 
 public:
     using AssetID = uint32_t;
 
     AssetManager() = delete;
-    
+
     static void Init();
     static void Shutdown();
 
@@ -54,6 +54,6 @@ public:
     static std::vector<std::string> GetShaderKeys();
 };
 
-}
+} // namespace Rush
 
 #endif // __ASSETMANAGER_H__

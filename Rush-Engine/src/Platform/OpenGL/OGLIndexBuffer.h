@@ -6,10 +6,10 @@
 #include <stdint.h>
 
 namespace Rush {
-    
+
 class OGLIndexBuffer : public IndexBuffer {
 private:
-uint32_t m_EBO;
+    uint32_t m_EBO;
 
 public:
     OGLIndexBuffer(const uint32_t *indices, uint32_t count);
@@ -17,7 +17,7 @@ public:
     OGLIndexBuffer(OGLIndexBuffer &) = delete;
     OGLIndexBuffer(const OGLIndexBuffer &) = delete;
 
-    void Bind() override; 
+    void Bind() override;
     void Unbind() override;
 };
 

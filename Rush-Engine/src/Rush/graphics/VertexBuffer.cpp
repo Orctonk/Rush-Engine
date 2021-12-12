@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "VertexBuffer.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLVertexBuffer.h"
@@ -9,17 +9,17 @@
 
 namespace Rush {
 
-VertexBuffer::VertexBuffer(uint32_t size) {}
-VertexBuffer::VertexBuffer(const float *data, uint32_t size) {}
+VertexBuffer::VertexBuffer(uint32_t size) { }
+VertexBuffer::VertexBuffer(const float *data, uint32_t size) { }
 
 VertexBuffer::~VertexBuffer() { }
 
 Shared<VertexBuffer> VertexBuffer::Create(const float *data, uint32_t size) {
-    return CreateShared<OGLVertexBuffer>(data,size);
+    return CreateShared<OGLVertexBuffer>(data, size);
 }
 
 Shared<VertexBuffer> VertexBuffer::Create(uint32_t size) {
     return CreateShared<OGLVertexBuffer>(size);
 }
 
-}
+} // namespace Rush

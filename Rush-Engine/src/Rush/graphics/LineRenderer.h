@@ -1,11 +1,11 @@
 #ifndef __LINERENDERER_H__
 #define __LINERENDERER_H__
 
-#include "Rush/core/Core.h"
 #include "RenderingAPI.h"
+#include "Rush/core/Core.h"
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
 namespace Rush {
 
@@ -14,7 +14,7 @@ struct RUSH_API LineRenderStats {
     int vertexCount = 0;
     int lineCount = 0;
 };
-    
+
 class RUSH_API LineRenderer {
 private:
     static Unique<RenderingAPI> s_API;
@@ -34,10 +34,9 @@ public:
     static void ResetRenderStats();
     static LineRenderStats GetRenderStats() { return s_Stats; }
 
-    static Unique<RenderingAPI>& GetAPI();
+    static Unique<RenderingAPI> &GetAPI();
 };
 
 } // namespace Rush
-
 
 #endif // __LINERENDERER_H__

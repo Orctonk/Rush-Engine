@@ -10,7 +10,7 @@
 namespace Rush {
 
 struct RUSH_API FramebufferOptions {
-    uint32_t width,height;
+    uint32_t width, height;
     std::vector<TextureFormat> textureFormats;
 };
 
@@ -18,6 +18,7 @@ class RUSH_API Framebuffer {
 protected:
     std::vector<Shared<Texture>> m_Textures;
     FramebufferOptions m_Options;
+
 public:
     Framebuffer(FramebufferOptions options);
     virtual ~Framebuffer();
@@ -26,12 +27,12 @@ public:
     virtual void Unbind() = 0;
     virtual void Resize(uint32_t width, uint32_t height) = 0;
     virtual void Blit(Unique<Framebuffer> &target) = 0;
-    
-    std::vector<Shared<Texture>> &GetTextures(){ return m_Textures; }
+
+    std::vector<Shared<Texture>> &GetTextures() { return m_Textures; }
 
     static Unique<Framebuffer> Create(FramebufferOptions options);
 };
 
-}
+} // namespace Rush
 
 #endif // __FRAMEBUFFER_H__

@@ -10,8 +10,8 @@ class RUSH_API DebugLayer : public Layer {
     float m_FrameTimes[DEBUG_FPS_SAMPLES];
     int m_FrameTimeOffset;
     static bool s_ShowWindow;
-public:
 
+public:
     DebugLayer();
     ~DebugLayer();
 
@@ -25,5 +25,5 @@ public:
     static void SetShown(bool show);
 };
 
-}
+} // namespace Rush
 #endif // __DEBUGLAYER_H__

@@ -1,5 +1,5 @@
-#include "Rushpch.h"
 #include "UniformBuffer.h"
+#include "Rushpch.h"
 
 #ifdef RUSH_OPENGL
     #include "Platform/OpenGL/OGLUniformBuffer.h"
@@ -17,4 +17,4 @@ Shared<UniformBuffer> UniformBuffer::Create(uint32_t size, uint16_t binding) {
     return CreateShared<OGLUniformBuffer>(size, binding);
 }
 
-}
+} // namespace Rush

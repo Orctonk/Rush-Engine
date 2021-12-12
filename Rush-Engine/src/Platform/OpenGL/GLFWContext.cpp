@@ -1,21 +1,17 @@
+#include "GLFWContext.h"
 #include "Rushpch.h"
 #include <glad/glad.h>
-#include "GLFWContext.h"
 
 namespace Rush {
 
 GLFWContext::GLFWContext(GLFWwindow *windowContext)
     : m_Context(windowContext) {
     RUSH_PROFILE_FUNCTION();
-    
 }
-
 
 GLFWContext::~GLFWContext() {
     RUSH_PROFILE_FUNCTION();
-    
 }
-
 
 void GLFWContext::Init() {
     RUSH_PROFILE_FUNCTION();
@@ -37,10 +33,9 @@ void GLFWContext::MakeCurrent() {
     glfwMakeContextCurrent(m_Context);
 }
 
-
 void GLFWContext::SwapBuffer() {
     RUSH_PROFILE_FUNCTION();
     glfwSwapBuffers(m_Context);
-}    
+}
 
 } // namespace Rush

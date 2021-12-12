@@ -4,7 +4,6 @@
 namespace Rush {
 
 void Settings::SaveSettings() {
-
 }
 
-};
+}; // namespace Rush

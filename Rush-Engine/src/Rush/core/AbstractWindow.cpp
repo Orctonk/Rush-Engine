@@ -1,25 +1,24 @@
 #include "AbstractWindow.h"
 
 #ifdef RUSH_OPENGL
-#include "Platform/OpenGL/GLFWWindow.h"
+    #include "Platform/OpenGL/GLFWWindow.h"
 #else
     #error "No window manager provided!";
 #endif
 
-namespace Rush{
+namespace Rush {
 
-AbstractWindow::AbstractWindow(const WindowProperties &properties){
+AbstractWindow::AbstractWindow(const WindowProperties &properties) {
     m_Properties = properties;
 }
 
-AbstractWindow::~AbstractWindow(){ 
-    
+AbstractWindow::~AbstractWindow() {
 }
 
-Unique<AbstractWindow> AbstractWindow::CreateWindow(const WindowProperties &properties){
+Unique<AbstractWindow> AbstractWindow::CreateWindow(const WindowProperties &properties) {
 #ifdef RUSH_OPENGL
     return CreateUnique<GLFWWindow>(properties);
 #endif
 }
 
-}
+} // namespace Rush

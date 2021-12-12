@@ -1,11 +1,11 @@
-#include "Rushpch.h"
 #include "Logger.h"
+#include "Rushpch.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 #ifdef RUSH_WINDOWS
-#include <Windows.h>
+    #include <Windows.h>
 #endif
 
 namespace Rush {
@@ -18,27 +18,27 @@ std::ostream &operator<<(std::ostream &os, Color col) {
 #else
     static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     switch (col.col) {
-    case BLACK:
-        SetConsoleTextAttribute(hConsole, 0);
-        break;
-    case WHITE:
-        SetConsoleTextAttribute(hConsole, 15);
-        break;
-    case RED:
-        SetConsoleTextAttribute(hConsole, 12);
-        break;
-    case GREEN:
-        SetConsoleTextAttribute(hConsole, 10);
-        break;
-    case YELLOW:
-        SetConsoleTextAttribute(hConsole, 14);
-        break;
-    case BLUE:
-        SetConsoleTextAttribute(hConsole, 9);
-        break;
-    default:
-        RUSH_LOG_WARNING("Invalid color specified!");
-        break;
+        case BLACK:
+            SetConsoleTextAttribute(hConsole, 0);
+            break;
+        case WHITE:
+            SetConsoleTextAttribute(hConsole, 15);
+            break;
+        case RED:
+            SetConsoleTextAttribute(hConsole, 12);
+            break;
+        case GREEN:
+            SetConsoleTextAttribute(hConsole, 10);
+            break;
+        case YELLOW:
+            SetConsoleTextAttribute(hConsole, 14);
+            break;
+        case BLUE:
+            SetConsoleTextAttribute(hConsole, 9);
+            break;
+        default:
+            RUSH_LOG_WARNING("Invalid color specified!");
+            break;
     }
     return os;
 #endif
@@ -54,12 +54,12 @@ Logger::Logger()
 
 std::string getLevelString(LogLevel level) {
     switch (level) {
-    case LogLevel::Trace:     return "TRACE";
-    case LogLevel::Debug:     return "DEBUG";
-    case LogLevel::Info:      return "INFO";
-    case LogLevel::Warning:   return "WARNING";
-    case LogLevel::Error:     return "ERROR";
-    default:        return "";
+        case LogLevel::Trace: return "TRACE";
+        case LogLevel::Debug: return "DEBUG";
+        case LogLevel::Info: return "INFO";
+        case LogLevel::Warning: return "WARNING";
+        case LogLevel::Error: return "ERROR";
+        default: return "";
     }
 }
 
@@ -71,24 +71,23 @@ void Logger::LogPump() {
     while (true) {
         std::unique_lock<std::mutex> l(i.m_QueueLock);
         if (i.m_LogQueue.empty()) {
-            if (s_close)
-                break;
+            if (s_close) break;
             i.m_Logged.wait(l);
         } else {
             m = i.m_LogQueue.front();
             switch (m.level) {
-            case LogLevel::Trace:
-                std::cout << Color(BLUE);
-                break;
-            case LogLevel::Info:
-                std::cout << Color(GREEN);
-                break;
-            case LogLevel::Warning:
-                std::cout << Color(YELLOW);
-                break;
-            case LogLevel::Error:
-                std::cout << Color(RED);
-                break;
+                case LogLevel::Trace:
+                    std::cout << Color(BLUE);
+                    break;
+                case LogLevel::Info:
+                    std::cout << Color(GREEN);
+                    break;
+                case LogLevel::Warning:
+                    std::cout << Color(YELLOW);
+                    break;
+                case LogLevel::Error:
+                    std::cout << Color(RED);
+                    break;
             }
             std::cout << m.timestamp << ": " << std::left << std::setw(7) << getLevelString(m.level) << " [" << m.sender << "] " << m.message << std::endl;
             i.m_LogQueue.pop();
@@ -127,7 +126,7 @@ Logger::ScopeAlias Logger::SetScopeAlias(std::string alias) {
 
 Logger::ScopeAlias::ScopeAlias(std::string alias)
     : alias(alias),
-    previousAlias(GetAlias()) {
+      previousAlias(GetAlias()) {
     SetAlias(alias);
 }
 
@@ -136,4 +135,4 @@ Logger::ScopeAlias::~ScopeAlias() {
         SetAlias(previousAlias);
 }
 
-}
+} // namespace Rush

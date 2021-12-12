@@ -2,37 +2,40 @@
 #define __KEYBOARDEVENT_H__
 #include "Event.h"
 
-namespace Rush{ 
+namespace Rush {
 
-class KeyboardPressEvent : public Event{
+class KeyboardPressEvent : public Event {
 public:
     int keycode;
     int modifiers;
 
     KeyboardPressEvent(int keycode, int modifiers)
-    : keycode(keycode), modifiers(modifiers){}
+        : keycode(keycode), modifiers(modifiers) {
+    }
     EVENT_BODY(KeyboardPress);
     virtual std::string GetString() const override { return "KeyboardPressEvent(" + std::to_string(keycode) + ")"; }
 };
 
-class KeyboardRepeatEvent : public Event{
+class KeyboardRepeatEvent : public Event {
 public:
     int keycode;
     int modifiers;
 
     KeyboardRepeatEvent(int keycode, int modifiers)
-    : keycode(keycode), modifiers(modifiers){}
+        : keycode(keycode), modifiers(modifiers) {
+    }
     EVENT_BODY(KeyboardRepeat);
     virtual std::string GetString() const override { return "KeyboardRepeatEvent(" + std::to_string(keycode) + ")"; }
 };
 
-class KeyboardReleaseEvent : public Event{
+class KeyboardReleaseEvent : public Event {
 public:
     int keycode;
     int modifiers;
 
     KeyboardReleaseEvent(int keycode, int modifiers)
-    : keycode(keycode), modifiers(modifiers){}
+        : keycode(keycode), modifiers(modifiers) {
+    }
     EVENT_BODY(KeyboardRelease);
     virtual std::string GetString() const override { return "KeyboardReleaseEvent(" + std::to_string(keycode) + ")"; }
 };
@@ -42,10 +45,11 @@ public:
     unsigned int typed;
 
     KeyboardTypeEvent(unsigned int typed)
-    : typed(typed) {}
+        : typed(typed) {
+    }
     EVENT_BODY(KeyboardType);
     virtual std::string GetString() const override { return "KeyboardTypeEvent(" + std::to_string(typed) + ")"; }
 };
 
-} 
+} // namespace Rush
 #endif // __KEYBOARDEVENT_H__

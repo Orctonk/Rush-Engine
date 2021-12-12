@@ -1,14 +1,14 @@
 #include "Component.binding.h"
-#include "../ScriptingBackend.h"
 #include "../Entity.binding.h"
+#include "../ScriptingBackend.h"
 #include <iostream>
 
 namespace Rush {
 namespace Bindings {
 
-void Component::Init() {}
+void Component::Init() { }
 
-void Component::BindMethods() {}
+void Component::BindMethods() { }
 
 void *Component::GetHandle(MonoObject *instance) {
     MonoClass *c = mono_class_from_name(ScriptingBackend::GetImage(), "Rush", "Component");
@@ -32,5 +32,5 @@ MonoObject *Component::CreateComponent(Rush::Entity parent, void *nativePtr, con
     return component;
 }
 
-}
-}
+} // namespace Bindings
+} // namespace Rush

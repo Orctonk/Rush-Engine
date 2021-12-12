@@ -1,23 +1,23 @@
 #ifndef __RUSH_EVENT_MANAGER_H__
 #define __RUSH_EVENT_MANAGER_H__
 
-#include "Rush/core/Core.h"
 #include "Event.h"
+#include "Rush/core/Core.h"
 
 #include <mutex>
 #include <queue>
 
-namespace Rush { 
+namespace Rush {
 
 class RUSH_API EventQueue {
 private:
     std::queue<Event *> m_EventQueue;
     std::mutex m_EventLock;
-    
-    EventQueue();
-public:
 
-    static EventQueue &GetInstance(){
+    EventQueue();
+
+public:
+    static EventQueue &GetInstance() {
         static EventQueue s_Instance;
 
         return s_Instance;
@@ -27,6 +27,6 @@ public:
     Event *ConsumeEvent();
 };
 
-} 
+} // namespace Rush
 
 #endif

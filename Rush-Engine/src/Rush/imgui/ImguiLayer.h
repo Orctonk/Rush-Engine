@@ -2,9 +2,9 @@
 #define __IMGUILAYER_H__
 
 #include "Rush/core/Layer.h"
-#include "Rush/events/WindowEvent.h"
 #include "Rush/events/KeyboardEvent.h"
 #include "Rush/events/MouseEvent.h"
+#include "Rush/events/WindowEvent.h"
 
 namespace Rush {
 
@@ -27,13 +27,12 @@ public:
     virtual void OnDetach() override;
     virtual void OnUpdate() override;
     virtual void OnImguiRender() override { }
-    
     virtual void OnEvent(Event &e) override;
 
     void Begin();
     void End();
 };
 
-}
+} // namespace Rush
 
 #endif // __IMGUILAYER_H__

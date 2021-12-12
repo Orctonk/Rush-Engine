@@ -13,9 +13,9 @@ private:
     static Path s_CWD;
 
 public:
-    Path() : Path("/") {}
+    Path() : Path("/") { }
     Path(std::string raw);
-    Path(const char* raw) : Path(std::string(raw)) {}
+    Path(const char *raw) : Path(std::string(raw)) { }
     ~Path();
 
     Path GetParentDirectory() const;
@@ -30,10 +30,10 @@ public:
     static void SetCWD(Path newCWD);
     static Path GetCWD();
 
-    bool operator==(const Path &other){ return m_Raw == other.m_Raw; }
+    bool operator==(const Path &other) { return m_Raw == other.m_Raw; }
     operator std::string() { return m_Raw; }
 };
 
-}
+} // namespace Rush
 
 #endif // __PATH_H__
