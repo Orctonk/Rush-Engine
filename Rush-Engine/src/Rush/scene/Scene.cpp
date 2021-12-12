@@ -5,6 +5,8 @@
 #include "Rush/resources/AssetManager.h"
 #include "Rush/graphics/Renderer.h"
 #include "Components.h"
+#include "Rush/scripting/ScriptingBackend.h"
+#include "Rush/scripting/Behaviour.binding.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -17,7 +19,7 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-    
+
 }
 
 Entity Scene::NewEntity(std::string name) {
@@ -43,6 +45,11 @@ void Scene::OnUpdate() {
             pe.particleSystem.Emit(pe.emissionProperties);
         }
     }
+
+    for (auto e : m_SceneRegistry.view<RuntimeScriptComponent>()) {
+        auto &sc = m_SceneRegistry.get<RuntimeScriptComponent>(e);
+        ScriptingBackend::InvokeInstanceVoid(sc.behaviourInstance, "Update");
+    }
 }
 
 void Scene::Render() {
@@ -50,7 +57,7 @@ void Scene::Render() {
         m_SceneShader = AssetManager::GetShader("res/shaders/materialShader.glsl");
     if (!m_SkyboxShader)
         m_SkyboxShader = AssetManager::GetShader("res/shaders/skyboxShader.glsl");
-    
+
     CameraComponent *mainCamera = nullptr;
     glm::mat4 view;
 
@@ -59,7 +66,7 @@ void Scene::Render() {
         if (c.main) {
             auto &t = m_SceneRegistry.get<TransformComponent>(e);
             view = t.GetModelMatrix();
-            
+
             mainCamera = &c;
         }
     }
@@ -71,7 +78,7 @@ void Scene::Render() {
     Renderer::GetAPI()->SetClearColor(mainCamera->clearColor);
     Renderer::GetAPI()->Clear();
     Renderer::BeginScene(mainCamera->camera, view);
-    
+
     for (auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshRendererComponent>())) {
         auto [transform, mesh] = m_SceneRegistry.get<TransformComponent, MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
@@ -97,9 +104,18 @@ void Scene::Render() {
 }
 
 void Scene::StartPlay() {
+    ScriptingBackend::LoadAssemblies();
+    for (auto e : m_SceneRegistry.view<ScriptComponent>()) {
+        auto &sc = m_SceneRegistry.get<ScriptComponent>(e);
+        auto &rsc = m_SceneRegistry.emplace<RuntimeScriptComponent>(e);
+        rsc.behaviourInstance = Bindings::Behaviour::CreateComponent({ &m_SceneRegistry, e }, &sc);
+    }
 }
 
 void Scene::StopPlay() {
+    ScriptingBackend::UnloadAssemblies();
+    auto rscView = m_SceneRegistry.view<RuntimeScriptComponent>();
+    m_SceneRegistry.remove<RuntimeScriptComponent>(rscView.begin(), rscView.end());
 }
 
 void Scene::SetLightData(Shared<Shader> shader) {

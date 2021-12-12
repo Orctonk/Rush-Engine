@@ -9,11 +9,13 @@
 
 struct ENTT_API ScriptComponent {
     std::string scriptFile;
+    std::string className;
 
     template<typename Archive>
     void serialize(Archive &archive) {
         archive(
-            cereal::make_nvp("script", scriptFile)
+            cereal::make_nvp("script", scriptFile),
+            cereal::make_nvp("class", className)
         );
     }
 };

@@ -108,6 +108,12 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/scene/components/LightComponent.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/Scene.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/ScriptingBackend.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/Behaviour.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/Entity.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/components/Component.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Logger.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Time.binding.cpp
 )
 
 # Add implementation specific sources
@@ -283,8 +289,12 @@ if(RUSH_OPENGL)
     target_link_libraries(Rush PRIVATE glad)
 endif()
 
-if(MSVC)
-endif()
+add_custom_command(TARGET Rush POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/mono/mcs.exe
+    $<TARGET_FILE_DIR:Rush>/mcs.exe)
+
+target_compile_definitions(Rush PRIVATE "RUSH_BINDINGS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/src/Rush/scripting/csbindings/\"")
 
 install(TARGETS Rush
     LIBRARY DESTINATION lib

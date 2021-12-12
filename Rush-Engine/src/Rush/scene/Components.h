@@ -9,4 +9,8 @@
 #include "components/TagComponent.h"
 #include "components/MeshRendererComponent.h"
 
+#ifdef RUSH_BUILD
+#include "components/RuntimeScriptComponent.h"
+#endif
+
 #endif // __COMPONENTS_H__
