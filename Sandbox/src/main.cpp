@@ -10,23 +10,18 @@
 
 class Sandbox : public Rush::Application {
 public:
-	Sandbox(){}
-	~Sandbox(){}
-	void Init() override {
-		RUSH_LOG_INFO("Rush Version: {}.{}", RUSH_VERSION_MAJOR, RUSH_VERSION_MINOR);
-		PushOverlay(new Rush::ImguiLayer());
-		PushLayer(new SandboxLayer());
-	}
-
-	void Exit() override {
-		
-	}
-
-    void Update() override {
-
+    Sandbox() { }
+    ~Sandbox() { }
+    void Init() override {
+        RUSH_LOG_INFO("Rush Version: {}.{}", RUSH_VERSION_MAJOR, RUSH_VERSION_MINOR);
+        PushOverlay(new Rush::ImguiLayer());
+        PushLayer(new SandboxLayer());
     }
+
+    void Exit() override { }
+    void Update() override { }
 };
 
-Rush::Application* Rush::CreateApplication(){
-	return new Sandbox();
+Rush::Application *Rush::CreateApplication() {
+    return new Sandbox();
 }

@@ -5,19 +5,20 @@
 
 class SandboxLayer : public Rush::Layer {
 private:
-	Rush::Scene m_Scene;
-	Rush::Entity m_Camera;
+    Rush::Scene m_Scene;
+    Rush::Entity m_Camera;
 
-	bool OnResize(Rush::WindowResizeEvent& e);
+    bool OnResize(Rush::WindowResizeEvent &e);
+
 public:
-	SandboxLayer() {}
-	~SandboxLayer() {}
+    SandboxLayer() { }
+    ~SandboxLayer() { }
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override {}
-	virtual void OnUpdate() override;
-	virtual void OnImguiRender() override {}
-	virtual void OnEvent(Rush::Event& e) override;
+    virtual void OnAttach() override;
+    virtual void OnDetach() override { }
+    virtual void OnUpdate() override;
+    virtual void OnImguiRender() override { }
+    virtual void OnEvent(Rush::Event &e) override;
 };
 
 #endif // __SANDBOX_LAYER_H__
