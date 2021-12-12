@@ -1,6 +1,7 @@
+#include <glad/glad.h>
+
 #include "GLFWContext.h"
 #include "Rushpch.h"
-#include <glad/glad.h>
 
 namespace Rush {
 

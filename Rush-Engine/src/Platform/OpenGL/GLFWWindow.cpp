@@ -1,7 +1,7 @@
-#include "GLFWWindow.h"
-#include "Rushpch.h"
 #include <glad/glad.h>
 
+#include "GLFWWindow.h"
+#include "Rushpch.h"
 #include "GLFWContext.h"
 #include "Rush/events/EventQueue.h"
 #include "Rush/events/KeyboardEvent.h"
