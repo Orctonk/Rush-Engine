@@ -3,14 +3,14 @@
 
 #include <Rush.h>
 
-enum class MouseDragMode{
+enum class MouseDragMode {
     NONE,
     PAN,
     ROTATE,
     ZOOM
 };
 
-class CameraController{
+class CameraController {
 private:
     Rush::Entity m_Camera;
     int m_DragLastX, m_DragLastY;
@@ -22,6 +22,7 @@ private:
     bool MouseMoveHandle(Rush::MouseMoveEvent &e);
     bool MouseScrollHandle(Rush::MouseScrollEvent &e);
     bool WindowResizeHandle(Rush::WindowResizeEvent &e);
+
 public:
     CameraController();
     ~CameraController();

@@ -3,10 +3,10 @@
 
 #include <Rush.h>
 
-#include <vector>
+#include <stdint.h>
 #include <string>
 #include <unordered_map>
-#include <stdint.h>
+#include <vector>
 
 struct Sample {
     uint32_t id;

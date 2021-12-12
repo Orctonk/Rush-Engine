@@ -1,8 +1,8 @@
 #ifndef __SCENEGRAPHVIEW_H__
 #define __SCENEGRAPHVIEW_H__
 
-#include <Rush.h>
 #include "widgets/EntityEditorWidget.h"
+#include <Rush.h>
 
 class SceneGraphView {
 private:
@@ -13,6 +13,7 @@ private:
 
     void RenderEntity(const Rush::Entity e);
     bool KeyPressHandle(Rush::KeyboardPressEvent &e);
+
 public:
     bool enabled;
 
@@ -21,7 +22,7 @@ public:
 
     void OnEvent(Rush::Event &e);
     void OnImguiRender(Rush::Scene &scene);
-    
+
     static void RenderMaterial(Rush::Material &mat);
 };
 

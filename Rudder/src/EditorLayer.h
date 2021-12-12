@@ -1,12 +1,12 @@
 #ifndef __EDITORLAYER_H__
 #define __EDITORLAYER_H__
 
-#include <Rush.h>
+#include "views/AssetView.h"
+#include "views/ProfilerResultView.h"
 #include "views/RenderViews.h"
 #include "views/SceneGraphView.h"
 #include "views/SceneView.h"
-#include "views/AssetView.h"
-#include "views/ProfilerResultView.h"
+#include <Rush.h>
 
 class EditorLayer : public Rush::Layer {
 private:

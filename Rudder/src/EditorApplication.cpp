@@ -10,8 +10,8 @@ class EditorApplication : public Application {
         m_Window->SetVSync(true);
         PushOverlay(new EditorLayer());
     }
-    virtual void Exit() override {}
-    virtual void Update() override {}
+    virtual void Exit() override { }
+    virtual void Update() override { }
 };
 
 Application *Rush::CreateApplication() {

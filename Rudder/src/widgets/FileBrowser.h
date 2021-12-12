@@ -2,8 +2,8 @@
 #define __FILEBROWSER_H__
 
 #include <filesystem>
-#include <vector>
 #include <string>
+#include <vector>
 
 class FileBrowser {
 private:
@@ -16,6 +16,7 @@ private:
     bool m_Finished;
 
     void SortDirCWD();
+
 public:
     FileBrowser();
     ~FileBrowser();

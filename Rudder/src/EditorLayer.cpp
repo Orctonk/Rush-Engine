@@ -1,20 +1,20 @@
-#include "Rudderpch.h"
 #include "EditorLayer.h"
+#include "Rudderpch.h"
 
 #include "widgets/FileBrowser.h"
 
+#include <IconFontCppHeaders/IconsFontAwesome5.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <misc/cpp/imgui_stdlib.h>
-#include <IconFontCppHeaders/IconsFontAwesome5.h>
 
 EditorLayer::EditorLayer()
     : m_ScenePath("res/scenes/test2.scene") {
 }
 
-EditorLayer::~EditorLayer() {}
+EditorLayer::~EditorLayer() { }
 
 void EditorLayer::OnAttach() {
     using namespace Rush;
@@ -25,14 +25,13 @@ void EditorLayer::OnAttach() {
         Rush::Entity e1 = m_Scene.NewEntity("Editor Camera");
         e1.AddComponent<CameraComponent>();
     }
-    for (auto e : reg->view<CameraComponent>()) {
-        m_RenderViews.Init({ reg,e });
-    }
+    for (auto e : reg->view<CameraComponent>())
+        m_RenderViews.Init({ reg, e });
 
     m_SceneView.Init();
     AddImGuiFonts();
 }
-void EditorLayer::OnDetach() {}
+void EditorLayer::OnDetach() { }
 void EditorLayer::OnUpdate() {
     m_Scene.OnUpdate();
     m_RenderViews.OnUpdate(m_Scene);
@@ -56,15 +55,13 @@ void EditorLayer::OnImguiRender() {
             m_Scene.Load(Rush::Path("res/scenes/new.scene"));
             m_ScenePath = Rush::Path("NewScene.scene");
             auto *reg = m_Scene.GetRegistry();
-            for (auto e : reg->view<CameraComponent>()) {
-                m_RenderViews.Init({ reg,e });
-            }
+            for (auto e : reg->view<CameraComponent>())
+                m_RenderViews.Init({ reg, e });
         }
         if (ImGui::MenuItem("Save", "Ctrl+S"))
             m_Scene.Save(m_ScenePath);
-        if (ImGui::MenuItem("Open", "Ctrl+O")) {
+        if (ImGui::MenuItem("Open", "Ctrl+O"))
             loadScene = true;
-        }
         if (ImGui::BeginMenu("Open recent")) {
             ImGui::MenuItem("recent_file_1.scene"); // TODO: Implement Open recent button
             ImGui::MenuItem("recent_file_2.scene");
@@ -75,10 +72,10 @@ void EditorLayer::OnImguiRender() {
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit")) {
-        ImGui::MenuItem("Undo", "Ctrl+Z"); // TODO: Implement Undo button
-        ImGui::MenuItem("Redo", "Ctrl+Y"); // TODO: Implement Redo button
-        ImGui::MenuItem("Copy", "Ctrl+C"); // TODO: Implement Copy button
-        ImGui::MenuItem("Cut", "Ctrl+X"); // TODO: Implement Cut button
+        ImGui::MenuItem("Undo", "Ctrl+Z");  // TODO: Implement Undo button
+        ImGui::MenuItem("Redo", "Ctrl+Y");  // TODO: Implement Redo button
+        ImGui::MenuItem("Copy", "Ctrl+C");  // TODO: Implement Copy button
+        ImGui::MenuItem("Cut", "Ctrl+X");   // TODO: Implement Cut button
         ImGui::MenuItem("Paste", "Ctrl+V"); // TODO: Implement Paste button
         ImGui::EndMenu();
     }
@@ -103,9 +100,8 @@ void EditorLayer::OnImguiRender() {
         loadBrowser.Open();
     }
     loadBrowser.Render();
-    if (loadBrowser.Finished()) {
+    if (loadBrowser.Finished())
         m_Scene.Load(loadBrowser.GetSelectedFile());
-    }
 
     ImGuiViewport *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
@@ -113,10 +109,7 @@ void EditorLayer::OnImguiRender() {
     ImGui::SetNextWindowViewport(viewport->ID);
     ImGui::SetNextWindowBgAlpha(0.0f);
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking
-        | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
-        | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus
-        | ImGuiWindowFlags_NoTitleBar;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoTitleBar;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("Main window", NULL, flags);
@@ -129,10 +122,7 @@ void EditorLayer::OnImguiRender() {
     m_AssetView.OnImguiRender();
     m_PRView.OnImguiRender();
     m_SceneView.OnImguiRender();
-
 }
-
-
 
 void EditorLayer::AddImGuiFonts() {
     ImGuiIO &io = ImGui::GetIO();

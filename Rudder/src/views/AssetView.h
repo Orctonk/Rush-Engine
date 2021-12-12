@@ -1,14 +1,14 @@
 #ifndef __ASSETVIEW_H__
 #define __ASSETVIEW_H__
 
+#include <Rush.h>
 #include <string>
 #include <vector>
-#include <Rush.h>
 
 class AssetView {
 private:
     struct LightData {
-        std::array<PackedLight,15> lights;
+        std::array<PackedLight, 15> lights;
         int32_t lightCount;
         int32_t dirLightCount;
     };
@@ -18,21 +18,21 @@ private:
         std::vector<Rush::Shared<DirTree>> children;
     };
 
-    enum AssetFilter{
+    enum AssetFilter {
         Texture = 0,
         Shader = 1,
         Material = 2,
         Mesh = 3,
         Count = 4
     };
-    
+
     Rush::Shared<DirTree> m_DirTree;
     bool m_AssetFilters[AssetFilter::Count];
     bool m_Dirty;
     int m_IconSize;
     Rush::Path m_CurrentDir;
     Rush::Path m_SelectedAsset;
-    std::unordered_map<std::string,Rush::Shared<Rush::Texture>> m_MaterialPreviews;
+    std::unordered_map<std::string, Rush::Shared<Rush::Texture>> m_MaterialPreviews;
     Rush::Shared<Rush::UniformBuffer> m_LightBuffer;
 
     void RenderFile(Rush::File &file);

@@ -1,38 +1,36 @@
-#include "Rudderpch.h"
 #include "ProfilerResultView.h"
+#include "Rudderpch.h"
 
-#include "widgets/FileBrowser.h" 
+#include "widgets/FileBrowser.h"
 
 #include <cstring>
 #include <stack>
 
-ProfilerResultView::ProfilerResultView(){
+ProfilerResultView::ProfilerResultView() {
     m_CurFile = "None";
     m_FirstDisplayedTime = 1000000;
     m_DisplayedDuration = 5000000;
     enabled = false;
 }
 
-ProfilerResultView::~ProfilerResultView(){
+ProfilerResultView::~ProfilerResultView() { }
 
-}
+void ProfilerResultView::OnImguiRender() {
+    if (!enabled) return;
 
-void ProfilerResultView::OnImguiRender(){
-    if(!enabled) return;
-
-    if(ImGui::Begin("Profiler result",&enabled)){
+    if (ImGui::Begin("Profiler result", &enabled)) {
         m_Focused = ImGui::IsWindowFocused();
         ImGui::Text("Current File: ");
         ImGui::SameLine();
         ImGui::Text(m_CurFile.c_str());
-        
+
         static FileBrowser profBrowser;
-        if(ImGui::Button("Browse")){
+        if (ImGui::Button("Browse")) {
             profBrowser.Open();
             profBrowser.SetTitle("Select profiler result...");
         }
         profBrowser.Render();
-        if(profBrowser.Finished()){
+        if (profBrowser.Finished()) {
             m_CurFile = profBrowser.GetSelectedFile();
             LoadProfileResult(m_CurFile);
         }
@@ -46,24 +44,24 @@ void ProfilerResultView::OnImguiRender(){
 
         const float scale = m_DisplayedDuration / width;
 
-        for(Sample &s : m_Samples){
-            if(s.start + s.dur < m_FirstDisplayedTime || (s.dur/scale) < 1.0f)
+        for (Sample &s : m_Samples) {
+            if (s.start + s.dur < m_FirstDisplayedTime || (s.dur / scale) < 1.0f)
                 continue;
-            if(s.start > m_FirstDisplayedTime + m_DisplayedDuration)
+            if (s.start > m_FirstDisplayedTime + m_DisplayedDuration)
                 break;
 
             uint64_t sEnd = s.start + s.dur;
-            float xOff = (((float)s.start) - m_FirstDisplayedTime)/scale;
-            while(!ends.empty() && ends.top() < sEnd){
+            float xOff = (((float)s.start) - m_FirstDisplayedTime) / scale;
+            while (!ends.empty() && ends.top() < sEnd) {
                 ends.pop();
                 level--;
             }
             auto hash = std::hash<std::string>{}(m_SampleNameMap[s.id]);
             uint32_t col = (uint32_t)(0x000000FF | hash);
-            drawList->AddRectFilled({p.x + xOff,p.y + level * 22},{p.x + xOff + (s.dur/scale),p.y + 20 * (level + 1) + 2 * level},col);
+            drawList->AddRectFilled({ p.x + xOff, p.y + level * 22 }, { p.x + xOff + (s.dur / scale), p.y + 20 * (level + 1) + 2 * level }, col);
             const char *rem;
-            ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(),(s.dur/scale),0.0f,m_SampleNameMap[s.id].c_str(),NULL,&rem);
-            drawList->AddText({p.x + xOff,p.y + level * 22},0xFFFFFFFF,m_SampleNameMap[s.id].c_str(),rem);
+            ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), (s.dur / scale), 0.0f, m_SampleNameMap[s.id].c_str(), NULL, &rem);
+            drawList->AddText({ p.x + xOff, p.y + level * 22 }, 0xFFFFFFFF, m_SampleNameMap[s.id].c_str(), rem);
             ends.push(sEnd);
             level++;
         }
@@ -71,13 +69,13 @@ void ProfilerResultView::OnImguiRender(){
     ImGui::End();
 }
 
-void ProfilerResultView::OnEvent(Rush::Event &e){
+void ProfilerResultView::OnEvent(Rush::Event &e) {
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(ProfilerResultView::KeyPressHandle));
     e.Dispatch<Rush::KeyboardRepeatEvent>(RUSH_BIND_FN(ProfilerResultView::KeyRepeatHandle));
     e.Dispatch<Rush::MouseScrollEvent>(RUSH_BIND_FN(ProfilerResultView::ScrollHandle));
 }
 
-void ProfilerResultView::LoadProfileResult(std::string path){
+void ProfilerResultView::LoadProfileResult(std::string path) {
     m_SampleNameMap.clear();
     m_Samples.clear();
     std::ifstream profile;
@@ -86,51 +84,50 @@ void ProfilerResultView::LoadProfileResult(std::string path){
     char buf[1024];
     std::unordered_map<std::string, uint32_t> idMap;
 
-    profile.getline(buf,1024,'{');
+    profile.getline(buf, 1024, '{');
 
     bool done = false;
     uint32_t curId = 0;
-    while(!done){
+    while (!done) {
         Sample s;
         // TODO: switch to more robust JSON parser
-        profile.getline(buf,1024,'{');
-        profile.get(buf,9);
-        profile.getline(buf,1024,'"');
-        if(idMap.find(std::string(buf)) != idMap.end()){
+        profile.getline(buf, 1024, '{');
+        profile.get(buf, 9);
+        profile.getline(buf, 1024, '"');
+        if (idMap.find(std::string(buf)) != idMap.end())
             s.id = idMap[buf];
-        }
-        else{
+        else {
             s.id = curId;
             idMap[std::string(buf)] = curId;
             m_SampleNameMap[curId] = std::string(buf);
             curId++;
         }
 
-        profile.get(buf,8);
-        profile.getline(buf,1024,',');
+        profile.get(buf, 8);
+        profile.getline(buf, 1024, ',');
         s.start = atoi(buf);
-        profile.getline(buf,1024,':');
-        profile.getline(buf,1024,'}');
+        profile.getline(buf, 1024, ':');
+        profile.getline(buf, 1024, '}');
         s.dur = atoi(buf);
-        profile.get(buf,2);
+        profile.get(buf, 2);
         done = buf[0] == ']';
-        if(buf[0] == '\0'){
+        if (buf[0] == '\0') {
             RUSH_LOG_ERROR("Attempting to open incomplete or invalid profiler file!");
             done = true;
         }
         m_Samples.push_back(s);
     }
     profile.close();
-    std::sort(m_Samples.begin(),m_Samples.end(),[](const Sample &a, const Sample &b){
+    std::sort(m_Samples.begin(), m_Samples.end(), [](const Sample &a, const Sample &b) {
         return a.start < b.start;
     });
 }
 
-bool ProfilerResultView::KeyPressHandle(Rush::KeyboardPressEvent &e){
-    if(!m_Focused)
+bool ProfilerResultView::KeyPressHandle(Rush::KeyboardPressEvent &e) {
+    if (!m_Focused)
         return false;
-    
-    switch(e.keycode){
+
+    switch (e.keycode) {
         case RUSH_KEY_W:
             m_FirstDisplayedTime += m_DisplayedDuration * 0.05f;
             m_DisplayedDuration *= 0.9f;
@@ -152,11 +149,11 @@ bool ProfilerResultView::KeyPressHandle(Rush::KeyboardPressEvent &e){
     }
 }
 
-bool ProfilerResultView::KeyRepeatHandle(Rush::KeyboardRepeatEvent &e){
-    if(!m_Focused)
+bool ProfilerResultView::KeyRepeatHandle(Rush::KeyboardRepeatEvent &e) {
+    if (!m_Focused)
         return false;
-    
-    switch(e.keycode){
+
+    switch (e.keycode) {
         case RUSH_KEY_W:
             m_FirstDisplayedTime += m_DisplayedDuration * 0.05f;
             m_DisplayedDuration *= 0.9f;
@@ -178,17 +175,17 @@ bool ProfilerResultView::KeyRepeatHandle(Rush::KeyboardRepeatEvent &e){
     }
 }
 
-bool ProfilerResultView::ScrollHandle(Rush::MouseScrollEvent &e){
-    if(!m_Focused)
+bool ProfilerResultView::ScrollHandle(Rush::MouseScrollEvent &e) {
+    if (!m_Focused)
         return false;
 
-    if(e.delta >= 0)
-        for(int i = 0; i < e.delta; i++){
+    if (e.delta >= 0)
+        for (int i = 0; i < e.delta; i++) {
             m_FirstDisplayedTime += m_DisplayedDuration * 0.1f;
             m_DisplayedDuration *= 0.8f;
         }
     else
-        for(int i = 0; i > e.delta; i--){
+        for (int i = 0; i > e.delta; i--) {
             m_FirstDisplayedTime -= m_DisplayedDuration * 0.1f;
             m_DisplayedDuration /= 0.8f;
         }

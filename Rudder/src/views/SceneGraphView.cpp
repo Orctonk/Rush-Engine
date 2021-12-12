@@ -1,12 +1,15 @@
-#include "Rudderpch.h"
 #include "SceneGraphView.h"
+#include "Rudderpch.h"
 
 #include "GlobalEntitySelection.h"
 #include "widgets/FileBrowser.h"
 
 #include <misc/cpp/imgui_stdlib.h>
 
-#define PROPERTY_LABEL(x) ImGui::Text(x); ImGui::SameLine(100.0f); ImGui::SetNextItemWidth(150.0f)
+#define PROPERTY_LABEL(x)    \
+    ImGui::Text(x);          \
+    ImGui::SameLine(100.0f); \
+    ImGui::SetNextItemWidth(150.0f)
 
 SceneGraphView::SceneGraphView() {
     using namespace Rush;
@@ -28,7 +31,7 @@ SceneGraphView::SceneGraphView() {
         PROPERTY_LABEL("Scale:");
         if (ImGui::DragFloat3("##Scale", &scale.x, 0.01f, 0.0f, 0.0f, "%.2f"))
             t.SetScale(scale);
-        });
+    });
     m_EE.Register<CameraComponent>("Camera", [](Rush::Entity &e) {
         auto &c = e.GetComponent<CameraComponent>();
         bool modified = false;
@@ -43,8 +46,8 @@ SceneGraphView::SceneGraphView() {
         PROPERTY_LABEL("Projection:");
         int selProj = c.camera.IsPerspective() ? 0 : 1;
         if (ImGui::Combo("##Projection", &selProj, "Perspective\0Orthographic\0\0")) {
-            if (selProj == 0)    c.camera.SetPerspective(1024.0f / 720.0f, 45.0f);
-            else                c.camera.SetOrthographic(0.0f, 1.0f, 1.0f, 0.0f);
+            if (selProj == 0) c.camera.SetPerspective(1024.0f / 720.0f, 45.0f);
+            else c.camera.SetOrthographic(0.0f, 1.0f, 1.0f, 0.0f);
         }
 
         if (c.camera.IsPerspective()) {
@@ -104,7 +107,7 @@ SceneGraphView::SceneGraphView() {
             if (ImGui::DragFloat("##Far", &far, 0.1f, near + 0.1f, FLT_MAX / INT_MAX, "%.1f")) modified = true;
             if (modified) c.camera.SetOrthographic(left, right, top, bottom, near, far);
         }
-        });
+    });
     m_EE.Register<MeshRendererComponent>("Mesh Renderer", [](Rush::Entity &e) {
         auto &mi = e.GetComponent<MeshRendererComponent>();
         PROPERTY_LABEL("Mesh:");
@@ -137,7 +140,7 @@ SceneGraphView::SceneGraphView() {
                 }
             }
         }
-        });
+    });
     m_EE.Register<LightComponent>("Light", [](Rush::Entity &e) {
         auto &l = e.GetComponent<LightComponent>();
         PROPERTY_LABEL("Light Type:");
@@ -171,7 +174,7 @@ SceneGraphView::SceneGraphView() {
             PROPERTY_LABEL("Cutoff:");
             ImGui::DragFloat2("Cutoff", &l.cutOff);
         }
-        });
+    });
     m_EE.Register<ParticleComponent>("Particle Emitter", [](Rush::Entity &e) {
         auto &pe = e.GetComponent<ParticleComponent>();
         ParticleProperties &pp = pe.emissionProperties;
@@ -191,17 +194,17 @@ SceneGraphView::SceneGraphView() {
         ImGui::ColorEdit3("End color", &pp.colorEnd.x);
         ImGui::DragFloat("Particle lifetime", &pp.lifetime, 0.01f);
         ImGui::DragFloat("Lifetime Variance", &pp.lifetimeVariance, 0.01f);
-        });
+    });
     m_EE.Register<ScriptComponent>("Script", [](Rush::Entity &e) {
         auto &sc = e.GetComponent<ScriptComponent>();
         ImGui::InputText("Script File", &sc.scriptFile);
-        });
+    });
     m_EEVisible = true;
     m_Renaming = false;
     enabled = true; // TODO: Make window open status persistent over application close
 }
 
-SceneGraphView::~SceneGraphView() {}
+SceneGraphView::~SceneGraphView() { }
 
 void SceneGraphView::OnEvent(Rush::Event &e) {
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(SceneGraphView::KeyPressHandle));
@@ -225,7 +228,7 @@ void SceneGraphView::OnImguiRender(Rush::Scene &scene) {
 
     scene.GetRegistry()->each([&](entt::entity e) {
         RenderEntity({ scene.GetRegistry(), e });
-        });
+    });
 
     ImGui::End();
     m_EE.Render(GlobalEntitySelection::GetSelection(), &m_EEVisible);
@@ -338,7 +341,7 @@ bool SceneGraphView::KeyPressHandle(Rush::KeyboardPressEvent &e) {
     if (!m_Focused) return false;
     Rush::Entity selection = GlobalEntitySelection::GetSelection();
     if (e.keycode == RUSH_KEY_DELETE && ((entt::entity)selection) != entt::null) {
-        //TODO: A bit hacky
+        // TODO: A bit hacky
         selection.GetParentRegistry()->destroy(selection);
         GlobalEntitySelection::ClearSelection();
         return true;

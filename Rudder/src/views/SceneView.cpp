@@ -1,19 +1,18 @@
-#include "Rudderpch.h"
 #include "SceneView.h"
+#include "Rudderpch.h"
 
-SceneView::SceneView() {}
-SceneView::~SceneView() {}
+SceneView::SceneView() { }
+SceneView::~SceneView() { }
 
 void SceneView::Init() {
     using namespace Rush;
     enabled = true;
     m_SceneViewSize.x = (float)Application::GetInstance().GetWindow()->GetWidth();
     m_SceneViewSize.y = (float)Application::GetInstance().GetWindow()->GetHeight();
-    m_SceneBuffer = Framebuffer::Create({
-        Application::GetInstance().GetWindow()->GetWidth(),
-        Application::GetInstance().GetWindow()->GetHeight(),
-        {TextureFormat::RGBA16F}
-        });
+    m_SceneBuffer =
+        Framebuffer::Create({ Application::GetInstance().GetWindow()->GetWidth(),
+                              Application::GetInstance().GetWindow()->GetHeight(),
+                              { TextureFormat::RGBA16F } });
 }
 
 void SceneView::OnUpdate(Rush::Scene &scene) {
@@ -37,8 +36,7 @@ void SceneView::OnImguiRender() {
             ImVec2(windowPos.x + offset.x, windowPos.y + offset.y),
             ImVec2(windowPos.x + offset.x + m_SceneViewSize.x * scale, windowPos.y + offset.y + m_SceneViewSize.y * scale),
             ImVec2(0, 1),
-            ImVec2(1, 0)
-        );
+            ImVec2(1, 0));
     }
     ImGui::End();
 }

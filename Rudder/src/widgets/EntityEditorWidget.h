@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-typedef void(*ComponentFunc)(Rush::Entity &);
+typedef void (*ComponentFunc)(Rush::Entity &);
 
 struct ComponentData {
     std::string name;
@@ -16,21 +16,21 @@ struct ComponentData {
 };
 
 class EntityEditor {
-    std::unordered_map<entt::id_type,ComponentData> m_CompMap;
+    std::unordered_map<entt::id_type, ComponentData> m_CompMap;
 
 public:
     EntityEditor();
     ~EntityEditor();
 
-    template<typename Comp>
-    void Register(std::string name, ComponentFunc draw){
+    template <typename Comp>
+    void Register(std::string name, ComponentFunc draw) {
         ComponentData d;
         d.name = name;
         d.drawWidget = draw;
-        d.create = [](Rush::Entity &e){e.AddComponent<Comp>();};
-        d.remove = [](Rush::Entity &e){e.RemoveComponent<Comp>();};
+        d.create = [](Rush::Entity &e) { e.AddComponent<Comp>(); };
+        d.remove = [](Rush::Entity &e) { e.RemoveComponent<Comp>(); };
         m_CompMap.emplace(entt::type_hash<Comp>::value(), d);
-    }    
+    }
 
     void Render(Rush::Entity e, bool *shown);
 };
