@@ -46,3 +46,6 @@
 [submodule ".\\Rush-Engine\\Libraries\\pstreams"]
 	path = .\\Rush-Engine\\Libraries\\pstreams
 	url = git://git.code.sf.net/p/pstreams/code
+[submodule ".\\Rush-Engine\\Libraries\\GlmSharp"]
+	path = .\\Rush-Engine\\Libraries\\GlmSharp
+	url = https://github.com/Philip-Trettner/GlmSharp.git
