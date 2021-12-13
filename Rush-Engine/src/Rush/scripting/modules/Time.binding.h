@@ -3,7 +3,6 @@
 
 #include "../BindingBase.h"
 #include "../ScriptingBackend.h"
-#include <stdint.h>
 
 namespace Rush {
 namespace Bindings {

@@ -112,7 +112,9 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/scripting/Behaviour.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/Entity.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/components/Component.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Input.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Logger.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Random.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Time.binding.cpp
 )
 
