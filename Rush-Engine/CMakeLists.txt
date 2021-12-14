@@ -112,6 +112,7 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/scripting/Behaviour.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/Entity.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/components/Component.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/modules/GLM.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Input.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Logger.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Random.binding.cpp
@@ -300,6 +301,7 @@ add_custom_command(TARGET Rush POST_BUILD
 
 target_compile_definitions(Rush PRIVATE "RUSH_BINDINGS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/src/Rush/scripting/csbindings/\"")
 target_compile_definitions(Rush PRIVATE "RUSH_MCS_EXEC=\"${CMAKE_CURRENT_SOURCE_DIR}/Libraries/mono/mcs.exe\"")
+target_compile_definitions(Rush PRIVATE "RUSH_GLM_BINDINGS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/Libraries/GlmSharp/GlmSharp/\"")
 
 install(TARGETS Rush
     LIBRARY DESTINATION lib

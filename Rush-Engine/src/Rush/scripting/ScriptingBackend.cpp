@@ -3,6 +3,7 @@
 
 #include "Behaviour.binding.h"
 #include "Entity.binding.h"
+#include "modules/GLM.binding.h"
 #include "modules/Input.binding.h"
 #include "modules/Logger.binding.h"
 #include "modules/Random.binding.h"
@@ -158,6 +159,7 @@ void ScriptingBackend::AddBindings() {
     REGISTER_BINDING(Bindings::Entity);
     // REGISTER_BINDING(Bindings::LightComponent);
 
+    REGISTER_BINDING(Bindings::GLM);
     REGISTER_BINDING(Bindings::Input);
     REGISTER_BINDING(Bindings::Logger);
     REGISTER_BINDING(Bindings::Random);
