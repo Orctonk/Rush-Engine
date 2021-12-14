@@ -9,7 +9,7 @@ namespace Bindings {
 
 class Random : public BindingBase {
 public:
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "modules/Random.cs"; };
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "modules/Random.cs" }; };
     virtual void BindMethods() override;
 };
 

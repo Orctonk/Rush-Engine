@@ -272,6 +272,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(MONO REQUIRED mono-2)
 target_compile_options(Rush PUBLIC ${MONO_CFLAGS})
 target_link_directories(Rush PUBLIC ${MONO_LIBRARY_DIRS})
+target_compile_definitions(Rush PRIVATE "RUSH_MONO_LIB_DIR=\"${MONO_LIBRARY_DIRS}\"")
+target_compile_definitions(Rush PRIVATE "RUSH_MONO_CONFIG_DIR=\"${MONO_PREFIX}/etc/mono/\"")
 target_link_libraries(Rush PUBLIC ${MONO_LIBRARIES})
 target_include_directories(Rush PRIVATE ${MONO_INCLUDE_DIRS})
 
@@ -297,6 +299,7 @@ add_custom_command(TARGET Rush POST_BUILD
     $<TARGET_FILE_DIR:Rush>/mcs.exe)
 
 target_compile_definitions(Rush PRIVATE "RUSH_BINDINGS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/src/Rush/scripting/csbindings/\"")
+target_compile_definitions(Rush PRIVATE "RUSH_MCS_EXEC=\"${CMAKE_CURRENT_SOURCE_DIR}/Libraries/mono/mcs.exe\"")
 
 install(TARGETS Rush
     LIBRARY DESTINATION lib

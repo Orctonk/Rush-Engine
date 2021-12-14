@@ -10,6 +10,7 @@
 // #include "components/LightComponent.binding.h"
 
 #include <mono/metadata/exception.h>
+#include <mono/metadata/mono-config.h>
 
 #define REGISTER_BINDING(binding) s_Bindings.push_back(CreateUnique<binding>())
 
@@ -40,14 +41,17 @@ ExecRes exec(std::string cmd) {
 }
 
 std::string ScriptingBackend::CompileFiles(std::vector<std::string> filenames, std::string outName) {
-    std::string fileList = "";
-    for (std::string &file : filenames) {
-        fileList += "\"";
-        fileList += file;
-        fileList += "\" ";
-    }
+    std::ofstream respFile("scripting_sources.resp", std::ifstream::trunc);
+    respFile << "-r:System.Numerics.dll" << std::endl;
+    respFile << "-r:System.Runtime.Serialization.dll" << std::endl;
+    respFile << "-t:library" << std::endl;
+    respFile << "-out:" << outName << std::endl;
+    for (std::string &file : filenames)
+        respFile << "\"" << file << "\"\n";
 
-    std::string command = "mcs " + fileList + " -t:library -out:" + outName;
+    respFile.close();
+
+    std::string command = "mcs @\"scripting_sources.resp\"";
 
     RUSH_LOG_SCOPE_ALIAS("C# Compiler");
     RUSH_LOG_INFO("Running command: {0}", command);
@@ -79,9 +83,11 @@ void ScriptingBackend::Init() {
 
     if (!s_RootDomain) {
         RUSH_LOG_INFO("Creating mono domain");
-        s_RootDomain = mono_jit_init("Scripting Backend");
+        mono_set_dirs(RUSH_MONO_LIB_DIR, RUSH_MONO_CONFIG_DIR);
+        mono_config_parse(NULL);
+        s_RootDomain = mono_jit_init_version("Scripting Backend", "v4.0.30319");
         if (s_RootDomain) {
-            RUSH_LOG_INFO("Domain Created");
+            RUSH_LOG_INFO("Mono runtime version {0}", mono_get_runtime_build_info());
             // Bind all methods
             for (auto &b : s_Bindings)
                 b->BindMethods();
@@ -99,8 +105,10 @@ void ScriptingBackend::LoadAssemblies(std::vector<std::string> extra) {
         }
         // Get file list
         std::vector<std::string> files;
-        for (auto &b : s_Bindings)
-            files.push_back(b->GetFilename());
+        for (auto &b : s_Bindings) {
+            std::vector<std::string> bFiles = b->GetFilenames();
+            files.insert(files.end(), bFiles.begin(), bFiles.end());
+        }
         std::string filename = CompileFiles(files, "scripting.dll");
         s_AppDomain = mono_domain_create_appdomain("Scripting", NULL);
         mono_domain_set(s_AppDomain, false);

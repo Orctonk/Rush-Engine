@@ -17,7 +17,7 @@ private:
 
 public:
     virtual void Init() override;
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "Entity.cs"; }
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "Entity.cs" }; }
     virtual void BindMethods() override;
 
     static MonoObject *CreateEntity(Rush::Entity entity);

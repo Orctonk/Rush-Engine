@@ -9,7 +9,7 @@ namespace Bindings {
 
 class Time : public BindingBase {
 public:
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "modules/Time.cs"; };
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "modules/Time.cs" }; };
     virtual void BindMethods() override;
 };
 

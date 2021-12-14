@@ -15,7 +15,7 @@ namespace Bindings {
 
 class Component : public BindingBase {
 public:
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "Component.cs"; }
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "Component.cs" }; }
     virtual void Init() override;
     virtual void BindMethods() override;
 
@@ -25,7 +25,7 @@ protected:
 };
 
 #define COMPONENT_BODY(name, path)                                             \
-    virtual std::string GetFilename() override { return (path); }              \
+    virtual FileList GetFilenames() override { return { path }; }              \
     virtual void Init() override;                                              \
     virtual void BindMethods() override;                                       \
     static MonoObject *CreateComponent(Rush::Entity parent, void *nativePtr) { \

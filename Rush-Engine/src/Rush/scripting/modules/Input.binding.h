@@ -9,7 +9,7 @@ namespace Bindings {
 
 class Input : public BindingBase {
 public:
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "modules/Input.cs"; };
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "modules/Input.cs" }; };
     virtual void BindMethods() override;
 };
 

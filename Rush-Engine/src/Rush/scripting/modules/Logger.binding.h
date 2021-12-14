@@ -11,7 +11,7 @@ class Logger : public BindingBase {
     static void Log(int level, MonoString *message);
 
 public:
-    virtual std::string GetFilename() override { return ScriptingBackend::BindingsBaseDir + "modules/Logger.cs"; }
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "modules/Logger.cs" }; }
     virtual void BindMethods() override;
 };
 
