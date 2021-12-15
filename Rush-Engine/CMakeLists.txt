@@ -13,6 +13,8 @@ set(RUSH_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(RUSH_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Libraries")
 set(RUSH_CMAKE_CONFIG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake-config")
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/$<CONFIG>/lib")
@@ -269,12 +271,12 @@ if(${RUSH_BUILD_SHARED})
 endif()
 
 # Add Mono as dependency
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(MONO REQUIRED mono-2)
+find_package(Mono REQUIRED)
+message("Mono found at ${MONO_ROOT}")
 target_compile_options(Rush PUBLIC ${MONO_CFLAGS})
 target_link_directories(Rush PUBLIC ${MONO_LIBRARY_DIRS})
 target_compile_definitions(Rush PRIVATE "RUSH_MONO_LIB_DIR=\"${MONO_LIBRARY_DIRS}\"")
-target_compile_definitions(Rush PRIVATE "RUSH_MONO_CONFIG_DIR=\"${MONO_PREFIX}/etc/mono/\"")
+target_compile_definitions(Rush PRIVATE "RUSH_MONO_CONFIG_DIR=\"${MONO_ROOT}/etc/mono/\"")
 target_link_libraries(Rush PUBLIC ${MONO_LIBRARIES})
 target_include_directories(Rush PRIVATE ${MONO_INCLUDE_DIRS})
 
