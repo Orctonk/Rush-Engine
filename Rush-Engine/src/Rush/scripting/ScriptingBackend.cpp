@@ -9,6 +9,7 @@
 #include "modules/Random.binding.h"
 #include "modules/Time.binding.h"
 // #include "components/LightComponent.binding.h"
+#include "components/TransformComponent.binding.h"
 
 #include <mono/metadata/exception.h>
 #include <mono/metadata/mono-config.h>
@@ -158,6 +159,7 @@ void ScriptingBackend::AddBindings() {
     REGISTER_BINDING(Bindings::Component);
     REGISTER_BINDING(Bindings::Entity);
     // REGISTER_BINDING(Bindings::LightComponent);
+    REGISTER_BINDING(Bindings::TransformComponent);
 
     REGISTER_BINDING(Bindings::GLM);
     REGISTER_BINDING(Bindings::Input);

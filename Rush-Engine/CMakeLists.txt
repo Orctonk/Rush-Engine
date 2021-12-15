@@ -114,6 +114,8 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/scripting/Behaviour.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/Entity.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/components/Component.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/components/LightComponent.binding.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/components/TransformComponent.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/GLM.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Input.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/modules/Logger.binding.cpp

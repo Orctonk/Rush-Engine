@@ -24,11 +24,12 @@ MonoObject *Component::CreateComponent(Rush::Entity parent, void *nativePtr, con
     MonoProperty *parentProperty = mono_class_get_property_from_name(c, "parent");
     MonoObject *component = mono_object_new(ScriptingBackend::GetAppDomain(), c);
     MonoObject *parentObj = Entity::CreateEntity(parent);
-    mono_runtime_object_init(component);
     mono_field_set_value(component, nativeHandleField, &nativePtr);
     void *args[1];
     args[0] = parentObj;
     mono_property_set_value(parentProperty, component, args, NULL);
+    // Call constructor last since it might use parent nad native handle fields
+    mono_runtime_object_init(component);
     return component;
 }
 

@@ -14,11 +14,14 @@ namespace Rush
         // [MethodImplAttribute(MethodImplOptions.InternalCall)]
         // private extern static LightComponent GetComponent_LightComponent();
 
-        // public static T GetComponent<T>() where T : Component
-        // {
-        //     if (typeof(T) == typeof(LightComponent))
-        //         return (T)(Component)GetComponent_LightComponent();
-        //     return null;
-        // }
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern TransformComponent GetComponent_TransformComponent();
+
+        public T GetComponent<T>() where T : Component
+        {
+            if (typeof(T) == typeof(TransformComponent))
+                return (T)(Component)GetComponent_TransformComponent();
+            return null;
+        }
     }
 }

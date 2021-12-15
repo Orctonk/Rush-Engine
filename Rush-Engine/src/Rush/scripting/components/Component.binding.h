@@ -15,7 +15,7 @@ namespace Bindings {
 
 class Component : public BindingBase {
 public:
-    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "Component.cs" }; }
+    virtual FileList GetFilenames() override { return { ScriptingBackend::BindingsBaseDir + "components/Component.cs" }; }
     virtual void Init() override;
     virtual void BindMethods() override;
 

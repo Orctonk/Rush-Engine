@@ -13,6 +13,7 @@ namespace Bindings {
 class Entity : public BindingBase {
 private:
     static MonoObject *GetLightComponent(MonoObject *instance);
+    static MonoObject *GetTransformComponent(MonoObject *instance);
     static Rush::Entity EntityFromMonoInstance(MonoObject *instance);
 
 public:

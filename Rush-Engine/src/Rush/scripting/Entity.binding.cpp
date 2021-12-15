@@ -1,17 +1,18 @@
 #include "Entity.binding.h"
 
+#include "Rush/scene/components/LightComponent.h"
+#include "Rush/scene/components/TransformComponent.h"
 #include "components/LightComponent.binding.h"
-#include <Rush/scene/components/LightComponent.h>
+#include "components/TransformComponent.binding.h"
 
 namespace Rush {
 namespace Bindings {
-
-::LightComponent comp;
 
 void Entity::Init() { }
 
 void Entity::BindMethods() {
     mono_add_internal_call("Rush.Entity::GetComponent_LightComponent", GetLightComponent);
+    mono_add_internal_call("Rush.Entity::GetComponent_TransformComponent", GetTransformComponent);
 }
 
 Rush::Entity Entity::EntityFromMonoInstance(MonoObject *instance) {
@@ -27,7 +28,14 @@ Rush::Entity Entity::EntityFromMonoInstance(MonoObject *instance) {
 
 MonoObject *Entity::GetLightComponent(MonoObject *instance) {
     Rush::Entity ent = EntityFromMonoInstance(instance);
-    return LightComponent::CreateComponent(ent, &comp);
+    if (!ent.HasComponent<::LightComponent>()) return nullptr;
+    return LightComponent::CreateComponent(ent, &ent.GetComponent<::LightComponent>());
+}
+
+MonoObject *Entity::GetTransformComponent(MonoObject *instance) {
+    Rush::Entity ent = EntityFromMonoInstance(instance);
+    if (!ent.HasComponent<::TransformComponent>()) return nullptr;
+    return TransformComponent::CreateComponent(ent, &ent.GetComponent<::TransformComponent>());
 }
 
 MonoObject *Entity::CreateEntity(Rush::Entity entity) {
