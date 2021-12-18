@@ -124,10 +124,10 @@ void RenderViews::FillRenderView(Rush::Scene &scene) {
     }
 
     LineRenderer::BeginScene(cam.camera.GetProjection(), glm::inverse(view));
-    LineRenderer::GetAPI()->SetLineWidth(2.0f);
-    for (float f = -10.0f; f < 10.5f; f++) {
-        LineRenderer::DrawLine({ f, 0.0f, -11.0f }, { f, 0.0f, 11.0f }, glm::vec4(.6f));
-        LineRenderer::DrawLine({ -11.0f, 0.0f, f }, { 11.0f, 0.0f, f }, glm::vec4(.6f));
+    LineRenderer::GetAPI()->SetLineWidth(1.0f);
+    for (float f = -1000.0f; f < 1000.5f; f++) {
+        LineRenderer::DrawLine({ f, 0.0f, -1100.0f }, { f, 0.0f, 1100.0f }, glm::vec4(.6f));
+        LineRenderer::DrawLine({ -1100.0f, 0.0f, f }, { 1100.0f, 0.0f, f }, glm::vec4(.6f));
     }
     LineRenderer::EndScene();
 
