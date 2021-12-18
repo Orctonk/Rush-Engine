@@ -60,9 +60,6 @@ void RenderViews::OnUpdate(Rush::Scene &scene) {
 }
 
 void RenderViews::OnEvent(Rush::Event &e) {
-    auto [x, y] = Rush::Input::MousePos();
-    if (x < m_RenderViewportPos.x || y < m_RenderViewportPos.y || x > m_RenderViewportPos.x + m_RenderViewportSize.x || y > m_RenderViewportPos.y + m_RenderViewportSize.y)
-        return;
     m_CamController.OnEvent(e);
     e.Dispatch<Rush::MouseReleasedEvent>(RUSH_BIND_FN(RenderViews::MouseClickHandle));
     e.Dispatch<Rush::KeyboardPressEvent>(RUSH_BIND_FN(RenderViews::KeyPressHandle));
@@ -95,7 +92,6 @@ void RenderViews::OnImguiRender() {
         m_Focused = ImGui::IsWindowFocused();
         ImGui::End();
     }
-
     ImGui::PopStyleVar();
 }
 
@@ -187,22 +183,26 @@ void RenderViews::RenderImguiView(bool resized) {
         ImGuizmo::SetDrawlist();
         glm::mat4 model = t.GetModelMatrix();
         glm::mat4 delta;
-        ImGuizmo::Manipulate(&glm::inverse(ct.GetModelMatrix())[0].x, &c.camera.GetProjection()[0].x, m_GizmoOp, m_GizmoMode, &model[0].x, &delta[0].x);
+        float snap = (Rush::Input::KeyDown(RUSH_KEY_LEFT_SHIFT) || Rush::Input::KeyDown(RUSH_KEY_RIGHT_SHIFT)) ? 0.1f : 0.0f;
+        if (snap != 0.0f)
+            RUSH_LOG_INFO("Tist");
+        ImGuizmo::Manipulate(&glm::inverse(ct.GetModelMatrix())[0].x, &c.camera.GetProjection()[0].x, m_GizmoOp, m_GizmoMode, &model[0].x, &delta[0].x, &snap);
         m_UsingGizmo = ImGuizmo::IsOver();
         if (ImGuizmo::IsUsing()) {
             glm::quat orient;
             glm::vec3 trans, scale, skew;
             glm::vec4 persp;
-            glm::decompose(model, scale, orient, trans, skew, persp);
+            glm::decompose(delta, scale, orient, trans, skew, persp);
             switch (m_GizmoOp) {
                 case ImGuizmo::ROTATE:
-                    t.SetRotation(orient);
+                    orient.w = -orient.w;
+                    t.Rotate(orient);
                     break;
                 case ImGuizmo::TRANSLATE:
-                    t.SetTranslation(trans);
+                    t.Translate(trans);
                     break;
                 case ImGuizmo::SCALE:
-                    t.SetScale(scale);
+                    t.Scale(scale);
                     break;
             }
         }

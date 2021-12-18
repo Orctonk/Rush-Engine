@@ -48,5 +48,5 @@ void TransformComponent::Scale(const glm::vec3 &scale) {
 
 void TransformComponent::Rotate(const glm::quat &rotation) {
     m_Dirty = true;
-    m_Rotation = rotation * m_Rotation;
+    m_Rotation = glm::normalize(rotation * m_Rotation);
 }

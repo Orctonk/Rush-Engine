@@ -23,7 +23,7 @@ void EntityEditor::Render(Rush::Entity e, bool *shown) {
 
     std::vector<entt::id_type> unused;
     for (auto &[id, data] : m_CompMap) {
-        ImGui::PushID("Widget");
+        ImGui::PushID(data.name.c_str());
         entt::id_type c[] = { id };
         if (e.GetParentRegistry()->runtime_view(std::begin(c), std::end(c)).contains(e)) {
             if (ImGui::Button("-")) {
