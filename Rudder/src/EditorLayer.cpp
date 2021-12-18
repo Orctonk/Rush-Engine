@@ -84,6 +84,7 @@ void EditorLayer::OnImguiRender() {
         ImGui::MenuItem("Scene graph", "", &m_SceneGraph.enabled);
         ImGui::MenuItem("Assets", "", &m_AssetView.enabled);
         ImGui::MenuItem("Profiler inspector", "", &m_PRView.enabled);
+        ImGui::MenuItem("Exceptions", "", &m_Exceptions.enabled);
         bool show = Rush::DebugLayer::GetShown();
         ImGui::MenuItem("Debug Info", "", &show);
         Rush::DebugLayer::SetShown(show);
@@ -122,6 +123,7 @@ void EditorLayer::OnImguiRender() {
     m_AssetView.OnImguiRender();
     m_PRView.OnImguiRender();
     m_SceneView.OnImguiRender();
+    m_Exceptions.OnImguiRender();
 }
 
 void EditorLayer::AddImGuiFonts() {

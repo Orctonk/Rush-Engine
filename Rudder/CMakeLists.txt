@@ -17,6 +17,7 @@ set(RUDDER_SOURCES
     ${RUDDER_SOURCE_DIR}/views/SceneView.cpp
     ${RUDDER_SOURCE_DIR}/views/AssetView.cpp
     ${RUDDER_SOURCE_DIR}/views/ProfilerResultView.cpp
+    ${RUDDER_SOURCE_DIR}/views/ExceptionPanel.cpp
 )
 
 list(APPEND RUDDER_SOURCES

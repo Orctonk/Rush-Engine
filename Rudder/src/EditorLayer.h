@@ -2,6 +2,7 @@
 #define __EDITORLAYER_H__
 
 #include "views/AssetView.h"
+#include "views/ExceptionPanel.h"
 #include "views/ProfilerResultView.h"
 #include "views/RenderViews.h"
 #include "views/SceneGraphView.h"
@@ -18,6 +19,7 @@ private:
     SceneView m_SceneView;
     AssetView m_AssetView;
     ProfilerResultView m_PRView;
+    ExceptionPanel m_Exceptions;
 
     void AddImGuiFonts();
 
