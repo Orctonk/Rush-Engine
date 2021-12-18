@@ -11,8 +11,8 @@ namespace Rush
 #pragma warning restore 0169
         private Entity() { }
 
-        // [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        // private extern static LightComponent GetComponent_LightComponent();
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern LightComponent GetComponent_LightComponent();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         private extern TransformComponent GetComponent_TransformComponent();
@@ -21,6 +21,8 @@ namespace Rush
         {
             if (typeof(T) == typeof(TransformComponent))
                 return (T)(Component)GetComponent_TransformComponent();
+            else if (typeof(T) == typeof(LightComponent))
+                return (T)(Component)GetComponent_LightComponent();
             return null;
         }
     }
