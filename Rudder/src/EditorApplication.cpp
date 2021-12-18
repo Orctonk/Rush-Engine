@@ -8,7 +8,7 @@ using namespace Rush;
 class EditorApplication : public Application {
     virtual void Init() override {
         m_Window->SetVSync(true);
-        PushOverlay(new EditorLayer());
+        PushLayer(new EditorLayer());
     }
     virtual void Exit() override { }
     virtual void Update() override { }
