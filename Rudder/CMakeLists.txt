@@ -52,11 +52,6 @@ add_custom_command(TARGET Rudder POST_BUILD
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui.ini
     ${CMAKE_CURRENT_BINARY_DIR}/imgui.ini)
 
-add_custom_command(TARGET Rudder POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/FontAwesome/fa-solid-900.ttf
-    ${CMAKE_CURRENT_BINARY_DIR}/Fonts/fa-solid-900.ttf)
-
 add_custom_command(TARGET Rudder POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     $<TARGET_FILE_DIR:Rush>

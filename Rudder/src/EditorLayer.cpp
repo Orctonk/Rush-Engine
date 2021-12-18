@@ -128,12 +128,12 @@ void EditorLayer::OnImguiRender() {
 
 void EditorLayer::AddImGuiFonts() {
     ImGuiIO &io = ImGui::GetIO();
-    io.Fonts->AddFontDefault();
+    io.Fonts->AddFontFromFileTTF("./res/fonts/OpenSans-Regular.ttf", 16.0f);
 
     ImFontConfig config;
     config.MergeMode = true;
     config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
     static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-    io.Fonts->AddFontFromFileTTF("Fonts/fa-solid-900.ttf", 13.0f, &config, icon_ranges);
+    io.Fonts->AddFontFromFileTTF("./res/fonts/fa-solid-900.ttf", 13.0f, &config, icon_ranges);
     io.Fonts->Build();
 }
