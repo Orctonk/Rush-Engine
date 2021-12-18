@@ -111,6 +111,7 @@ set(RUSH_SOURCES
     ${RUSH_SOURCE_DIR}/Rush/scene/Camera.cpp
     ${RUSH_SOURCE_DIR}/Rush/scene/Scene.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/ScriptingBackend.cpp
+    ${RUSH_SOURCE_DIR}/Rush/scripting/ExceptionManager.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/Behaviour.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/Entity.binding.cpp
     ${RUSH_SOURCE_DIR}/Rush/scripting/components/Component.binding.cpp

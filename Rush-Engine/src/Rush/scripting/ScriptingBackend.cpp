@@ -3,6 +3,7 @@
 
 #include "Behaviour.binding.h"
 #include "Entity.binding.h"
+#include "ExceptionManager.h"
 #include "modules/GLM.binding.h"
 #include "modules/Input.binding.h"
 #include "modules/Logger.binding.h"
@@ -13,6 +14,7 @@
 
 #include <mono/metadata/exception.h>
 #include <mono/metadata/mono-config.h>
+#include <mono/metadata/mono-debug.h>
 
 #define REGISTER_BINDING(binding) s_Bindings.push_back(CreateUnique<binding>())
 
@@ -48,6 +50,7 @@ std::string ScriptingBackend::CompileFiles(std::vector<std::string> filenames, s
     respFile << "-r:System.Runtime.Serialization.dll" << std::endl;
     respFile << "-t:library" << std::endl;
     respFile << "-out:" << outName << std::endl;
+    respFile << "-debug" << std::endl;
     for (std::string &file : filenames)
         respFile << "\"" << file << "\"\n";
 
@@ -87,6 +90,9 @@ void ScriptingBackend::Init() {
         RUSH_LOG_INFO("Creating mono domain");
         mono_set_dirs(RUSH_MONO_LIB_DIR, RUSH_MONO_CONFIG_DIR);
         mono_config_parse(NULL);
+#ifdef RUSH_DEBUG
+        mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+#endif
         s_RootDomain = mono_jit_init_version("Scripting Backend", "v4.0.30319");
         if (s_RootDomain) {
             RUSH_LOG_INFO("Mono runtime version {0}", mono_get_runtime_build_info());
@@ -94,9 +100,8 @@ void ScriptingBackend::Init() {
             for (auto &b : s_Bindings)
                 b->BindMethods();
         }
-    } else {
+    } else
         RUSH_LOG_WARNING("Scripting backend has already been initialized");
-    }
 }
 void ScriptingBackend::LoadAssemblies(std::vector<std::string> extra) {
     RUSH_LOG_SCOPE_ALIAS("ScriptingBackend");
@@ -121,9 +126,8 @@ void ScriptingBackend::LoadAssemblies(std::vector<std::string> extra) {
             // Initialize modules
             for (auto &b : s_Bindings)
                 b->Init();
-        } else {
+        } else
             RUSH_LOG_ERROR("Failed to load assembly");
-        }
     } else
         RUSH_LOG_ERROR("Mono domain has not been initialized yet");
 }
@@ -138,9 +142,8 @@ void ScriptingBackend::UnloadAssemblies() {
         s_AppDomain = nullptr;
         s_Assembly = nullptr;
         RUSH_LOG_INFO("Unloaded assembly");
-    } else {
+    } else
         RUSH_LOG_WARNING("No assembly loaded");
-    }
 }
 
 void ScriptingBackend::Shutdown() {
@@ -151,7 +154,9 @@ void ScriptingBackend::InvokeInstanceVoid(MonoObject *instance, std::string meth
     MonoClass *c = mono_object_get_class(instance);
     MonoMethod *m = mono_class_get_method_from_name(c, method.c_str(), 0);
     // TODO: Implement error handling
-    mono_runtime_invoke(m, instance, NULL, NULL);
+    MonoObject *exc;
+    mono_runtime_invoke(m, instance, NULL, &exc);
+    if (exc) ExceptionManager::HandleException(exc);
 }
 
 void ScriptingBackend::AddBindings() {

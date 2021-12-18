@@ -43,3 +43,5 @@
 #include "Rush/events/MouseEvent.h"
 #include "Rush/events/Mousecodes.h"
 #include "Rush/events/WindowEvent.h"
+
+#include "Rush/scripting/ExceptionManager.h"
