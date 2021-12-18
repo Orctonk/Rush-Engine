@@ -22,6 +22,7 @@ private:
     ExceptionPanel m_Exceptions;
 
     void AddImGuiFonts();
+    void ApplyStyle();
 
 public:
     EditorLayer();
