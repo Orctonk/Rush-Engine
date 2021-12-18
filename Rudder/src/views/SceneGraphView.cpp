@@ -156,7 +156,7 @@ SceneGraphView::SceneGraphView() {
         ImGui::ColorEdit3("##Specular", &l.specular.r);
         if (l.type != LightType::DIRECTIONAL) {
             PROPERTY_LABEL("Range:");
-            if (ImGui::DragFloat("##Range", &l.range, 1.0f, 0.01f, 10000.0f) && !l.manualAtten) {
+            if (ImGui::DragFloat("##Range", &l.range, 1.0f, 0.01f, 10000.0f) && !l.manualAttenuation) {
                 l.constant = 1.0f;
                 l.linear = 4.5f / l.range;
                 l.quadratic = 75.0f / (l.range * l.range);
@@ -164,15 +164,15 @@ SceneGraphView::SceneGraphView() {
             ImGui::Separator();
             ImGui::Text("Attenuation");
             PROPERTY_LABEL("Manual:");
-            ImGui::Checkbox("##Manual Attenuation", &l.manualAtten);
-            if (l.manualAtten) {
+            ImGui::Checkbox("##Manual Attenuation", &l.manualAttenuation);
+            if (l.manualAttenuation) {
                 PROPERTY_LABEL("Coefficients:");
                 ImGui::DragFloat3("##Coefficients", &l.constant, 0.01f, 0.0f);
             }
         }
         if (l.type == LightType::SPOTLIGHT) {
             PROPERTY_LABEL("Cutoff:");
-            ImGui::DragFloat2("Cutoff", &l.cutOff);
+            ImGui::DragFloat2("Cutoff", &l.cutoff);
         }
     });
     m_EE.Register<ParticleComponent>("Particle Emitter", [](Rush::Entity &e) {

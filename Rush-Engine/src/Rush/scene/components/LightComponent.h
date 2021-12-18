@@ -27,14 +27,14 @@ struct PackedLight {
 
 struct ENTT_API LightComponent {
     LightType type{ LightType::POINT };
-    bool manualAtten{ false };
+    bool manualAttenuation{ false };
     float range{ 7.0f };
     float constant{ 1.0f };
     float linear{ 0.7f };
     float quadratic{ 1.8f };
 
-    float cutOff{ 35.0f };
-    float outerCutOff{ 45.0f };
+    float cutoff{ 35.0f };
+    float outerCutoff{ 45.0f };
 
     glm::vec3 ambient{ 0.1f, 0.1f, 0.1f };
     glm::vec3 diffuse{ 1.0f, 1.0f, 1.0f };
@@ -54,12 +54,12 @@ struct ENTT_API LightComponent {
         archive(
             cereal::make_nvp("type", typeStr),
             cereal::make_nvp("range", range),
-            cereal::make_nvp("manualAttenuation", manualAtten),
+            cereal::make_nvp("manualAttenuation", manualAttenuation),
             cereal::make_nvp("constant", constant),
             cereal::make_nvp("linear", linear),
             cereal::make_nvp("quadratic", quadratic),
-            cereal::make_nvp("cutoff", cutOff),
-            cereal::make_nvp("outerCutoff", outerCutOff),
+            cereal::make_nvp("cutoff", cutoff),
+            cereal::make_nvp("outerCutoff", outerCutoff),
             cereal::make_nvp("ambientColor",
                              std::array{
                                  cereal::make_nvp("r", ambient.r),
@@ -75,12 +75,12 @@ struct ENTT_API LightComponent {
         archive(
             cereal::make_nvp("type", typeStr),
             cereal::make_nvp("range", range),
-            cereal::make_nvp("manualAttenuation", manualAtten),
+            cereal::make_nvp("manualAttenuation", manualAttenuation),
             cereal::make_nvp("constant", constant),
             cereal::make_nvp("linear", linear),
             cereal::make_nvp("quadratic", quadratic),
-            cereal::make_nvp("cutoff", cutOff),
-            cereal::make_nvp("outerCutoff", outerCutOff),
+            cereal::make_nvp("cutoff", cutoff),
+            cereal::make_nvp("outerCutoff", outerCutoff),
             cereal::make_nvp("ambientColor",
                              std::array{
                                  cereal::make_nvp("r", ambient.r),
