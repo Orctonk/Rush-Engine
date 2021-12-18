@@ -90,10 +90,14 @@ void EditorLayer::OnImguiRender() {
         Rush::DebugLayer::SetShown(show);
         ImGui::EndMenu();
     }
-    if (ImGui::Button(ICON_FA_PLAY))
+    if (m_Scene.IsPlaying()) {
+        if (ImGui::Button(ICON_FA_STOP))
+            m_Scene.StopPlay();
+    } else if (ImGui::Button(ICON_FA_PLAY)) {
+        m_SceneView.enabled = true;
         m_Scene.StartPlay();
-    if (ImGui::Button(ICON_FA_STOP))
-        m_Scene.StopPlay();
+    }
+
     ImGui::EndMainMenuBar();
 
     if (loadScene) {

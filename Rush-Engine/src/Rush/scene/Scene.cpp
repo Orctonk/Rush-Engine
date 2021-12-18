@@ -102,18 +102,21 @@ void Scene::Render() {
 }
 
 void Scene::StartPlay() {
+    if (m_Playing) StopPlay();
     ScriptingBackend::LoadAssemblies();
     for (auto e : m_SceneRegistry.view<ScriptComponent>()) {
         auto &sc = m_SceneRegistry.get<ScriptComponent>(e);
         auto &rsc = m_SceneRegistry.emplace<RuntimeScriptComponent>(e);
         rsc.behaviourInstance = Bindings::Behaviour::CreateComponent({ &m_SceneRegistry, e }, &sc);
     }
+    m_Playing = true;
 }
 
 void Scene::StopPlay() {
     ScriptingBackend::UnloadAssemblies();
     auto rscView = m_SceneRegistry.view<RuntimeScriptComponent>();
     m_SceneRegistry.remove<RuntimeScriptComponent>(rscView.begin(), rscView.end());
+    m_Playing = false;
 }
 
 void Scene::SetLightData(Shared<Shader> shader) {

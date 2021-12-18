@@ -25,6 +25,8 @@ private:
     Shared<Shader> m_SkyboxShader;
     Shared<UniformBuffer> m_LightUniformBuffer;
 
+    bool m_Playing = false;
+
     void SetLightData(Shared<Shader> shader);
 
 public:
@@ -42,6 +44,7 @@ public:
     void Render();
     void StartPlay();
     void StopPlay();
+    bool IsPlaying() { return m_Playing; }
 
     template <typename... Components>
     void Save(const Path &scenePath);
