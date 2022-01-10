@@ -22,30 +22,27 @@
 [submodule "Rush-Engine/Libraries/cereal"]
 	path = Rush-Engine/Libraries/cereal
 	url = git@github.com:USCiLab/cereal.git
-[submodule "Rush-Engine\\Libraries\\shaderc"]
-	path = Rush-Engine\\Libraries\\shaderc
+[submodule "Rush-Engine/Libraries/shaderc"]
+	path = Rush-Engine/Libraries/shaderc
 	url = https://github.com/google/shaderc.git
-[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-tools"]
-	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-tools
+[submodule "Rush-Engine/Libraries/shaderc-deps/spirv-tools"]
+	path = Rush-Engine/Libraries/shaderc-deps/spirv-tools
 	url = git@github.com:KhronosGroup/SPIRV-Tools.git
-[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-headers"]
-	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\spirv-headers
+[submodule "Rush-Engine/Libraries/shaderc-deps/spirv-headers"]
+	path = Rush-Engine/Libraries/shaderc-deps/spirv-headers
 	url = git@github.com:KhronosGroup/SPIRV-Headers.git
-[submodule ".\\Rush-Engine\\Libraries\\shaderc-deps\\glslang"]
-	path = .\\Rush-Engine\\Libraries\\shaderc-deps\\glslang
+[submodule "Rush-Engine/Libraries/shaderc-deps/glslang"]
+	path = Rush-Engine/Libraries/shaderc-deps/glslang
 	url = git@github.com:KhronosGroup/glslang.git
-[submodule ".\\Rush-Engine\\Libraries\\spirv-cross"]
-	path = .\\Rush-Engine\\Libraries\\spirv-cross
+[submodule "Rush-Engine/Libraries/spirv-cross"]
+	path = Rush-Engine/Libraries/spirv-cross
 	url = git@github.com:KhronosGroup/SPIRV-Cross.git
-[submodule ".\\Rush-Engine\\Libraries\\fmt"]
-	path = .\\Rush-Engine\\Libraries\\fmt
+[submodule "Rush-Engine/Libraries/fmt"]
+	path = Rush-Engine/Libraries/fmt
 	url = git@github.com:fmtlib/fmt.git
-[submodule ".\\Rudder\\Libraries\\IconFontCppHeaders"]
-	path = .\\Rudder\\Libraries\\IconFontCppHeaders
+[submodule "Rudder/Libraries/IconFontCppHeaders"]
+	path = Rudder/Libraries/IconFontCppHeaders
 	url = https://github.com/juliettef/IconFontCppHeaders.git
-[submodule ".\\Rush-Engine\\Libraries\\pstreams"]
-	path = .\\Rush-Engine\\Libraries\\pstreams
-	url = git://git.code.sf.net/p/pstreams/code
-[submodule ".\\Rush-Engine\\Libraries\\GlmSharp"]
-	path = .\\Rush-Engine\\Libraries\\GlmSharp
+[submodule "Rush-Engine/Libraries/GlmSharp"]
+	path = Rush-Engine/Libraries/GlmSharp
 	url = https://github.com/Philip-Trettner/GlmSharp.git
