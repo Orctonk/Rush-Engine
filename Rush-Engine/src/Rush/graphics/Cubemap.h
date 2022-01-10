@@ -1,7 +1,7 @@
 #ifndef __CUBEMAP_H__
 #define __CUBEMAP_H__
 
-#include "Rush/Resources/Path.h"
+#include "Rush/resources/Path.h"
 #include "Rush/core/Core.h"
 
 #include <stdint.h>
