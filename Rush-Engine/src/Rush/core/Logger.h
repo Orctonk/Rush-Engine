@@ -8,6 +8,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <sstream>
 
 namespace Rush {
 
@@ -139,7 +140,7 @@ void Logger::Log(std::string message, std::string sender, LogLevel level, Args..
     if (sender.empty()) {
         auto id = std::this_thread::get_id();
         try {
-            ss << m_AliasMap.at(id);
+            ss << (m_AliasMap.at(id));
         } catch (std::out_of_range e) {
             ss << id;
         }
@@ -154,17 +155,17 @@ void Logger::Log(std::string message, std::string sender, LogLevel level, Args..
 
 } // namespace Rush
 
-#define RUSH_LOG_TRACE(x, ...) Rush::Logger::getInstance().Trace(x, "", __VA_ARGS__)
+#define RUSH_LOG_TRACE(x, ...) Rush::Logger::getInstance().Trace(x, "", ## __VA_ARGS__)
 #ifdef RUSH_DEBUG
-    #define RUSH_LOG_DEBUG(x, ...) Rush::Logger::getInstance().Debug(x, "", __VA_ARGS__)
+#define RUSH_LOG_DEBUG(x, ...) Rush::Logger::getInstance().Debug(x, "", ## __VA_ARGS__)
 #else
-    #define RUSH_LOG_DEBUG(x, ...) \
+#define RUSH_LOG_DEBUG(x, ...) \
         do {                       \
         } while ()
 #endif
-#define RUSH_LOG_INFO(x, ...)    Rush::Logger::getInstance().Info(x, "", __VA_ARGS__)
-#define RUSH_LOG_WARNING(x, ...) Rush::Logger::getInstance().Warning(x, "", __VA_ARGS__)
-#define RUSH_LOG_ERROR(x, ...)   Rush::Logger::getInstance().Error(x, "", __VA_ARGS__)
+#define RUSH_LOG_INFO(x, ...)    Rush::Logger::getInstance().Info(x, "", ## __VA_ARGS__)
+#define RUSH_LOG_WARNING(x, ...) Rush::Logger::getInstance().Warning(x, "", ## __VA_ARGS__)
+#define RUSH_LOG_ERROR(x, ...)   Rush::Logger::getInstance().Error(x, "", ## __VA_ARGS__)
 
 #define RUSH_CONCAT_(a, b)      a##b
 #define RUSH_CONCAT(a, b)       RUSH_CONCAT_(a, b)
