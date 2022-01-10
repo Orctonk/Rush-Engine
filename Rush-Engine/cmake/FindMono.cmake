@@ -30,10 +30,15 @@ if(WIN32)  # Windows
         message(FATAL_ERROR "Could not find Mono root dir, try setting the MONO_ROOT variable to the mono installation directory")
         set(MONO_FOUND FALSE)
     endif(MONO_ROOT AND EXISTS ${MONO_ROOT})
-ELSE(WIN32)  # Unix
-    FindPkgConfig()
+else(WIN32)  # Unix
+    include(FindPkgConfig)  
     if(PKG_CONFIG_FOUND)
-        pkg_check_modules(MONO Mono_FIND_REQUIRED mono-2)
+        message("testing")
+        if(Mono_FIND_REQUIRED)
+            pkg_check_modules(MONO REQUIRED mono-2)
+        else(Mono_FIND_REQUIRED)
+            pkg_check_modules(MONO REQUIRED mono-2)
+        endif(Mono_FIND_REQUIRED)
     else(PKG_CONFIG_FOUND)
         if(NOT MONO_ROOT OR NOT EXISTS ${MONO_ROOT})
             # Attempt to set mono root dir based on executable path or guess
@@ -66,7 +71,7 @@ ELSE(WIN32)  # Unix
             message(FATAL_ERROR "Could not find Mono root dir, try setting the MONO_ROOT variable to the mono installation directory")
             set(MONO_FOUND FALSE)
         endif(MONO_ROOT AND EXISTS ${MONO_ROOT})
-    endif(PkgConfig_FOUND)
+    endif(PKG_CONFIG_FOUND)
 endif(WIN32)
 
 if(MONO_FOUND)
