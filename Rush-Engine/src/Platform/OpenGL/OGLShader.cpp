@@ -156,9 +156,8 @@ void OGLShader::SetUniform(std::string name, glm::mat4 val) {
 int OGLShader::GetUniformLocation(std::string name) {
     RUSH_PROFILE_FUNCTION();
     if (m_UniformCache.find(name) == m_UniformCache.end()) {
-        auto loc = glGetUniformLocation(m_Shader, name.c_str());
-        m_UniformCache[name] = loc;
-        if (loc == -1) RUSH_LOG_WARNING("Uniform '{}' not found in shader '{}'!", name, m_DebugName);
+        RUSH_LOG_WARNING("Uniform '{}' not found in shader '{}'!", name, m_DebugName);
+        m_UniformCache[name] = -1;
     }
     return m_UniformCache[name];
 }
@@ -190,12 +189,18 @@ void OGLShader::LoadOpenGLBinaries() {
     for (auto &&[type, binary] : m_SPIRVBinaries) {
         Path cachedBinaryPath = Path(m_DebugName).GetFileName() + ".glsl." + TypeToString(type);
 
-        if (!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(), m_OpenGLBinaries[type], m_SourceModTime)) {
-            spirv_cross::CompilerGLSL glslCompiler(binary);
-            spirv_cross::ShaderResources res = glslCompiler.get_shader_resources();
-            for (const auto &pushC : res.push_constant_buffers) {
-                glslCompiler.set_decoration(pushC.id, spv::DecorationLocation, pushCIndex++);
+        spirv_cross::CompilerGLSL glslCompiler(binary);
+        spirv_cross::ShaderResources res = glslCompiler.get_shader_resources();
+        for (const auto &pushC : res.push_constant_buffers) {
+            glslCompiler.set_decoration(pushC.id, spv::DecorationLocation, pushCIndex);
+            auto range = glslCompiler.get_active_buffer_ranges(pushC.id);
+            if (range.empty()) pushCIndex++;
+            for (auto br : range) {
+                m_UniformCache[pushC.name + "." + glslCompiler.get_member_name(pushC.base_type_id, br.index)] = pushCIndex;
+                pushCIndex++;
             }
+        }
+        if (!FileCache::GetCachedBinaryFile(cachedBinaryPath.GetFullFileName(), m_OpenGLBinaries[type], m_SourceModTime)) {
             m_OpenGLSources[type] = glslCompiler.compile();
 
             Path cachedSourcePath = Path(m_DebugName).GetFileName() + ".glslsource." + TypeToString(type);
