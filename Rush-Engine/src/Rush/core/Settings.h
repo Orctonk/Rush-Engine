@@ -9,17 +9,15 @@ private:
     SettingMap m_RushSettings;
     SettingMap m_UserSettings;
 
-    Settings() { }
-    ~Settings() { }
+    Settings() {}
+    ~Settings() {}
 
     static void SaveSettings();
 
     template <typename T>
-    static void SetSetting(SettingMap &map, const std::string &name, T value);
-    template <>
-    static void SetSetting<const char *>(SettingMap &map, const std::string &name, const char *value);
-    template <>
-    static void SetSetting<std::string>(SettingMap &map, const std::string &name, std::string value);
+    static void SetSetting(SettingMap &map, const std::string &name, T value) {
+        map[name] = std::to_string(value);
+    }
 
     static Settings &GetInstance() {
         static Settings instance;
@@ -27,7 +25,7 @@ private:
     }
 
 public:
-    static void Init() { }
+    static void Init() {}
 
     template <typename T>
     static void SetRushSetting(const std::string &name, const T value) { SetSetting(GetInstance().m_RushSettings, name, value); }
@@ -53,17 +51,9 @@ public:
 };
 
 template <>
-void Settings::SetSetting<std::string>(SettingMap &map, const std::string &name, const std::string value) {
-    map[name] = value;
-}
+void Settings::SetSetting<std::string>(SettingMap &map, const std::string &name, const std::string value);
 template <>
-void Settings::SetSetting<const char *>(SettingMap &map, const std::string &name, const char *value) {
-    map[name] = value;
-}
-template <typename T>
-void Settings::SetSetting(SettingMap &map, const std::string &name, const T value) {
-    map[name] = std::to_string(value);
-}
+void Settings::SetSetting<const char *>(SettingMap &map, const std::string &name, const char *value);
 
 }; // namespace Rush
 
