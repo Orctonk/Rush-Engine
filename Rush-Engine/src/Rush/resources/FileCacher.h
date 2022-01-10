@@ -19,9 +19,9 @@ public:
     static void Init();
     static void SetCacheDirectory(const Path &cacheDir) { s_CacheDir = cacheDir; }
     static void CacheBinaryFile(const std::string &cacheFileName, const std::vector<uint32_t> &data);
-    static bool GetCachedBinaryFile(const std::string &cacheFileName, std::vector<uint32_t> &data, const FileChangeTime &lastChange = FileChangeTime::time_point());
+    static bool GetCachedBinaryFile(const std::string &cacheFileName, std::vector<uint32_t> &data, const FileChangeTime &lastChange = {});
     static void CacheTextFile(const std::string &cacheFileName, const std::string &data);
-    static bool GetCachedTextFile(const std::string &cacheFileName, std::string &data, const FileChangeTime &lastChange = FileChangeTime::time_point());
+    static bool GetCachedTextFile(const std::string &cacheFileName, std::string &data, const FileChangeTime &lastChange = {});
 };
 
 } // namespace Rush
