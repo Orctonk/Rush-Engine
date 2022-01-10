@@ -63,7 +63,7 @@ std::string Path::GetFileExtension() const {
 
 void Path::SetCWD(Path newCWD) {
     s_CWD = newCWD;
-    chdir(newCWD.GetRawPath().c_str());
+    _chdir(newCWD.GetRawPath().c_str());
 }
 
 Path Path::GetCWD() {
