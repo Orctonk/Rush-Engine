@@ -8,11 +8,11 @@
 namespace Rush {
 namespace Bindings {
 
-void Entity::Init() { }
+void Entity::Init() {}
 
 void Entity::BindMethods() {
-    mono_add_internal_call("Rush.Entity::GetComponent_LightComponent", GetLightComponent);
-    mono_add_internal_call("Rush.Entity::GetComponent_TransformComponent", GetTransformComponent);
+    mono_add_internal_call("Rush.Entity::GetComponent_LightComponent", (const void *)GetLightComponent);
+    mono_add_internal_call("Rush.Entity::GetComponent_TransformComponent", (const void *)GetTransformComponent);
 }
 
 Rush::Entity Entity::EntityFromMonoInstance(MonoObject *instance) {

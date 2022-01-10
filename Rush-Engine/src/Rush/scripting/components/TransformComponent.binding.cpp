@@ -5,19 +5,19 @@
 namespace Rush {
 namespace Bindings {
 
-void TransformComponent::Init() { }
+void TransformComponent::Init() {}
 
 void TransformComponent::BindMethods() {
-    mono_add_internal_call("Rush.TransformComponent::GetModelMatrix", GetModelMatrix);
-    mono_add_internal_call("Rush.TransformComponent::get_Translation", GetTranslation);
-    mono_add_internal_call("Rush.TransformComponent::get_Rotation", GetRotation);
-    mono_add_internal_call("Rush.TransformComponent::get_Scale", GetScale);
-    mono_add_internal_call("Rush.TransformComponent::set_Translation", SetTranslation);
-    mono_add_internal_call("Rush.TransformComponent::set_Rotation", SetRotation);
-    mono_add_internal_call("Rush.TransformComponent::set_Scale", SetScale);
-    mono_add_internal_call("Rush.TransformComponent::Translate", Translate);
-    mono_add_internal_call("Rush.TransformComponent::DoScale", Scale);
-    mono_add_internal_call("Rush.TransformComponent::Rotate", Rotate);
+    mono_add_internal_call("Rush.TransformComponent::GetModelMatrix", (const void *)GetModelMatrix);
+    mono_add_internal_call("Rush.TransformComponent::get_Translation", (const void *)GetTranslation);
+    mono_add_internal_call("Rush.TransformComponent::get_Rotation", (const void *)GetRotation);
+    mono_add_internal_call("Rush.TransformComponent::get_Scale", (const void *)GetScale);
+    mono_add_internal_call("Rush.TransformComponent::set_Translation", (const void *)SetTranslation);
+    mono_add_internal_call("Rush.TransformComponent::set_Rotation", (const void *)SetRotation);
+    mono_add_internal_call("Rush.TransformComponent::set_Scale", (const void *)SetScale);
+    mono_add_internal_call("Rush.TransformComponent::Translate", (const void *)Translate);
+    mono_add_internal_call("Rush.TransformComponent::DoScale", (const void *)Scale);
+    mono_add_internal_call("Rush.TransformComponent::Rotate", (const void *)Rotate);
 }
 
 glm::mat4 TransformComponent::GetModelMatrix(MonoObject *instance) {

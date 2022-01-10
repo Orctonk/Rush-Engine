@@ -3,31 +3,31 @@
 namespace Rush {
 namespace Bindings {
 
-void LightComponent::Init() { }
+void LightComponent::Init() {}
 
 void LightComponent::BindMethods() {
-    mono_add_internal_call("Rush.LightComponent::get_Range", GetRange);
-    mono_add_internal_call("Rush.LightComponent::set_Range", SetRange);
-    mono_add_internal_call("Rush.LightComponent::get_Type", GetType);
-    mono_add_internal_call("Rush.LightComponent::set_Type", SetType);
-    mono_add_internal_call("Rush.LightComponent::get_ManualAttenuation", GetManualAttenuation);
-    mono_add_internal_call("Rush.LightComponent::set_ManualAttenuation", SetManualAttenuation);
-    mono_add_internal_call("Rush.LightComponent::get_Constant", GetConstant);
-    mono_add_internal_call("Rush.LightComponent::set_Constant", SetConstant);
-    mono_add_internal_call("Rush.LightComponent::get_Linear", GetLinear);
-    mono_add_internal_call("Rush.LightComponent::set_Linear", SetLinear);
-    mono_add_internal_call("Rush.LightComponent::get_Quadratic", GetQuadratic);
-    mono_add_internal_call("Rush.LightComponent::set_Quadratic", SetQuadratic);
-    mono_add_internal_call("Rush.LightComponent::get_Cutoff", GetCutoff);
-    mono_add_internal_call("Rush.LightComponent::set_Cutoff", SetCutoff);
-    mono_add_internal_call("Rush.LightComponent::get_OuterCutoff", GetOuterCutoff);
-    mono_add_internal_call("Rush.LightComponent::set_OuterCutoff", SetOuterCutoff);
-    mono_add_internal_call("Rush.LightComponent::get_Ambient", GetAmbient);
-    mono_add_internal_call("Rush.LightComponent::set_Ambient", SetAmbient);
-    mono_add_internal_call("Rush.LightComponent::get_Diffuse", GetDiffuse);
-    mono_add_internal_call("Rush.LightComponent::set_Diffuse", SetDiffuse);
-    mono_add_internal_call("Rush.LightComponent::get_Specular", GetSpecular);
-    mono_add_internal_call("Rush.LightComponent::set_Specular", SetSpecular);
+    mono_add_internal_call("Rush.LightComponent::get_Range", (const void *)GetRange);
+    mono_add_internal_call("Rush.LightComponent::set_Range", (const void *)SetRange);
+    mono_add_internal_call("Rush.LightComponent::get_Type", (const void *)GetType);
+    mono_add_internal_call("Rush.LightComponent::set_Type", (const void *)SetType);
+    mono_add_internal_call("Rush.LightComponent::get_ManualAttenuation", (const void *)GetManualAttenuation);
+    mono_add_internal_call("Rush.LightComponent::set_ManualAttenuation", (const void *)SetManualAttenuation);
+    mono_add_internal_call("Rush.LightComponent::get_Constant", (const void *)GetConstant);
+    mono_add_internal_call("Rush.LightComponent::set_Constant", (const void *)SetConstant);
+    mono_add_internal_call("Rush.LightComponent::get_Linear", (const void *)GetLinear);
+    mono_add_internal_call("Rush.LightComponent::set_Linear", (const void *)SetLinear);
+    mono_add_internal_call("Rush.LightComponent::get_Quadratic", (const void *)GetQuadratic);
+    mono_add_internal_call("Rush.LightComponent::set_Quadratic", (const void *)SetQuadratic);
+    mono_add_internal_call("Rush.LightComponent::get_Cutoff", (const void *)GetCutoff);
+    mono_add_internal_call("Rush.LightComponent::set_Cutoff", (const void *)SetCutoff);
+    mono_add_internal_call("Rush.LightComponent::get_OuterCutoff", (const void *)GetOuterCutoff);
+    mono_add_internal_call("Rush.LightComponent::set_OuterCutoff", (const void *)SetOuterCutoff);
+    mono_add_internal_call("Rush.LightComponent::get_Ambient", (const void *)GetAmbient);
+    mono_add_internal_call("Rush.LightComponent::set_Ambient", (const void *)SetAmbient);
+    mono_add_internal_call("Rush.LightComponent::get_Diffuse", (const void *)GetDiffuse);
+    mono_add_internal_call("Rush.LightComponent::set_Diffuse", (const void *)SetDiffuse);
+    mono_add_internal_call("Rush.LightComponent::get_Specular", (const void *)GetSpecular);
+    mono_add_internal_call("Rush.LightComponent::set_Specular", (const void *)SetSpecular);
 };
 
 float LightComponent::GetRange(MonoObject *instance) {
