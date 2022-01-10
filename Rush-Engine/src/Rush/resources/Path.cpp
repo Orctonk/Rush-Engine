@@ -2,13 +2,13 @@
 #include "Rushpch.h"
 
 #if defined(RUSH_LINUX)
-    #define PATH_DELIM '/'
-    #include <unistd.h>
+#define PATH_DELIM '/'
+#include <unistd.h>
 #elif defined(RUSH_WINDOWS)
-    #define PATH_DELIM '\\'
-    #include <direct.h>
+#define PATH_DELIM '\\'
+#include <direct.h>
 #else
-    #error "Paths are not implemented on this platform!"
+#error "Paths are not implemented on this platform!"
 #endif
 
 namespace Rush {
@@ -63,7 +63,11 @@ std::string Path::GetFileExtension() const {
 
 void Path::SetCWD(Path newCWD) {
     s_CWD = newCWD;
+#ifdef RUSH_LINUX
+    chdir(newCWD.GetRawPath().c_str());
+#elif defined(RUSH_WINDOWS)
     _chdir(newCWD.GetRawPath().c_str());
+#endif
 }
 
 Path Path::GetCWD() {

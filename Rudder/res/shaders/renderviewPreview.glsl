@@ -55,18 +55,18 @@ struct DirectionalLight {
     vec3 specular;
 };
 
-layout (std140,binding = 0) uniform Lights {
+layout (std140,binding = 1) uniform Lights {
     DirectionalLight u_DLights[DLIGHT_COUNT];
 };
 
-layout (std140,binding = 1) uniform Material {
+layout (std140,binding = 2) uniform Material {
     vec4 color;
     float shininess;
 } u_Material;
 
-layout (binding = 2) uniform sampler2D diffuseTexture;
-layout (binding = 3) uniform sampler2D specularTexture;
-layout (binding = 4) uniform sampler2D normalTexture;
+layout (binding = 3) uniform sampler2D diffuseTexture;
+layout (binding = 4) uniform sampler2D specularTexture;
+layout (binding = 5) uniform sampler2D normalTexture;
 
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 
