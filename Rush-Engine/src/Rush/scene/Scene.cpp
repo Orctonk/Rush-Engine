@@ -29,7 +29,6 @@ Entity Scene::NewEntity(std::string name) {
 }
 
 void Scene::DeleteEntity(Entity e) {
-    m_SceneRegistry.remove_all(e.m_Entity);
     m_SceneRegistry.destroy(e.m_Entity);
 }
 
@@ -80,6 +79,8 @@ void Scene::Render() {
     for (auto &e : m_SceneRegistry.group<TransformComponent>(entt::get_t<MeshRendererComponent>())) {
         auto [transform, mesh] = m_SceneRegistry.get<TransformComponent, MeshRendererComponent>(e);
         glm::mat4 model = transform.GetModelMatrix();
+
+        if(!mesh.mesh) return;
 
         for (auto &sm : mesh.mesh->submeshes) {
             sm.material->Bind();

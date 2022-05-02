@@ -1,48 +1,6 @@
-[submodule "Rush-Engine/Libraries/glm"]
-	path = Rush-Engine/Libraries/glm
-	url = https://github.com/g-truc/glm.git
-[submodule "Rush-Engine/Libraries/glfw"]
-	path = Rush-Engine/Libraries/glfw
-	url = https://github.com/glfw/glfw.git
-[submodule "Rush-Engine/Libraries/assimp"]
-	path = Rush-Engine/Libraries/assimp
-	url = https://github.com/assimp/assimp.git
-[submodule "Rush-Engine/Libraries/imgui"]
-	path = Rush-Engine/Libraries/imgui
-	url = https://github.com/ocornut/imgui.git
-[submodule "Rush-Engine/Libraries/entt"]
-	path = Rush-Engine/Libraries/entt
-	url = https://github.com/skypjack/entt.git
 [submodule "Rudder/Libraries/ImGuizmo"]
 	path = Rudder/Libraries/ImGuizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo.git
-[submodule "Rush-Engine/Libraries/Json"]
-	path = Rush-Engine/Libraries/Json
-	url = https://github.com/nlohmann/json.git
-[submodule "Rush-Engine/Libraries/cereal"]
-	path = Rush-Engine/Libraries/cereal
-	url = https://github.com/USCiLab/cereal.git
-[submodule "Rush-Engine/Libraries/shaderc"]
-	path = Rush-Engine/Libraries/shaderc
-	url = https://github.com/google/shaderc.git
-[submodule "Rush-Engine/Libraries/shaderc-deps/spirv-tools"]
-	path = Rush-Engine/Libraries/shaderc-deps/spirv-tools
-	url = https://github.com/KhronosGroup/SPIRV-Tools.git
-[submodule "Rush-Engine/Libraries/shaderc-deps/spirv-headers"]
-	path = Rush-Engine/Libraries/shaderc-deps/spirv-headers
-	url = https://github.com/KhronosGroup/SPIRV-Headers.git
-[submodule "Rush-Engine/Libraries/shaderc-deps/glslang"]
-	path = Rush-Engine/Libraries/shaderc-deps/glslang
-	url = https://github.com/KhronosGroup/glslang.git
-[submodule "Rush-Engine/Libraries/spirv-cross"]
-	path = Rush-Engine/Libraries/spirv-cross
-	url = https://github.com/KhronosGroup/SPIRV-Cross.git
-[submodule "Rush-Engine/Libraries/fmt"]
-	path = Rush-Engine/Libraries/fmt
-	url = https://github.com/fmtlib/fmt.git
 [submodule "Rudder/Libraries/IconFontCppHeaders"]
 	path = Rudder/Libraries/IconFontCppHeaders
 	url = https://github.com/juliettef/IconFontCppHeaders.git
-[submodule "Rush-Engine/Libraries/GlmSharp"]
-	path = Rush-Engine/Libraries/GlmSharp
-	url = https://github.com/Philip-Trettner/GlmSharp.git

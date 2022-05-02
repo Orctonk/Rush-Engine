@@ -1,18 +1,19 @@
 #ifndef __EXCEPTIONMANAGER_H__
 #define __EXCEPTIONMANAGER_H__
 
+#include "Rush/core/Core.h"
 #include <mono/metadata/object.h>
 
 namespace Rush {
 
-struct Exception {
+struct RUSH_API Exception {
     std::string message;
     std::string function;
     std::string file;
     int line;
 };
 
-class ExceptionManager {
+class RUSH_API ExceptionManager {
 private:
     ExceptionManager() = delete;
 

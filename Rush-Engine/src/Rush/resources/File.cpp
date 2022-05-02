@@ -1,9 +1,9 @@
 #include <Rushpch.h>
 
 #ifdef RUSH_PLATFORM_LINUX
-    #include "FileLinux.cpp"
+    #include "FileLinux.inl"
 #elif defined(RUSH_PLATFORM_WINDOWS)
-    #include "FileWindows.cpp"
+    #include "FileWindows.inl"
 #else
     #error "Platform not supported"
 #endif
